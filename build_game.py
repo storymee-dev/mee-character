@@ -1704,9 +1704,9 @@ def main():
                             headPath.style.fill = skinColor;
                         }
                         
-                        // Apply ear filter to images in face group
-                        faceGroup.querySelectorAll("image").forEach(img => {
-                            img.setAttribute("filter", "url(#custom-ear-filter)");
+                        // Apply ear filter to rects (ears) in face group
+                        faceGroup.querySelectorAll("rect").forEach(rect => {
+                            rect.setAttribute("filter", "url(#custom-ear-filter)");
                         });
                         
                         // Insert face group and remove old head/ears
@@ -1722,8 +1722,8 @@ def main():
                     }
                 }
 
-                // Head coordinates for features placement (always center on 90.32, 66.73)
-                const cx = 90.32;
+                // Head coordinates for features placement (dynamically adjusted based on active face shape)
+                const cx = (state.faceIndex > 0) ? 90.00 : 90.32;
                 const cy = 66.73;
 
                 // 2. Inject Eyebrows
