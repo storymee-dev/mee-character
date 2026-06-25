@@ -16,19 +16,14 @@ const state = {
     },
     // Nhân vật Mee dạng con người
     mee: {
-        skinColor: "#FFD0A1",
-        hairStyleBangs: "bangs1",
-        hairStyleBack: "back1",
-        hairColor: "#1A1A1A",
-        eyeStyle: "style3", // style3 là kiểu mắt có mi của Sếp
-        noseStyle: "style1",
-        mouthStyle: "style1",
-        shirtStyle: "style1",
-        shirtColor: "#5A67D8",
-        shirtSubColor: "#FFFFFF",
-        useSubColor: false,
-        faceStyle: "face1",
-        eyeColor: "#1A1A1A",
+        type: "human",
+        gender: "male",
+        skinToneIndex: 1,
+        customMode: false,
+        customSkin: "#ffe7e6",
+        customShading: "#ffcccc",
+        eyeIndex: 3,
+        eyebrowIndex: 1,
         mood: "happy",
         rotation: 0
     },
@@ -261,194 +256,164 @@ const MII_OPTIONS = {
 
 // Hàm sinh mã nguồn SVG động của nhân vật người ghép lớp
 function renderHumanSVG(mee) {
-    const skinColor = mee.skinColor || "#E0A96D";
-    const hairStyleBangs = mee.hairStyleBangs || "bangs1";
-    const hairStyleBack = mee.hairStyleBack || "back1";
-    const hairColor = mee.hairColor || "#1A1A1A";
-    const eyeStyle = mee.eyeStyle || "style3";
-    const noseStyle = mee.noseStyle || "style1";
-    const mouthStyle = mee.mouthStyle || "style1";
-    const shirtStyle = mee.shirtStyle || "style1";
-    const shirtColor = mee.shirtColor || "#5A67D8";
-    const shirtSubColor = mee.shirtSubColor || "#FFFFFF";
-    const useSubColor = mee.useSubColor || false;
-    const subColor = useSubColor ? shirtSubColor : "#FFFFFF";
+    const gender = mee.gender || "male";
+    const skinToneIndex = mee.skinToneIndex || 1;
+    const customMode = mee.customMode !== undefined ? mee.customMode : false;
+    const customSkin = mee.customSkin || "#ffe7e6";
+    const customShading = mee.customShading || "#ffcccc";
+    const eyeIndex = mee.eyeIndex || 3;
+    const eyebrowIndex = mee.eyebrowIndex || 1;
     const rotation = mee.rotation || 0;
-    const faceStyle = mee.faceStyle || "face1";
-    const eyeColor = mee.eyeColor || "#1A1A1A";
-    
-    let svg = `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;">`;
-    svg += `<g transform="rotate(${rotation}, 100, 100)">`;
-    
-    // 1. HAIR BACK
-    if (hairStyleBack === "back2") {
-        svg += `<path d="M52,80 C36,95 36,115 50,132 C58,140 142,140 150,132 C164,115 164,95 148,80 C140,70 60,70 52,80 Z" fill="${hairColor}"/>`;
-    } else if (hairStyleBack === "back3") {
-        svg += `<path d="M52,80 C36,95 38,130 44,155 C48,170 65,175 75,160 L125,160 C135,175 152,170 156,155 C162,130 164,95 148,80 C140,70 60,70 52,80 Z" fill="${hairColor}"/>`;
-    } else if (hairStyleBack === "back4") {
-        svg += `<circle cx="50" cy="70" r="18" fill="${hairColor}"/>`;
-        svg += `<circle cx="150" cy="70" r="18" fill="${hairColor}"/>`;
-        svg += `<circle cx="58" cy="80" r="4" fill="#E53E3E"/>`;
-        svg += `<circle cx="142" cy="80" r="4" fill="#E53E3E"/>`;
+
+    let svgContent = "";
+    if (customMode) {
+        svgContent = SVG_DATABASE["base"][gender];
+    } else {
+        svgContent = SVG_DATABASE["presets"][gender][skinToneIndex];
     }
-    
-    // 2. NECK
-    svg += `<path d="M90,120 L110,120 L110,138 L90,138 Z" fill="${skinColor}"/>`;
-    svg += `<path d="M90,120 Q100,128 110,120" stroke="#00000015" stroke-width="3" fill="none"/>`;
-    
-    // 3. SHOULDER & SHIRT (OUTFIT)
-    let shirtPath = `M55,138 C55,138 70,132 100,132 C130,132 145,138 145,138 L155,200 L45,200 Z`;
-    svg += `<path d="${shirtPath}" fill="${shirtColor}"/>`;
-    
-    if (shirtStyle === "style2") {
-        svg += `<g>`;
-        svg += `<path d="M51,152 L149,152" stroke="${subColor}" stroke-width="8"/>`;
-        svg += `<path d="M47,172 L153,172" stroke="${subColor}" stroke-width="8"/>`;
-        svg += `<path d="M45,192 L155,192" stroke="${subColor}" stroke-width="8"/>`;
-        svg += `</g>`;
-    } else if (shirtStyle === "style3") {
-        svg += `<path d="M85,132 L100,152 L115,132 Z" fill="${skinColor}"/>`;
-        svg += `<polygon points="85,132 96,145 100,132" fill="#FFFFFF" opacity="0.95"/>`;
-        svg += `<polygon points="115,132 104,145 100,132" fill="#FFFFFF" opacity="0.95"/>`;
-    } else if (shirtStyle === "style4") {
-        svg += `<line x1="94" y1="138" x2="94" y2="158" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>`;
-        svg += `<line x1="106" y1="138" x2="106" y2="158" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>`;
-        svg += `<circle cx="94" cy="159" r="2.5" fill="#FFFFFF"/>`;
-        svg += `<circle cx="106" cy="159" r="2.5" fill="#FFFFFF"/>`;
-        svg += `<path d="M75,200 L82,175 L118,175 L125,200" fill="none" stroke="#FFFFFF" stroke-width="2" opacity="0.4"/>`;
-    } else if (shirtStyle === "style5") {
-        svg += `<polygon points="100,150 103,158 112,158 105,163 108,171 100,166 92,171 95,163 88,158 97,158" fill="${subColor}"/>`;
-    } else if (shirtStyle === "style6") {
-        svg += `<path d="M100,154 C97,148 91,148 91,154 C91,162 100,170 100,170 C100,170 109,162 109,154 C109,148 103,148 100,154 Z" fill="${subColor}"/>`;
+
+    if (!svgContent) return "";
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(svgContent, "image/svg+xml");
+    const svgElement = doc.documentElement;
+
+    if (customMode) {
+        // 1. Update fills for cls-6 (skin) and cls-7 (shadow)
+        svgElement.querySelectorAll(".cls-6").forEach(el => el.style.fill = customSkin);
+        svgElement.querySelectorAll(".cls-7").forEach(el => el.style.fill = customShading);
+
+        // 2. Interpolate linear-gradient for legs/body shading transition
+        const linearGrad = svgElement.querySelector("#linear-gradient");
+        if (linearGrad) {
+            const stops = linearGrad.querySelectorAll("stop");
+            if (stops.length >= 5) {
+                stops[0].setAttribute("stop-color", customSkin);
+                stops[1].setAttribute("stop-color", customizerLerpColor(customSkin, customShading, 0.59));
+                stops[2].setAttribute("stop-color", customizerLerpColor(customSkin, customShading, 0.8));
+                stops[3].setAttribute("stop-color", customizerLerpColor(customSkin, customShading, 0.95));
+                stops[4].setAttribute("stop-color", customShading);
+            }
+        }
+
+        // 3. Update all stop-colors in linear-gradient-3 to customShading
+        const linearGrad3 = svgElement.querySelector("#linear-gradient-3");
+        if (linearGrad3) {
+            linearGrad3.querySelectorAll("stop").forEach(stop => {
+                stop.setAttribute("stop-color", customShading);
+            });
+        }
+
+        // 4. Inject component transfer filter for custom ear shading
+        let defs = svgElement.querySelector("defs");
+        if (!defs) {
+            defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+            svgElement.insertBefore(defs, svgElement.firstChild);
+        }
+
+        let filter = defs.querySelector("#custom-ear-filter");
+        if (!filter) {
+            filter = document.createElementNS("http://www.w3.org/2000/svg", "filter");
+            filter.setAttribute("id", "custom-ear-filter");
+            
+            const feGray = document.createElementNS("http://www.w3.org/2000/svg", "feColorMatrix");
+            feGray.setAttribute("type", "matrix");
+            feGray.setAttribute("values", "0.2126 0.7152 0.0722 0 0  0.2126 0.7152 0.0722 0 0  0.2126 0.7152 0.0722 0 0  0 0 0 1 0");
+            feGray.setAttribute("result", "gray");
+            filter.appendChild(feGray);
+            
+            const feTransfer = document.createElementNS("http://www.w3.org/2000/svg", "feComponentTransfer");
+            feTransfer.setAttribute("in", "gray");
+            
+            const feFuncR = document.createElementNS("http://www.w3.org/2000/svg", "feFuncR");
+            feFuncR.setAttribute("type", "linear");
+            feFuncR.setAttribute("id", "custom-ear-funcR");
+            feTransfer.appendChild(feFuncR);
+            
+            const feFuncG = document.createElementNS("http://www.w3.org/2000/svg", "feFuncG");
+            feFuncG.setAttribute("type", "linear");
+            feFuncG.setAttribute("id", "custom-ear-funcG");
+            feTransfer.appendChild(feFuncG);
+            
+            const feFuncB = document.createElementNS("http://www.w3.org/2000/svg", "feFuncB");
+            feFuncB.setAttribute("type", "linear");
+            feFuncB.setAttribute("id", "custom-ear-funcB");
+            feTransfer.appendChild(feFuncB);
+            
+            filter.appendChild(feTransfer);
+            defs.appendChild(filter);
+        }
+
+        const funcR = filter.querySelector("#custom-ear-funcR");
+        const funcG = filter.querySelector("#custom-ear-funcG");
+        const funcB = filter.querySelector("#custom-ear-funcB");
+
+        if (funcR && funcG && funcB) {
+            const r_skin = parseInt(customSkin.substring(1, 3), 16) / 255;
+            const g_skin = parseInt(customSkin.substring(3, 5), 16) / 255;
+            const b_skin = parseInt(customSkin.substring(5, 7), 16) / 255;
+
+            const r_shadow = parseInt(customShading.substring(1, 3), 16) / 255;
+            const g_shadow = parseInt(customShading.substring(3, 5), 16) / 255;
+            const b_shadow = parseInt(customShading.substring(5, 7), 16) / 255;
+
+            funcR.setAttribute("slope", r_skin - r_shadow);
+            funcR.setAttribute("intercept", r_shadow);
+            funcG.setAttribute("slope", g_skin - g_shadow);
+            funcG.setAttribute("intercept", g_shadow);
+            funcB.setAttribute("slope", b_skin - b_shadow);
+            funcB.setAttribute("intercept", b_shadow);
+        }
+
+        // Apply filter to ears
+        svgElement.querySelectorAll("image").forEach(img => {
+            img.setAttribute("filter", "url(#custom-ear-filter)");
+        });
     }
-    
-    if (shirtStyle !== "style3") {
-        svg += `<path d="M85,132 C85,142 115,142 115,132 Z" fill="${skinColor}"/>`;
+
+    // 5. Inject eyebrows & eyes after head ellipse
+    const head = svgElement.querySelector("ellipse.cls-6");
+    if (head) {
+        if (eyebrowIndex > 0) {
+            const eyebrowItem = FACIAL_DATABASE.eyebrows[eyebrowIndex - 1];
+            const eyebrowsGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+            eyebrowsGroup.setAttribute("id", "custom-eyebrows");
+            const dx = 52.31;
+            const dy = 72.435 - eyebrowItem.y_center;
+            eyebrowsGroup.setAttribute("transform", `translate(${dx}, ${dy})`);
+            eyebrowsGroup.innerHTML = eyebrowItem.left.join("") + eyebrowItem.right.join("");
+            head.insertAdjacentElement('afterend', eyebrowsGroup);
+        }
+        
+        if (eyeIndex > 0) {
+            const eyeItem = FACIAL_DATABASE.eyes[eyeIndex - 1];
+            const eyesGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+            eyesGroup.setAttribute("id", "custom-eyes");
+            const dx = 52.30;
+            const dy = 87.37 - eyeItem.y_center;
+            eyesGroup.setAttribute("transform", `translate(${dx}, ${dy})`);
+            eyesGroup.innerHTML = eyeItem.left.join("") + eyeItem.right.join("");
+            
+            const eyebrowsEl = svgElement.querySelector("#custom-eyebrows");
+            if (eyebrowsEl) {
+                eyebrowsEl.insertAdjacentElement('afterend', eyesGroup);
+            } else {
+                head.insertAdjacentElement('afterend', eyesGroup);
+            }
+        }
     }
-    
-    // 4. HEAD BASE
-    svg += `<ellipse cx="100" cy="90" rx="42" ry="40" fill="${skinColor}"/>`;
-    
-    // 5. EARS
-    svg += `<ellipse cx="56" cy="90" rx="6" ry="8" fill="${skinColor}"/>`;
-    svg += `<ellipse cx="144" cy="90" rx="6" ry="8" fill="${skinColor}"/>`;
-    svg += `<path d="M57,87 C55,87 55,93 57,93" stroke="#00000010" stroke-width="1.5" fill="none"/>`;
-    svg += `<path d="M143,87 C145,87 145,93 143,93" stroke="#00000010" stroke-width="1.5" fill="none"/>`;
-    
-    // 6. FACE DETAILS (Blush / Freckles)
-    if (faceStyle === "face2") {
-        svg += `<ellipse cx="72" cy="98" rx="8" ry="4" fill="#F43F5E" opacity="0.3"/>`;
-        svg += `<ellipse cx="128" cy="98" rx="8" ry="4" fill="#F43F5E" opacity="0.3"/>`;
-    } else if (faceStyle === "face3") {
-        svg += `<g fill="#78350F" opacity="0.6">`;
-        svg += `<circle cx="70" cy="97" r="1.2"/><circle cx="74" cy="96" r="1"/><circle cx="72" cy="99" r="1.1"/>`;
-        svg += `<circle cx="130" cy="97" r="1.2"/><circle cx="126" cy="96" r="1"/><circle cx="128" cy="99" r="1.1"/>`;
-        svg += `</g>`;
-    } else if (faceStyle === "face4") {
-        svg += `<circle cx="72" cy="98" r="6" fill="#EF4444" opacity="0.25"/>`;
-        svg += `<circle cx="128" cy="98" r="6" fill="#EF4444" opacity="0.25"/>`;
+
+    // 6. Apply rotation if needed
+    if (rotation !== 0) {
+        const wrapper = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        wrapper.setAttribute("transform", `rotate(${rotation}, 90, 220)`);
+        while (svgElement.firstChild) {
+            wrapper.appendChild(svgElement.firstChild);
+        }
+        svgElement.appendChild(wrapper);
     }
-    
-    // 7. EYES
-    if (eyeStyle === "style1") {
-        svg += `<circle cx="83" cy="88" r="7" fill="${eyeColor}"/>`;
-        svg += `<circle cx="117" cy="88" r="7" fill="${eyeColor}"/>`;
-        svg += `<circle cx="81.5" cy="85.5" r="2.2" fill="#FFFFFF"/>`;
-        svg += `<circle cx="115.5" cy="85.5" r="2.2" fill="#FFFFFF"/>`;
-        svg += `<circle cx="85" cy="91" r="1" fill="#FFFFFF"/>`;
-        svg += `<circle cx="119" cy="91" r="1" fill="#FFFFFF"/>`;
-        svg += `<path d="M75,79 Q83,75 89,78" stroke="#1A1A1A" stroke-width="2.5" fill="none" stroke-linecap="round"/>`;
-        svg += `<path d="M125,79 Q117,75 111,78" stroke="#1A1A1A" stroke-width="2.5" fill="none" stroke-linecap="round"/>`;
-    } else if (eyeStyle === "style2") {
-        svg += `<path d="M76,90 Q83,82 90,90" stroke="#1A1A1A" stroke-width="3.5" fill="none" stroke-linecap="round"/>`;
-        svg += `<path d="M124,90 Q117,82 110,90" stroke="#1A1A1A" stroke-width="3.5" fill="none" stroke-linecap="round"/>`;
-        svg += `<path d="M75,78 Q83,73 89,77" stroke="#1A1A1A" stroke-width="2.5" fill="none" stroke-linecap="round"/>`;
-        svg += `<path d="M125,78 Q117,73 111,77" stroke="#1A1A1A" stroke-width="2.5" fill="none" stroke-linecap="round"/>`;
-    } else if (eyeStyle === "style3") {
-        svg += `<circle cx="83" cy="88" r="7.5" fill="${eyeColor}"/>`;
-        svg += `<circle cx="117" cy="88" r="7.5" fill="${eyeColor}"/>`;
-        svg += `<circle cx="81" cy="85" r="2.5" fill="#FFFFFF"/>`;
-        svg += `<circle cx="115" cy="85" r="2.5" fill="#FFFFFF"/>`;
-        svg += `<circle cx="85" cy="91" r="1.2" fill="#FFFFFF"/>`;
-        svg += `<circle cx="119" cy="91" r="1.2" fill="#FFFFFF"/>`;
-        svg += `<path d="M74,85 Q79,81 86,83" stroke="#1A1A1A" stroke-width="3" fill="none" stroke-linecap="round"/>`;
-        svg += `<path d="M126,85 Q121,81 114,83" stroke="#1A1A1A" stroke-width="3" fill="none" stroke-linecap="round"/>`;
-        svg += `<path d="M73,89 L70,87" stroke="#1A1A1A" stroke-width="2" stroke-linecap="round"/>`;
-        svg += `<path d="M127,89 L130,87" stroke="#1A1A1A" stroke-width="2" stroke-linecap="round"/>`;
-        svg += `<path d="M74,77 Q82,73 88,77" stroke="#1A1A1A" stroke-width="2.5" fill="none" stroke-linecap="round"/>`;
-        svg += `<path d="M126,77 Q118,73 112,77" stroke="#1A1A1A" stroke-width="2.5" fill="none" stroke-linecap="round"/>`;
-    } else if (eyeStyle === "style4") {
-        svg += `<circle cx="83" cy="88" r="7" fill="${eyeColor}"/>`;
-        svg += `<circle cx="81.5" cy="85.5" r="2.2" fill="#FFFFFF"/>`;
-        svg += `<circle cx="85" cy="91" r="1" fill="#FFFFFF"/>`;
-        svg += `<path d="M110,88 Q117,94 124,88" stroke="#1A1A1A" stroke-width="3.5" fill="none" stroke-linecap="round"/>`;
-        svg += `<path d="M75,79 Q83,75 89,78" stroke="#1A1A1A" stroke-width="2.5" fill="none" stroke-linecap="round"/>`;
-        svg += `<path d="M125,77 Q117,73 111,76" stroke="#1A1A1A" stroke-width="2.5" fill="none" stroke-linecap="round"/>`;
-    } else if (eyeStyle === "style5") {
-        svg += `<circle cx="83" cy="88" r="8" fill="#FFFFFF" stroke="#1A1A1A" stroke-width="2.5"/>`;
-        svg += `<circle cx="117" cy="88" r="8" fill="#FFFFFF" stroke="#1A1A1A" stroke-width="2.5"/>`;
-        svg += `<circle cx="83" cy="88" r="3.5" fill="${eyeColor}"/>`;
-        svg += `<circle cx="117" cy="88" r="3.5" fill="${eyeColor}"/>`;
-        svg += `<path d="M74,75 Q83,70 89,74" stroke="#1A1A1A" stroke-width="2.5" fill="none" stroke-linecap="round"/>`;
-        svg += `<path d="M126,75 Q117,70 111,74" stroke="#1A1A1A" stroke-width="2.5" fill="none" stroke-linecap="round"/>`;
-    } else if (eyeStyle === "style6") {
-        svg += `<circle cx="83" cy="88" r="7" fill="${eyeColor}"/>`;
-        svg += `<circle cx="117" cy="88" r="7" fill="${eyeColor}"/>`;
-        svg += `<circle cx="81.5" cy="85.5" r="2.2" fill="#FFFFFF"/>`;
-        svg += `<circle cx="115.5" cy="85.5" r="2.2" fill="#FFFFFF"/>`;
-        svg += `<path d="M75,79 Q83,75 89,78" stroke="#1A1A1A" stroke-width="2.5" fill="none" stroke-linecap="round"/>`;
-        svg += `<path d="M125,79 Q117,75 111,78" stroke="#1A1A1A" stroke-width="2.5" fill="none" stroke-linecap="round"/>`;
-        svg += `<circle cx="81" cy="88" r="13" fill="none" stroke="#EF4444" stroke-width="3"/>`;
-        svg += `<circle cx="119" cy="88" r="13" fill="none" stroke="#EF4444" stroke-width="3"/>`;
-        svg += `<line x1="94" y1="88" x2="106" y2="88" stroke="#EF4444" stroke-width="3"/>`;
-    }
-    
-    // 8. NOSE
-    let noseColor = "#00000024";
-    if (noseStyle === "style1") {
-        svg += `<ellipse cx="100" cy="99" rx="3.5" ry="1.8" fill="${noseColor}"/>`;
-    } else if (noseStyle === "style2") {
-        svg += `<polygon points="100,96 96.5,102 103.5,102" fill="${noseColor}"/>`;
-    } else if (noseStyle === "style3") {
-        svg += `<path d="M99,96 L101,96 L101,102 L98,102" stroke="#00000028" stroke-width="2" fill="none" stroke-linecap="round"/>`;
-    } else if (noseStyle === "style4") {
-        svg += `<ellipse cx="100" cy="99" rx="5" ry="3" fill="${noseColor}"/>`;
-        svg += `<ellipse cx="98.5" cy="98" rx="1.5" ry="1" fill="#FFFFFF" opacity="0.6"/>`;
-    }
-    
-    // 9. MOUTH
-    if (mouthStyle === "style1") {
-        svg += `<path d="M88,108 Q100,123 112,108 Z" fill="#E53E3E"/>`;
-        svg += `<path d="M93,115 Q100,124 107,115" fill="#F687B3"/>`;
-        svg += `<path d="M88,108 Q100,123 112,108" stroke="#1A1A1A" stroke-width="3" fill="none" stroke-linecap="round"/>`;
-    } else if (mouthStyle === "style2") {
-        svg += `<path d="M91,110 Q95.5,114 100,110 Q104.5,114 109,110" stroke="#1A1A1A" stroke-width="3" fill="none" stroke-linecap="round"/>`;
-    } else if (mouthStyle === "style3") {
-        svg += `<path d="M90,106 Q100,125 110,106 Z" fill="#1A1A1A"/>`;
-        svg += `<path d="M94,115 Q100,124 106,115" fill="#EF4444"/>`;
-        svg += `<path d="M90,106 L110,106" stroke="#1A1A1A" stroke-width="3" stroke-linecap="round"/>`;
-    } else if (mouthStyle === "style4") {
-        svg += `<path d="M94,111 Q99,115 107,109" stroke="#1A1A1A" stroke-width="3" fill="none" stroke-linecap="round"/>`;
-    } else if (mouthStyle === "style5") {
-        svg += `<circle cx="100" cy="111" r="5.5" fill="#1A1A1A"/>`;
-    } else if (mouthStyle === "style6") {
-        svg += `<line x1="91" y1="111" x2="109" y2="111" stroke="#1A1A1A" stroke-width="3" stroke-linecap="round"/>`;
-    }
-    
-    // 10. HAIR BANGS
-    if (hairStyleBangs === "bangs1") {
-        svg += `<path d="M57,72 Q100,88 143,72 C145,54 135,44 100,44 C65,44 55,54 57,72 Z" fill="${hairColor}"/>`;
-    } else if (hairStyleBangs === "bangs2") {
-        svg += `<path d="M57,72 Q112,85 143,65 C146,51 131,44 100,44 C69,44 54,54 57,72 Z" fill="${hairColor}"/>`;
-    } else if (hairStyleBangs === "bangs3") {
-        svg += `<path d="M57,72 L73,68 L82,76 L100,66 L118,76 L127,68 L143,72 C145,54 135,44 100,44 C65,44 55,54 57,72 Z" fill="${hairColor}"/>`;
-    } else if (hairStyleBangs === "bangs4") {
-        svg += `<path d="M57,72 Q68,80 78,72 Q88,80 100,72 Q112,80 122,72 Q132,80 143,72 C145,54 135,44 100,44 C65,44 55,54 57,72 Z" fill="${hairColor}"/>`;
-    }
-    
-    svg += `</g>`;
-    svg += `</svg>`;
-    return svg;
+
+    return svgElement.outerHTML;
 }
 
 // SVG Assets cho Avatar Mee
@@ -622,29 +587,30 @@ function initDOM() {
         
         characterWrapper: document.getElementById("characterWrapper"),
         ambientGlow: document.getElementById("ambientGlow"),
-        paletteGrid: document.getElementById("paletteGrid"),
-        activeSkinLabel: document.getElementById("activeSkinLabel"),
-        hexSkinLabel: document.getElementById("hexSkinLabel"),
-        hexShadingLabel: document.getElementById("hexShadingLabel"),
-        skinBadgeDot: document.getElementById("skinBadgeDot"),
-        shadingBadgeDot: document.getElementById("shadingBadgeDot"),
-        customModeToggle: document.getElementById("customModeToggle"),
-        customPickersContainer: document.getElementById("customPickersContainer"),
-        customSkinPicker: document.getElementById("customSkinPicker"),
-        customShadingPicker: document.getElementById("customShadingPicker"),
-        customSkinHex: document.getElementById("customSkinHex"),
-        customShadingHex: document.getElementById("customShadingHex"),
-        autoShadowBtn: document.getElementById("autoShadowBtn"),
-        eyesGrid: document.getElementById("eyesGrid"),
-        eyebrowsGrid: document.getElementById("eyebrowsGrid"),
-        genderMaleBtn: document.getElementById("genderMaleBtn"),
-        genderFemaleBtn: document.getElementById("genderFemaleBtn"),
         btnCameraZoomIn: document.getElementById("btn-camera-zoom-in"),
         btnCameraZoomOut: document.getElementById("btn-camera-zoom-out"),
         btnCameraReset: document.getElementById("btn-camera-reset"),
         btnExportSvg: document.getElementById("btn-export-svg"),
         btnExportPng: document.getElementById("btn-export-png"),
         viewportCanvas: document.getElementById("viewportCanvas"),
+        
+        // Mee Builder (Home) DOM Elements
+        meeBuilderGenderMaleBtn: document.getElementById("meeBuilderGenderMaleBtn"),
+        meeBuilderGenderFemaleBtn: document.getElementById("meeBuilderGenderFemaleBtn"),
+        meeBuilderActiveSkinLabel: document.getElementById("meeBuilderActiveSkinLabel"),
+        meeBuilderHexSkinLabel: document.getElementById("meeBuilderHexSkinLabel"),
+        meeBuilderSkinBadgeDot: document.getElementById("meeBuilderSkinBadgeDot"),
+        meeBuilderPaletteGrid: document.getElementById("meeBuilderPaletteGrid"),
+        meeBuilderCustomModeToggle: document.getElementById("meeBuilderCustomModeToggle"),
+        meeBuilderCustomPickers: document.getElementById("meeBuilderCustomPickers"),
+        meeBuilderCustomSkinPicker: document.getElementById("meeBuilderCustomSkinPicker"),
+        meeBuilderCustomSkinHex: document.getElementById("meeBuilderCustomSkinHex"),
+        meeBuilderCustomShadingPicker: document.getElementById("meeBuilderCustomShadingPicker"),
+        meeBuilderCustomShadingHex: document.getElementById("meeBuilderCustomShadingHex"),
+        meeBuilderEyesGrid: document.getElementById("meeBuilderEyesGrid"),
+        meeBuilderEyebrowsGrid: document.getElementById("meeBuilderEyebrowsGrid"),
+        btnMeeExit: document.getElementById("btn-mee-exit"),
+        btnMeeDone: document.getElementById("btn-mee-done"),
 
         // Art: Studio
         studioMusic68: document.getElementById("studio-music-6-8"),
@@ -1237,8 +1203,7 @@ function updateMeePreview(container, type, color) {
 
 // 6. MODULE: MEE BUILDER (ĐẢO NHÂN VẬT - PHONG CÁCH NINTENDO MII)
 let meeBackup = null;      // Lưu dự phòng khi vào xưởng để Hủy (Exit)
-let miiActiveTab = "face"; // Tab hiện tại: face, hair, eyes, nose, mouth, outfit
-let miiActiveHairTab = "sets"; // Sub-tab tóc hiện tại: sets, bangs, back
+let miiActiveTab = "skin"; // Tab hiện tại của Home Mee Builder: skin, eyes, eyebrows
 let meeHistory = [];       // Lịch sử để Hoàn tác (Undo)
 
 function saveMeeHistory() {
@@ -1246,39 +1211,155 @@ function saveMeeHistory() {
     meeHistory.push(JSON.parse(JSON.stringify(state.mee)));
 }
 
+function buildMeeBuilderPaletteUI() {
+    if (!dom.meeBuilderPaletteGrid) return;
+    dom.meeBuilderPaletteGrid.innerHTML = "";
+    
+    PALETTE_DATA.forEach(item => {
+        const button = document.createElement("div");
+        button.className = "palette-item";
+        if (!state.mee.customMode && item.id === state.mee.skinToneIndex) {
+            button.classList.add("active");
+        }
+        button.dataset.id = item.id;
+        button.title = `Tông màu da #${item.id}`;
+
+        const shadingDiv = document.createElement("div");
+        shadingDiv.className = "palette-color shading";
+        shadingDiv.style.backgroundColor = item.shading;
+
+        const skinDiv = document.createElement("div");
+        skinDiv.className = "palette-color skin";
+        skinDiv.style.backgroundColor = item.skin;
+
+        const indicator = document.createElement("div");
+        indicator.className = "palette-indicator";
+        indicator.innerText = `#${item.id}`;
+
+        button.appendChild(shadingDiv);
+        button.appendChild(skinDiv);
+        button.appendChild(indicator);
+
+        button.addEventListener("click", () => {
+            saveMeeHistory();
+            state.mee.customMode = false;
+            state.mee.skinToneIndex = item.id;
+            state.mee.customSkin = item.skin;
+            state.mee.customShading = item.shading;
+            
+            playCustomizerSound('select');
+            updateMeeBuilderVisual();
+        });
+
+        dom.meeBuilderPaletteGrid.appendChild(button);
+    });
+
+    if (state.mee.customMode) {
+        if (dom.meeBuilderActiveSkinLabel) dom.meeBuilderActiveSkinLabel.innerText = "Tự chọn (Custom)";
+        if (dom.meeBuilderHexSkinLabel) {
+            dom.meeBuilderHexSkinLabel.querySelector("span").innerText = state.mee.customSkin.toUpperCase();
+        }
+        if (dom.meeBuilderSkinBadgeDot) dom.meeBuilderSkinBadgeDot.style.backgroundColor = state.mee.customSkin;
+    } else {
+        const activeColor = PALETTE_DATA[state.mee.skinToneIndex - 1];
+        if (activeColor) {
+            if (dom.meeBuilderActiveSkinLabel) dom.meeBuilderActiveSkinLabel.innerText = `Mẫu #${activeColor.id}`;
+            if (dom.meeBuilderHexSkinLabel) {
+                dom.meeBuilderHexSkinLabel.querySelector("span").innerText = activeColor.skin.toUpperCase();
+            }
+            if (dom.meeBuilderSkinBadgeDot) dom.meeBuilderSkinBadgeDot.style.backgroundColor = activeColor.skin;
+        }
+    }
+}
+
+function buildMeeBuilderFacialUI() {
+    if (!dom.meeBuilderEyebrowsGrid || !dom.meeBuilderEyesGrid) return;
+    
+    // 1. Eyebrows Grid
+    dom.meeBuilderEyebrowsGrid.innerHTML = "";
+    FACIAL_DATABASE.eyebrows.forEach(item => {
+        const btn = document.createElement("button");
+        btn.className = "facial-select-btn";
+        if (item.id === state.mee.eyebrowIndex) btn.classList.add("active");
+        
+        const dy = 9 - item.y_center;
+        btn.innerHTML = `
+            <span class="facial-btn-label">Kiểu #${item.id}</span>
+            <svg viewBox="0 0 76.02 18" class="facial-btn-preview" style="width: 100%; height: 36px;">
+                <g transform="translate(0, ${dy})">
+                    ${item.left.join("")} ${item.right.join("")}
+                </g>
+            </svg>
+        `;
+        
+        btn.addEventListener("click", () => {
+            if (state.mee.eyebrowIndex !== item.id) {
+                saveMeeHistory();
+                state.mee.eyebrowIndex = item.id;
+                playCustomizerSound('click');
+                syncMeeBuilderFacialActiveState(dom.meeBuilderEyebrowsGrid, item.id);
+                updateMeeBuilderVisual();
+            }
+        });
+        dom.meeBuilderEyebrowsGrid.appendChild(btn);
+    });
+
+    // 2. Eyes Grid
+    dom.meeBuilderEyesGrid.innerHTML = "";
+    FACIAL_DATABASE.eyes.forEach(item => {
+        const btn = document.createElement("button");
+        btn.className = "facial-select-btn";
+        if (item.id === state.mee.eyeIndex) btn.classList.add("active");
+        
+        const dy = 11 - item.y_center;
+        btn.innerHTML = `
+            <span class="facial-btn-label">Kiểu #${item.id}</span>
+            <svg viewBox="0 0 76.04 22" class="facial-btn-preview" style="width: 100%; height: 44px;">
+                <g transform="translate(0, ${dy})">
+                    ${item.left.join("")} ${item.right.join("")}
+                </g>
+            </svg>
+        `;
+        
+        btn.addEventListener("click", () => {
+            if (state.mee.eyeIndex !== item.id) {
+                saveMeeHistory();
+                state.mee.eyeIndex = item.id;
+                playCustomizerSound('click');
+                syncMeeBuilderFacialActiveState(dom.meeBuilderEyesGrid, item.id);
+                updateMeeBuilderVisual();
+            }
+        });
+        dom.meeBuilderEyesGrid.appendChild(btn);
+    });
+}
+
+function syncMeeBuilderFacialActiveState(gridContainer, activeId) {
+    const buttons = gridContainer.querySelectorAll(".facial-select-btn");
+    buttons.forEach((btn, idx) => {
+        btn.classList.toggle("active", idx + 1 === activeId);
+    });
+}
+
 function setupMeeBuilderEvents() {
     // 1. Sidebar tab dọc chọn bộ phận
-    document.querySelectorAll(".mii-tab-btn").forEach(btn => {
+    document.querySelectorAll(".mii-tab-btn.mii-tab-main").forEach(btn => {
         btn.addEventListener("click", () => {
-            document.querySelectorAll(".mii-tab-btn").forEach(b => b.classList.remove("active"));
+            document.querySelectorAll(".mii-tab-btn.mii-tab-main").forEach(b => b.classList.remove("active"));
             btn.classList.add("active");
             
             miiActiveTab = btn.dataset.tab;
             
-            // Hiện/Ẩn sub-tab tóc
-            const hairSubTabs = document.getElementById("hair-sub-tabs");
-            if (miiActiveTab === "hair") {
-                hairSubTabs.classList.remove("hidden");
-            } else {
-                hairSubTabs.classList.add("hidden");
-            }
+            // Ẩn/Hiện content panel tương ứng
+            document.querySelectorAll(".mee-builder-tab-content").forEach(p => p.classList.add("hidden"));
+            const target = document.getElementById(`mee-builder-${miiActiveTab}-content`);
+            if (target) target.classList.remove("hidden");
             
-            renderMiiGrid();
-            renderMiiColors();
+            playCustomizerSound('select');
         });
     });
 
-    // 2. Sub-tabs cho mục Tóc (Sets / Bangs / Back)
-    document.querySelectorAll(".mii-sub-tab").forEach(btn => {
-        btn.addEventListener("click", () => {
-            document.querySelectorAll(".mii-sub-tab").forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
-            miiActiveHairTab = btn.dataset.sub;
-            renderMiiGrid();
-        });
-    });
-
-    // 3. Các nút xoay, reset, undo trên preview
+    // 2. Các nút xoay, reset, undo trên preview
     document.getElementById("btn-preview-rotate").addEventListener("click", () => {
         saveMeeHistory();
         state.mee.rotation = (state.mee.rotation + 45) % 360;
@@ -1295,294 +1376,195 @@ function setupMeeBuilderEvents() {
         if (meeHistory.length > 0) {
             state.mee = meeHistory.pop();
             updateMeeBuilderVisual();
-            renderMiiGrid();
-            renderMiiColors();
         } else {
             showCustomAlert("↩️", "Hoàn Tác", "Không còn bước nào để hoàn tác đâu bé!");
         }
     });
 
-    // 4. Checkbox Sub-color áo thun
-    const chkSubColor = document.getElementById("chk-sub-color");
-    if (chkSubColor) {
-        chkSubColor.addEventListener("change", () => {
-            saveMeeHistory();
-            state.mee.useSubColor = chkSubColor.checked;
-            const subColorGrid = document.getElementById("mii-sub-color-grid");
-            if (state.mee.useSubColor) {
-                subColorGrid.classList.remove("hidden");
-            } else {
-                subColorGrid.classList.add("hidden");
+    // 3. Gender buttons
+    if (dom.meeBuilderGenderMaleBtn && dom.meeBuilderGenderFemaleBtn) {
+        dom.meeBuilderGenderMaleBtn.addEventListener("click", () => {
+            if (state.mee.gender !== "male") {
+                saveMeeHistory();
+                state.mee.gender = "male";
+                playCustomizerSound('select');
+                updateMeeBuilderVisual();
             }
+        });
+        dom.meeBuilderGenderFemaleBtn.addEventListener("click", () => {
+            if (state.mee.gender !== "female") {
+                saveMeeHistory();
+                state.mee.gender = "female";
+                playCustomizerSound('select');
+                updateMeeBuilderVisual();
+            }
+        });
+    }
+
+    // 4. Custom pickers
+    if (dom.meeBuilderCustomModeToggle) {
+        dom.meeBuilderCustomModeToggle.addEventListener("change", () => {
+            saveMeeHistory();
+            state.mee.customMode = dom.meeBuilderCustomModeToggle.checked;
+            if (state.mee.customMode) {
+                state.mee.customSkin = dom.meeBuilderCustomSkinPicker.value;
+                state.mee.customShading = dom.meeBuilderCustomShadingPicker.value;
+            }
+            playCustomizerSound('select');
             updateMeeBuilderVisual();
+        });
+    }
+
+    if (dom.meeBuilderCustomSkinPicker) {
+        dom.meeBuilderCustomSkinPicker.addEventListener("input", (e) => {
+            state.mee.customSkin = e.target.value;
+            if (dom.meeBuilderCustomSkinHex) dom.meeBuilderCustomSkinHex.innerText = e.target.value.toUpperCase();
+            
+            // Tự động tạo màu bóng da HSL khi đổi màu da custom
+            const shadow = customizerAutoShadow(state.mee.customSkin);
+            state.mee.customShading = shadow;
+            if (dom.meeBuilderCustomShadingPicker) dom.meeBuilderCustomShadingPicker.value = shadow;
+            if (dom.meeBuilderCustomShadingHex) dom.meeBuilderCustomShadingHex.innerText = shadow.toUpperCase();
+
+            updateMeeBuilderVisual();
+        });
+        dom.meeBuilderCustomSkinPicker.addEventListener("change", () => {
+            saveMeeHistory();
+        });
+    }
+
+    if (dom.meeBuilderCustomShadingPicker) {
+        dom.meeBuilderCustomShadingPicker.addEventListener("input", (e) => {
+            state.mee.customShading = e.target.value;
+            if (dom.meeBuilderCustomShadingHex) dom.meeBuilderCustomShadingHex.innerText = e.target.value.toUpperCase();
+            updateMeeBuilderVisual();
+        });
+        dom.meeBuilderCustomShadingPicker.addEventListener("change", () => {
+            saveMeeHistory();
         });
     }
 
     // 5. Nút Exit (Thoát không lưu)
-    document.getElementById("btn-mee-exit").addEventListener("click", () => {
-        if (meeBackup) {
-            state.mee = JSON.parse(JSON.stringify(meeBackup));
-        }
-        syncAgeAndTier(state.user.ageGroup, state.user.tier);
-        
-        // Trở lại bản đồ
-        dom.zoneDetailViewport.classList.add("hidden");
-        dom.worldMapScreen.classList.remove("hidden");
-        showCustomAlert("🚪", "Đã Thoát Xưởng", "Nhân vật Mee của bé đã được khôi phục về trạng thái trước đó.");
-    });
+    if (dom.btnMeeExit) {
+        dom.btnMeeExit.addEventListener("click", () => {
+            if (meeBackup) {
+                state.mee = JSON.parse(JSON.stringify(meeBackup));
+            }
+            syncAgeAndTier(state.user.ageGroup, state.user.tier);
+            
+            // Trở lại bản đồ
+            dom.zoneDetailViewport.classList.add("hidden");
+            dom.worldMapScreen.classList.remove("hidden");
+            showCustomAlert("🚪", "Đã Thoát Xưởng", "Nhân vật Mee của bé đã được khôi phục về trạng thái trước đó.");
+        });
+    }
 
     // 6. Nút Done (Lưu và Đồng bộ)
-    document.getElementById("btn-mee-done").addEventListener("click", () => {
-        // Đồng bộ avatar của user
-        state.user.avatar = "human";
-        state.mee.type = "human";
-        
-        // Cập nhật tất cả preview
-        syncAgeAndTier(state.user.ageGroup, state.user.tier);
-        
-        // Thêm tác phẩm nhân vật vào Passport (trừ Guest)
-        if (state.user.tier !== "Guest") {
-            addWorkToPassport("drawing", `Thiết Kế Nhân Vật: ${state.user.username}`, renderHumanSVG(state.mee));
-        }
-        
-        // Hiển thị visual trên map
-        const mapHomeAvatar = document.getElementById("map-home-avatar");
-        if (mapHomeAvatar) {
-            mapHomeAvatar.classList.remove("hidden");
-            updateMeePreview(mapHomeAvatar, state.mee.type, state.mee.color);
-        }
-        
-        // Quay về map
-        dom.zoneDetailViewport.classList.add("hidden");
-        dom.worldMapScreen.classList.remove("hidden");
-        
-        if (state.user.tier === "Guest") {
-            showCustomAlert("💾", "Lưu Nhân Vật Tạm Thời!", "Đã cập nhật avatar của bé! Hãy Đăng Ký tài khoản để lưu trữ nhân vật vĩnh viễn nhé.");
-        } else if (state.user.tier === "Free") {
-            showCustomAlert("💾", "Đã Lưu Nhân Vật!", "Mee của bé đã được lưu thành công vào Passport.");
-        } else {
-            showCustomAlert("👑", "Đã Lưu Nhân Vật VIP!", "Mee độc quyền VIP của bé đã được lưu thành công vào Passport.");
-        }
-    });
+    if (dom.btnMeeDone) {
+        dom.btnMeeDone.addEventListener("click", () => {
+            // Đồng bộ avatar của user
+            state.user.avatar = "human";
+            state.mee.type = "human";
+            
+            // Lưu trạng thái vào localStorage
+            localStorage.setItem("mee_character_customizer_state", JSON.stringify(state.mee));
+            
+            // Cập nhật tất cả preview
+            syncAgeAndTier(state.user.ageGroup, state.user.tier);
+            
+            // Thêm tác phẩm nhân vật vào Passport (trừ Guest)
+            if (state.user.tier !== "Guest") {
+                addWorkToPassport("drawing", `Thiết Kế Nhân Vật: ${state.user.username}`, renderHumanSVG(state.mee));
+            }
+            
+            // Hiển thị visual trên map
+            const mapHomeAvatar = document.getElementById("map-home-avatar");
+            if (mapHomeAvatar) {
+                mapHomeAvatar.classList.remove("hidden");
+                mapHomeAvatar.innerHTML = renderHumanSVG(state.mee);
+            }
+            
+            // Quay về map
+            dom.zoneDetailViewport.classList.add("hidden");
+            dom.worldMapScreen.classList.remove("hidden");
+            
+            if (state.user.tier === "Guest") {
+                showCustomAlert("💾", "Lưu Nhân Vật Tạm Temporarily!", "Đã cập nhật avatar của bé! Hãy Đăng Ký tài khoản để lưu trữ nhân vật vĩnh viễn nhé.");
+            } else if (state.user.tier === "Free") {
+                showCustomAlert("💾", "Đã Lưu Nhân Vật!", "Mee của bé đã được lưu thành công vào Passport.");
+            } else {
+                showCustomAlert("👑", "Đã Lưu Nhân Vật VIP!", "Mee độc quyền VIP của bé đã được lưu thành công vào Passport.");
+            }
+        });
+    }
 }
 
 function initMeeBuilderPanel() {
+    // Cập nhật state từ localStorage trước nếu có
+    const savedState = localStorage.getItem("mee_character_customizer_state");
+    if (savedState) {
+        try {
+            state.mee = JSON.parse(savedState);
+        } catch(e) {}
+    }
+
     // Lưu backup đề phòng nhấn Exit
     meeBackup = JSON.parse(JSON.stringify(state.mee));
     meeHistory = []; // Reset undo stack khi vào xưởng mới
     
-    // Reset tab về khuôn mặt đầu tiên
-    miiActiveTab = "face";
-    miiActiveHairTab = "sets";
+    // Reset tab về skin đầu tiên
+    miiActiveTab = "skin";
     
     // Active tab đầu tiên trên sidebar
-    document.querySelectorAll(".mii-tab-btn").forEach(btn => {
-        btn.classList.toggle("active", btn.dataset.tab === "face");
+    document.querySelectorAll(".mii-tab-btn.mii-tab-main").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.tab === "skin");
     });
-    document.getElementById("hair-sub-tabs").classList.add("hidden");
     
-    // Đồng bộ checkbox và panel sub-color
-    const chkSubColor = document.getElementById("chk-sub-color");
-    if (chkSubColor) {
-        chkSubColor.checked = state.mee.useSubColor || false;
-    }
-    const subColorGrid = document.getElementById("mii-sub-color-grid");
-    if (subColorGrid) {
-        subColorGrid.classList.toggle("hidden", !state.mee.useSubColor);
-    }
+    document.querySelectorAll(".mee-builder-tab-content").forEach(p => {
+        p.classList.toggle("hidden", p.id !== "mee-builder-skin-content");
+    });
     
-    renderMiiGrid();
-    renderMiiColors();
+    buildMeeBuilderPaletteUI();
+    buildMeeBuilderFacialUI();
     updateMeeBuilderVisual();
 }
 
-// Hàm render danh sách kiểu dáng trong Grid ở cột giữa
-function renderMiiGrid() {
-    const grid = document.getElementById("mii-items-grid");
-    if (!grid) return;
-    grid.innerHTML = "";
-    
-    let options = [];
-    if (miiActiveTab === "hair") {
-        options = MII_OPTIONS.hair[miiActiveHairTab] || [];
-    } else {
-        options = MII_OPTIONS[miiActiveTab] || [];
-    }
-    
-    options.forEach(item => {
-        const btn = document.createElement("button");
-        btn.className = "mii-grid-item";
-        
-        // Kiểm tra xem item này có đang được chọn không
-        let isActive = false;
-        if (miiActiveTab === "face") {
-            isActive = (state.mee.faceStyle === item.id);
-        } else if (miiActiveTab === "hair") {
-            if (miiActiveHairTab === "sets") {
-                isActive = (state.mee.hairStyleBangs === item.bangs && state.mee.hairStyleBack === item.back);
-            } else if (miiActiveHairTab === "bangs") {
-                isActive = (state.mee.hairStyleBangs === item.id);
-            } else if (miiActiveHairTab === "back") {
-                isActive = (state.mee.hairStyleBack === item.id);
-            }
-        } else if (miiActiveTab === "eyes") {
-            isActive = (state.mee.eyeStyle === item.id);
-        } else if (miiActiveTab === "nose") {
-            isActive = (state.mee.noseStyle === item.id);
-        } else if (miiActiveTab === "mouth") {
-            isActive = (state.mee.mouthStyle === item.id);
-        } else if (miiActiveTab === "outfit") {
-            isActive = (state.mee.shirtStyle === item.id);
-        }
-        
-        if (isActive) btn.classList.add("active");
-        
-        btn.innerHTML = `
-            <svg viewBox="0 0 100 60" style="width: 100%; height: 45px;">${item.preview}</svg>
-            <span style="font-size: 0.7rem; font-weight: bold; color: var(--color-text-main); text-align: center; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%;">${item.label}</span>
-        `;
-        
-        btn.addEventListener("click", () => {
-            saveMeeHistory();
-            
-            grid.querySelectorAll(".mii-grid-item").forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
-            
-            if (miiActiveTab === "face") {
-                state.mee.faceStyle = item.id;
-            } else if (miiActiveTab === "hair") {
-                if (miiActiveHairTab === "sets") {
-                    state.mee.hairStyleBangs = item.bangs;
-                    state.mee.hairStyleBack = item.back;
-                } else if (miiActiveHairTab === "bangs") {
-                    state.mee.hairStyleBangs = item.id;
-                } else if (miiActiveHairTab === "back") {
-                    state.mee.hairStyleBack = item.id;
-                }
-            } else if (miiActiveTab === "eyes") {
-                state.mee.eyeStyle = item.id;
-            } else if (miiActiveTab === "nose") {
-                state.mee.noseStyle = item.id;
-            } else if (miiActiveTab === "mouth") {
-                state.mee.mouthStyle = item.id;
-            } else if (miiActiveTab === "outfit") {
-                state.mee.shirtStyle = item.id;
-            }
-            
-            updateMeeBuilderVisual();
-        });
-        
-        grid.appendChild(btn);
-    });
-}
-
-// Hàm render bảng màu sắc bên phải
-function renderMiiColors() {
-    const mainGrid = document.getElementById("mii-main-color-grid");
-    const subSection = document.getElementById("mii-sub-color-section");
-    const subGrid = document.getElementById("mii-sub-color-grid");
-    
-    if (!mainGrid) return;
-    mainGrid.innerHTML = "";
-    
-    // Tùy theo tab để ẩn hiện hoặc lấy bảng màu
-    let activeColors = [];
-    let currentMainColor = "";
-    let isColorPanelVisible = true;
-    
-    if (miiActiveTab === "face") {
-        activeColors = ["#FFE3C4", "#FFD0A1", "#ECB176", "#D39E67", "#8D5B4C", "#5B3A2F"];
-        currentMainColor = state.mee.skinColor;
-        subSection.classList.add("hidden");
-    } else if (miiActiveTab === "hair") {
-        activeColors = ["#1A1A1A", "#4A3728", "#9A7B56", "#F1C40F", "#E67E22", "#E74C3C", "#9B59B6", "#E91E63", "#1ABC9C"];
-        currentMainColor = state.mee.hairColor;
-        subSection.classList.add("hidden");
-    } else if (miiActiveTab === "eyes") {
-        activeColors = ["#1A1A1A", "#3182CE", "#38A169", "#744210"];
-        currentMainColor = state.mee.eyeColor || "#1A1A1A";
-        subSection.classList.add("hidden");
-    } else if (miiActiveTab === "outfit") {
-        activeColors = ["#3B82F6", "#10B981", "#EF4444", "#F59E0B", "#8B5CF6", "#EC4899", "#F97316", "#14B8A6", "#34495E"];
-        currentMainColor = state.mee.shirtColor;
-        subSection.classList.remove("hidden");
-    } else {
-        isColorPanelVisible = false;
-        subSection.classList.add("hidden");
-    }
-    
-    const colorPanel = document.querySelector(".mii-color-panel");
-    if (colorPanel) {
-        colorPanel.style.display = isColorPanelVisible ? "flex" : "none";
-    }
-    
-    if (!isColorPanelVisible) return;
-    
-    // Render màu chính
-    activeColors.forEach(color => {
-        const dot = document.createElement("button");
-        dot.className = "mii-color-dot";
-        dot.style.backgroundColor = color;
-        
-        if (currentMainColor === color) dot.classList.add("active");
-        
-        dot.addEventListener("click", () => {
-            saveMeeHistory();
-            mainGrid.querySelectorAll(".mii-color-dot").forEach(b => b.classList.remove("active"));
-            dot.classList.add("active");
-            
-            if (miiActiveTab === "face") {
-                state.mee.skinColor = color;
-            } else if (miiActiveTab === "hair") {
-                state.mee.hairColor = color;
-            } else if (miiActiveTab === "eyes") {
-                state.mee.eyeColor = color;
-            } else if (miiActiveTab === "outfit") {
-                state.mee.shirtColor = color;
-            }
-            
-            updateMeeBuilderVisual();
-        });
-        mainGrid.appendChild(dot);
-    });
-    
-    // Render màu phụ (nếu có)
-    if (miiActiveTab === "outfit" && subGrid) {
-        subGrid.innerHTML = "";
-        activeColors.forEach(color => {
-            const dot = document.createElement("button");
-            dot.className = "mii-color-dot";
-            dot.style.backgroundColor = color;
-            
-            if ((state.mee.shirtSubColor || "#FFFFFF") === color) dot.classList.add("active");
-            
-            dot.addEventListener("click", () => {
-                saveMeeHistory();
-                subGrid.querySelectorAll(".mii-color-dot").forEach(b => b.classList.remove("active"));
-                dot.classList.add("active");
-                state.mee.shirtSubColor = color;
-                updateMeeBuilderVisual();
-            });
-            subGrid.appendChild(dot);
-        });
-    }
-}
-
 function updateMeeBuilderVisual() {
-    const previewContainer = document.getElementById("human-avatar-preview");
-    if (previewContainer) {
-        previewContainer.innerHTML = renderHumanSVG(state.mee);
+    if (dom.meeBuilderAvatarPreview) {
+        dom.meeBuilderAvatarPreview.innerHTML = renderHumanSVG(state.mee);
     }
     
-    const moodText = document.getElementById("mee-builder-mood-text");
-    if (moodText) {
+    if (dom.meeBuilderMoodText) {
         let moodLabel = "Bình thường 🙂";
         if (state.mee.mood === "happy") moodLabel = "Vui vẻ 😊";
         if (state.mee.mood === "sad") moodLabel = "Buồn bã 😢";
         if (state.mee.mood === "excited") moodLabel = "Hào hứng 🤩";
         if (state.mee.mood === "curious") moodLabel = "Tò mò 🤔";
-        moodText.textContent = `Mood: ${moodLabel}`;
+        dom.meeBuilderMoodText.textContent = `Mood: ${moodLabel}`;
     }
+
+    // Đồng bộ Gender buttons
+    if (dom.meeBuilderGenderMaleBtn && dom.meeBuilderGenderFemaleBtn) {
+        dom.meeBuilderGenderMaleBtn.classList.toggle("active", state.mee.gender === "male");
+        dom.meeBuilderGenderFemaleBtn.classList.toggle("active", state.mee.gender === "female");
+    }
+
+    // Đồng bộ Custom skin switch & panels
+    if (dom.meeBuilderCustomModeToggle) {
+        dom.meeBuilderCustomModeToggle.checked = state.mee.customMode;
+    }
+    if (dom.meeBuilderCustomPickers) {
+        dom.meeBuilderCustomPickers.classList.toggle("hidden", !state.mee.customMode);
+    }
+
+    if (dom.meeBuilderCustomSkinPicker) dom.meeBuilderCustomSkinPicker.value = state.mee.customSkin;
+    if (dom.meeBuilderCustomSkinHex) dom.meeBuilderCustomSkinHex.innerText = state.mee.customSkin.toUpperCase();
+    if (dom.meeBuilderCustomShadingPicker) dom.meeBuilderCustomShadingPicker.value = state.mee.customShading;
+    if (dom.meeBuilderCustomShadingHex) dom.meeBuilderCustomShadingHex.innerText = state.mee.customShading.toUpperCase();
+
+    buildMeeBuilderPaletteUI();
+    syncMeeBuilderFacialActiveState(dom.meeBuilderEyebrowsGrid, state.mee.eyebrowIndex);
+    syncMeeBuilderFacialActiveState(dom.meeBuilderEyesGrid, state.mee.eyeIndex);
 }
 
 // 7. MODULE: PET CARE (NHÀ THÚ CƯNG)
@@ -3033,15 +3015,9 @@ function renderParentModerationQueue() {
 // ==========================================
 // MEE CHARACTER CUSTOMIZER LOGIC INTEGRATION
 // ==========================================
-let customizerState = {
-    gender: "male", // male or female
-    skinToneIndex: 1, // 1 to 10
-    customMode: false,
-    customSkin: "#ffe7e6",
-    customShading: "#ffcccc",
-    eyeIndex: 1, // 1 to 11
-    eyebrowIndex: 1 // 1 to 7
-};
+// ==========================================
+// 12. MODULE: PHOTOBOOTH STUDIO (VƯƠNG QUỐC NGHỆ THUẬT)
+// ==========================================
 
 // Camera Variables
 let camZoom = 1.0;
@@ -3150,328 +3126,20 @@ function customizerAutoShadow(hexColor) {
     return `#${rHex}${gHex}${bHex}`;
 }
 
-// Load / Save State
-function loadCustomizerState() {
-    const saved = localStorage.getItem("mee_character_customizer_state");
-    if (saved) {
-        try {
-            const parsed = JSON.parse(saved);
-            if (["male", "female"].includes(parsed.gender)) customizerState.gender = parsed.gender;
-            if (parsed.skinToneIndex >= 1 && parsed.skinToneIndex <= 10) customizerState.skinToneIndex = parsed.skinToneIndex;
-            if (typeof parsed.customMode === 'boolean') customizerState.customMode = parsed.customMode;
-            if (parsed.customSkin) customizerState.customSkin = parsed.customSkin;
-            if (parsed.customShading) customizerState.customShading = parsed.customShading;
-            if (parsed.eyeIndex >= 1 && parsed.eyeIndex <= 11) customizerState.eyeIndex = parsed.eyeIndex;
-            if (parsed.eyebrowIndex >= 1 && parsed.eyebrowIndex <= 7) customizerState.eyebrowIndex = parsed.eyebrowIndex;
-        } catch(e) {}
-    }
-}
-
-function saveCustomizerState() {
-    localStorage.setItem("mee_character_customizer_state", JSON.stringify(customizerState));
-}
-
-// Colorize base SVG
-function applyCustomColorsToSVG(svgElement) {
-    const skinColor = customizerState.customSkin;
-    const shadingColor = customizerState.customShading;
-
-    svgElement.querySelectorAll(".cls-6").forEach(el => el.style.fill = skinColor);
-    svgElement.querySelectorAll(".cls-7").forEach(el => el.style.fill = shadingColor);
-
-    const linearGrad = svgElement.querySelector("#linear-gradient");
-    if (linearGrad) {
-        const stops = linearGrad.querySelectorAll("stop");
-        if (stops.length >= 5) {
-            stops[0].setAttribute("stop-color", skinColor);
-            stops[1].setAttribute("stop-color", customizerLerpColor(skinColor, shadingColor, 0.59));
-            stops[2].setAttribute("stop-color", customizerLerpColor(skinColor, shadingColor, 0.8));
-            stops[3].setAttribute("stop-color", customizerLerpColor(skinColor, shadingColor, 0.95));
-            stops[4].setAttribute("stop-color", shadingColor);
-        }
-    }
-
-    const linearGrad3 = svgElement.querySelector("#linear-gradient-3");
-    if (linearGrad3) {
-        linearGrad3.querySelectorAll("stop").forEach(stop => {
-            stop.setAttribute("stop-color", shadingColor);
-        });
-    }
-
-    let defs = svgElement.querySelector("defs");
-    if (!defs) {
-        defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
-        svgElement.insertBefore(defs, svgElement.firstChild);
-    }
-
-    let filter = defs.querySelector("#custom-ear-filter");
-    if (!filter) {
-        filter = document.createElementNS("http://www.w3.org/2000/svg", "filter");
-        filter.setAttribute("id", "custom-ear-filter");
-        
-        const feGray = document.createElementNS("http://www.w3.org/2000/svg", "feColorMatrix");
-        feGray.setAttribute("type", "matrix");
-        feGray.setAttribute("values", "0.2126 0.7152 0.0722 0 0  0.2126 0.7152 0.0722 0 0  0.2126 0.7152 0.0722 0 0  0 0 0 1 0");
-        feGray.setAttribute("result", "gray");
-        filter.appendChild(feGray);
-        
-        const feTransfer = document.createElementNS("http://www.w3.org/2000/svg", "feComponentTransfer");
-        feTransfer.setAttribute("in", "gray");
-        
-        const feFuncR = document.createElementNS("http://www.w3.org/2000/svg", "feFuncR");
-        feFuncR.setAttribute("type", "linear");
-        feFuncR.setAttribute("id", "custom-ear-funcR");
-        feTransfer.appendChild(feFuncR);
-        
-        const feFuncG = document.createElementNS("http://www.w3.org/2000/svg", "feFuncG");
-        feFuncG.setAttribute("type", "linear");
-        feFuncG.setAttribute("id", "custom-ear-funcG");
-        feTransfer.appendChild(feFuncG);
-        
-        const feFuncB = document.createElementNS("http://www.w3.org/2000/svg", "feFuncB");
-        feFuncB.setAttribute("type", "linear");
-        feFuncB.setAttribute("id", "custom-ear-funcB");
-        feTransfer.appendChild(feFuncB);
-        
-        filter.appendChild(feTransfer);
-        defs.appendChild(filter);
-    }
-
-    const funcR = filter.querySelector("#custom-ear-funcR");
-    const funcG = filter.querySelector("#custom-ear-funcG");
-    const funcB = filter.querySelector("#custom-ear-funcB");
-
-    if (funcR && funcG && funcB) {
-        const r_skin = parseInt(skinColor.substring(1, 3), 16) / 255;
-        const g_skin = parseInt(skinColor.substring(3, 5), 16) / 255;
-        const b_skin = parseInt(skinColor.substring(5, 7), 16) / 255;
-        const r_shadow = parseInt(shadingColor.substring(1, 3), 16) / 255;
-        const g_shadow = parseInt(shadingColor.substring(3, 5), 16) / 255;
-        const b_shadow = parseInt(shadingColor.substring(5, 7), 16) / 255;
-
-        funcR.setAttribute("slope", r_skin - r_shadow);
-        funcR.setAttribute("intercept", r_shadow);
-        funcG.setAttribute("slope", g_skin - g_shadow);
-        funcG.setAttribute("intercept", g_shadow);
-        funcB.setAttribute("slope", b_skin - b_shadow);
-        funcB.setAttribute("intercept", b_shadow);
-    }
-
-    svgElement.querySelectorAll("image").forEach(img => {
-        img.setAttribute("filter", "url(#custom-ear-filter)");
-    });
-}
-
-// Render dynamic Mee SVG
+// Render dynamic Mee SVG in Photobooth
 function updateCustomizerCharacter() {
     if (!dom.characterWrapper) return;
-    let svgContent = "";
     
-    if (customizerState.customMode) {
-        svgContent = SVG_DATABASE["base"][customizerState.gender];
-    } else {
-        svgContent = SVG_DATABASE["presets"][customizerState.gender][customizerState.skinToneIndex];
-    }
+    // Luôn lấy nhân vật Mee hiện tại từ state.mee
+    dom.characterWrapper.innerHTML = renderHumanSVG(state.mee);
     
-    if (svgContent) {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(svgContent, "image/svg+xml");
-        const svgElement = doc.documentElement;
-        
-        if (customizerState.customMode) {
-            applyCustomColorsToSVG(svgElement);
-        }
-
-        const head = svgElement.querySelector("ellipse.cls-6");
-        if (head) {
-            if (customizerState.eyebrowIndex > 0) {
-                const eyebrowItem = FACIAL_DATABASE.eyebrows[customizerState.eyebrowIndex - 1];
-                const eyebrowsGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
-                eyebrowsGroup.setAttribute("id", "custom-eyebrows");
-                const dx = 52.31;
-                const dy = 72.435 - eyebrowItem.y_center;
-                eyebrowsGroup.setAttribute("transform", `translate(${dx}, ${dy})`);
-                eyebrowsGroup.innerHTML = eyebrowItem.left.join("") + eyebrowItem.right.join("");
-                head.insertAdjacentElement('afterend', eyebrowsGroup);
-            }
-            
-            if (customizerState.eyeIndex > 0) {
-                const eyeItem = FACIAL_DATABASE.eyes[customizerState.eyeIndex - 1];
-                const eyesGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
-                eyesGroup.setAttribute("id", "custom-eyes");
-                const dx = 52.30;
-                const dy = 87.37 - eyeItem.y_center;
-                eyesGroup.setAttribute("transform", `translate(${dx}, ${dy})`);
-                eyesGroup.innerHTML = eyeItem.left.join("") + eyeItem.right.join("");
-                
-                const eyebrowsEl = svgElement.querySelector("#custom-eyebrows");
-                if (eyebrowsEl) {
-                    eyebrowsEl.insertAdjacentElement('afterend', eyesGroup);
-                } else {
-                    head.insertAdjacentElement('afterend', eyesGroup);
-                }
-            }
-        }
-
-        dom.characterWrapper.innerHTML = "";
-        dom.characterWrapper.appendChild(svgElement);
-    }
-    
-    const activeSkinColor = customizerState.customMode ? customizerState.customSkin : PALETTE_DATA[customizerState.skinToneIndex - 1].skin;
+    const activeSkinColor = state.mee.customMode ? state.mee.customSkin : (PALETTE_DATA[state.mee.skinToneIndex - 1] ? PALETTE_DATA[state.mee.skinToneIndex - 1].skin : "#ffe7e6");
     document.documentElement.style.setProperty('--skin-glow-color', activeSkinColor + "25");
 }
 
-// Build customizer grids (Skin, Eyes, Eyebrows)
-function buildCustomizerPaletteUI() {
-    if (!dom.paletteGrid) return;
-    dom.paletteGrid.innerHTML = "";
-    PALETTE_DATA.forEach(item => {
-        const button = document.createElement("div");
-        button.className = "palette-item";
-        if (!customizerState.customMode && item.id === customizerState.skinToneIndex) {
-            button.classList.add("active");
-        }
-        button.dataset.id = item.id;
-        button.title = `Tông màu da #${item.id}`;
-
-        const shadingDiv = document.createElement("div");
-        shadingDiv.className = "palette-color shading";
-        shadingDiv.style.backgroundColor = item.shading;
-
-        const skinDiv = document.createElement("div");
-        skinDiv.className = "palette-color skin";
-        skinDiv.style.backgroundColor = item.skin;
-
-        const indicator = document.createElement("div");
-        indicator.className = "palette-indicator";
-        indicator.innerText = `#${item.id}`;
-
-        button.appendChild(shadingDiv);
-        button.appendChild(skinDiv);
-        button.appendChild(indicator);
-
-        button.addEventListener("click", () => {
-            customizerState.customMode = false;
-            customizerState.skinToneIndex = item.id;
-            customizerState.customSkin = item.skin;
-            customizerState.customShading = item.shading;
-            
-            playCustomizerSound('select');
-            updateCustomizerUI();
-            saveCustomizerState();
-        });
-
-        dom.paletteGrid.appendChild(button);
-    });
-
-    if (customizerState.customMode) {
-        dom.activeSkinLabel.innerText = "Tự chọn (Custom)";
-        dom.hexSkinLabel.querySelector("span:last-child").innerText = customizerState.customSkin;
-        dom.skinBadgeDot.style.backgroundColor = customizerState.customSkin;
-        dom.hexShadingLabel.querySelector("span:last-child").innerText = customizerState.customShading;
-        dom.shadingBadgeDot.style.backgroundColor = customizerState.customShading;
-    } else {
-        const activeColor = PALETTE_DATA[customizerState.skinToneIndex - 1];
-        dom.activeSkinLabel.innerText = `Mẫu #${activeColor.id}`;
-        dom.hexSkinLabel.querySelector("span:last-child").innerText = activeColor.skin.toUpperCase();
-        dom.skinBadgeDot.style.backgroundColor = activeColor.skin;
-        dom.hexShadingLabel.querySelector("span:last-child").innerText = activeColor.shading.toUpperCase();
-        dom.shadingBadgeDot.style.backgroundColor = activeColor.shading;
-    }
-}
-
-function buildCustomizerFacialUI() {
-    if (!dom.eyebrowsGrid || !dom.eyesGrid) return;
-    
-    // 1. Eyebrows Grid
-    dom.eyebrowsGrid.innerHTML = "";
-    FACIAL_DATABASE.eyebrows.forEach(item => {
-        const btn = document.createElement("button");
-        btn.className = "facial-select-btn";
-        if (item.id === customizerState.eyebrowIndex) btn.classList.add("active");
-        
-        const dy = 9 - item.y_center;
-        btn.innerHTML = `
-            <span class="facial-btn-label">Kiểu #${item.id}</span>
-            <svg viewBox="0 0 76.02 18" class="facial-btn-preview">
-                <g transform="translate(0, ${dy})">
-                    ${item.left.join("")} ${item.right.join("")}
-                </g>
-            </svg>
-        `;
-        
-        btn.addEventListener("click", () => {
-            if (customizerState.eyebrowIndex !== item.id) {
-                customizerState.eyebrowIndex = item.id;
-                playCustomizerSound('click');
-                syncCustomizerFacialActiveState(dom.eyebrowsGrid, item.id);
-                updateCustomizerCharacter();
-                saveCustomizerState();
-            }
-        });
-        dom.eyebrowsGrid.appendChild(btn);
-    });
-
-    // 2. Eyes Grid
-    dom.eyesGrid.innerHTML = "";
-    FACIAL_DATABASE.eyes.forEach(item => {
-        const btn = document.createElement("button");
-        btn.className = "facial-select-btn";
-        if (item.id === customizerState.eyeIndex) btn.classList.add("active");
-        
-        const dy = 11 - item.y_center;
-        btn.innerHTML = `
-            <span class="facial-btn-label">Kiểu #${item.id}</span>
-            <svg viewBox="0 0 76.04 22" class="facial-btn-preview">
-                <g transform="translate(0, ${dy})">
-                    ${item.left.join("")} ${item.right.join("")}
-                </g>
-            </svg>
-        `;
-        
-        btn.addEventListener("click", () => {
-            if (customizerState.eyeIndex !== item.id) {
-                customizerState.eyeIndex = item.id;
-                playCustomizerSound('click');
-                syncCustomizerFacialActiveState(dom.eyesGrid, item.id);
-                updateCustomizerCharacter();
-                saveCustomizerState();
-            }
-        });
-        dom.eyesGrid.appendChild(btn);
-    });
-}
-
-function syncCustomizerFacialActiveState(gridContainer, activeId) {
-    const buttons = gridContainer.querySelectorAll(".facial-select-btn");
-    buttons.forEach((btn, idx) => {
-        btn.classList.toggle("active", idx + 1 === activeId);
-    });
-}
-
-// Update Customizer UI elements
 function updateCustomizerUI() {
-    if (customizerState.gender === "male") {
-        dom.genderMaleBtn.classList.add("active");
-        dom.genderFemaleBtn.classList.remove("active");
-    } else {
-        dom.genderMaleBtn.classList.remove("active");
-        dom.genderFemaleBtn.classList.add("active");
-    }
-
-    dom.customModeToggle.checked = customizerState.customMode;
-    dom.customPickersContainer.classList.toggle("hidden", !customizerState.customMode);
-
-    dom.customSkinPicker.value = customizerState.customSkin;
-    dom.customShadingPicker.value = customizerState.customShading;
-    dom.customSkinHex.innerText = customizerState.customSkin.toUpperCase();
-    dom.customShadingHex.innerText = customizerState.customShading.toUpperCase();
-
     updateCustomizerCharacter();
-    buildCustomizerPaletteUI();
-    
-    syncCustomizerFacialActiveState(dom.eyebrowsGrid, customizerState.eyebrowIndex);
-    syncCustomizerFacialActiveState(dom.eyesGrid, customizerState.eyeIndex);
+    applyCustomizerCameraTransform();
 }
 
 // Camera pan & zoom logic
@@ -3488,103 +3156,97 @@ function resetCustomizerCamera() {
     applyCustomizerCameraTransform();
 }
 
-// Main initialisation function
+// Main initialisation function for Photobooth
 function initMeeCustomizer() {
-    loadCustomizerState();
-    
-    // Tab switching logic
-    document.querySelectorAll(".customizer-tab-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-            document.querySelectorAll(".customizer-tab-btn").forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
-            
-            document.querySelectorAll(".customizer-tab-content").forEach(p => p.classList.add("hidden"));
-            const target = document.getElementById(`customizer-tab-content-${btn.dataset.tab}`);
-            if (target) target.classList.remove("hidden");
+    // 1. Gắn sự kiện chọn khung ảnh
+    if (dom.photoFrameSelector) {
+        dom.photoFrameSelector.querySelectorAll("button").forEach(btn => {
+            btn.addEventListener("click", () => {
+                dom.photoFrameSelector.querySelectorAll("button").forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+                
+                const frameType = btn.dataset.frame;
+                if (dom.photoFramePreview) {
+                    dom.photoFramePreview.classList.remove("frame-star", "frame-heart", "frame-retro", "frame-neon");
+                    dom.photoFramePreview.classList.add(`frame-${frameType}`);
+                }
+                
+                playCustomizerSound('select');
+            });
         });
-    });
+    }
 
-    // Gender buttons
-    dom.genderMaleBtn.addEventListener("click", () => {
-        if (customizerState.gender !== "male") {
-            customizerState.gender = "male";
-            playCustomizerSound('select');
-            updateCustomizerUI();
-            saveCustomizerState();
-        }
-    });
-    dom.genderFemaleBtn.addEventListener("click", () => {
-        if (customizerState.gender !== "female") {
-            customizerState.gender = "female";
-            playCustomizerSound('select');
-            updateCustomizerUI();
-            saveCustomizerState();
-        }
-    });
+    // 2. Gắn sự kiện AI sinh ảnh nền
+    if (dom.btnPhotoAiBg) {
+        dom.btnPhotoAiBg.addEventListener("click", () => {
+            if (state.user.tier !== "Premium") {
+                dom.paywallModal.classList.add("active");
+                return;
+            }
+            const prompt = dom.photoAiBgPrompt.value.trim();
+            if (!prompt) {
+                showCustomAlert("🪄", "AI Ghép Nền", "Bé hãy nhập mô tả hình nền muốn đổi nhé!");
+                return;
+            }
+            
+            dom.btnPhotoAiBg.disabled = true;
+            dom.btnPhotoAiBg.innerText = "AI đang tạo nền... 🪄";
+            
+            setTimeout(() => {
+                dom.btnPhotoAiBg.disabled = false;
+                dom.btnPhotoAiBg.innerText = "Đổi Nền Bằng AI 🪄";
+                
+                if (dom.photoBgLayer) {
+                    dom.photoBgLayer.innerHTML = "";
+                    dom.photoBgLayer.style.background = `linear-gradient(135deg, #4f46e5, #ec4899)`;
+                    
+                    const bgLabel = document.createElement("div");
+                    bgLabel.style.color = "white";
+                    bgLabel.style.fontSize = "3rem";
+                    bgLabel.style.textAlign = "center";
+                    bgLabel.style.lineHeight = "380px";
+                    
+                    let bgEmoji = "🏞️";
+                    if (prompt.toLowerCase().includes("băng") || prompt.toLowerCase().includes("tuyết")) bgEmoji = "❄️🏰";
+                    else if (prompt.toLowerCase().includes("biển") || prompt.toLowerCase().includes("cát")) bgEmoji = "🏖️🌅";
+                    else if (prompt.toLowerCase().includes("vũ trụ") || prompt.toLowerCase().includes("sao")) bgEmoji = "🚀🌌";
+                    else if (prompt.toLowerCase().includes("rừng") || prompt.toLowerCase().includes("cây")) bgEmoji = "🌲🍄";
+                    else if (prompt.toLowerCase().includes("kẹo")) bgEmoji = "🍭🍬";
+                    
+                    bgLabel.innerText = bgEmoji;
+                    dom.photoBgLayer.appendChild(bgLabel);
+                }
+                showCustomizerToast("Đã đổi hình nền bằng AI!");
+            }, 1200);
+        });
+    }
 
-    // Custom pickers
-    dom.customModeToggle.addEventListener("change", () => {
-        customizerState.customMode = dom.customModeToggle.checked;
-        if (customizerState.customMode) {
-            customizerState.customSkin = dom.customSkinPicker.value;
-            customizerState.customShading = dom.customShadingPicker.value;
-        }
-        playCustomizerSound('select');
-        updateCustomizerUI();
-        saveCustomizerState();
-    });
+    // 3. Sự kiện điều khiển camera
+    if (dom.btnCameraZoomIn) {
+        dom.btnCameraZoomIn.addEventListener("click", () => {
+            camZoom = Math.min(2.5, camZoom + 0.15);
+            applyCustomizerCameraTransform();
+        });
+    }
+    if (dom.btnCameraZoomOut) {
+        dom.btnCameraZoomOut.addEventListener("click", () => {
+            camZoom = Math.max(0.6, camZoom - 0.15);
+            applyCustomizerCameraTransform();
+        });
+    }
+    if (dom.btnCameraReset) {
+        dom.btnCameraReset.addEventListener("click", () => {
+            resetCustomizerCamera();
+        });
+    }
 
-    dom.customSkinPicker.addEventListener("input", (e) => {
-        customizerState.customSkin = e.target.value;
-        dom.customSkinHex.innerText = e.target.value.toUpperCase();
-        updateCustomizerCharacter();
-        buildCustomizerPaletteUI();
-    });
-    dom.customSkinPicker.addEventListener("change", () => {
-        saveCustomizerState();
-    });
-
-    dom.customShadingPicker.addEventListener("input", (e) => {
-        customizerState.customShading = e.target.value;
-        dom.customShadingHex.innerText = e.target.value.toUpperCase();
-        updateCustomizerCharacter();
-        buildCustomizerPaletteUI();
-    });
-    dom.customShadingPicker.addEventListener("change", () => {
-        saveCustomizerState();
-    });
-
-    dom.autoShadowBtn.addEventListener("click", () => {
-        const shadow = customizerAutoShadow(customizerState.customSkin);
-        customizerState.customShading = shadow;
-        dom.customShadingPicker.value = shadow;
-        dom.customShadingHex.innerText = shadow.toUpperCase();
-        playCustomizerSound('select');
-        updateCustomizerCharacter();
-        buildCustomizerPaletteUI();
-        saveCustomizerState();
-    });
-
-    // Camera events
-    dom.btnCameraZoomIn.addEventListener("click", () => {
-        camZoom = Math.min(2.5, camZoom + 0.15);
-        applyCustomizerCameraTransform();
-    });
-    dom.btnCameraZoomOut.addEventListener("click", () => {
-        camZoom = Math.max(0.6, camZoom - 0.15);
-        applyCustomizerCameraTransform();
-    });
-    dom.btnCameraReset.addEventListener("click", () => {
-        resetCustomizerCamera();
-    });
-
-    // Viewport drag pan events
+    // 4. Sự kiện kéo thả pan viewport
     if (dom.viewportCanvas) {
         dom.viewportCanvas.addEventListener("mousedown", (e) => {
             camIsDragging = true;
             camStartX = e.clientX - camPanX;
             camStartY = e.clientY - camPanY;
-            dom.photoMeeLayer.style.cursor = "grabbing";
+            if (dom.photoMeeLayer) dom.photoMeeLayer.style.cursor = "grabbing";
         });
         window.addEventListener("mousemove", (e) => {
             if (!camIsDragging) return;
@@ -3594,77 +3256,78 @@ function initMeeCustomizer() {
         });
         window.addEventListener("mouseup", () => {
             camIsDragging = false;
-            dom.photoMeeLayer.style.cursor = "grab";
+            if (dom.photoMeeLayer) dom.photoMeeLayer.style.cursor = "grab";
         });
     }
 
-    // Export SVG
-    dom.btnExportSvg.addEventListener("click", () => {
-        const svgEl = dom.characterWrapper.querySelector("svg");
-        if (svgEl) {
-            const serializer = new XMLSerializer();
-            const svgStr = serializer.serializeToString(svgEl);
-            const blob = new Blob([svgStr], {type: "image/svg+xml"});
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = `mee_character_${customizerState.gender}.svg`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            showCustomizerToast("Đã tải tệp SVG nhân vật!");
-        }
-    });
-
-    // Export PNG
-    dom.btnExportPng.addEventListener("click", () => {
-        const svgEl = dom.characterWrapper.querySelector("svg");
-        if (svgEl) {
-            const serializer = new XMLSerializer();
-            const svgStr = serializer.serializeToString(svgEl);
-            const img = new Image();
-            img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgStr)));
-            img.onload = () => {
-                const canvas = document.createElement("canvas");
-                canvas.width = 500;
-                canvas.height = 1200; // Mee tỷ lệ cao ráo
-                const ctx = canvas.getContext("2d");
-                ctx.drawImage(img, 0, 0, 500, 1200);
-                
-                const url = canvas.toDataURL("image/png");
+    // 5. Tải ảnh SVG
+    if (dom.btnExportSvg) {
+        dom.btnExportSvg.addEventListener("click", () => {
+            const svgEl = dom.characterWrapper.querySelector("svg");
+            if (svgEl) {
+                const serializer = new XMLSerializer();
+                const svgStr = serializer.serializeToString(svgEl);
+                const blob = new Blob([svgStr], {type: "image/svg+xml"});
+                const url = URL.createObjectURL(blob);
                 const a = document.createElement("a");
                 a.href = url;
-                a.download = `mee_character_${customizerState.gender}.png`;
+                a.download = `mee_character_${state.mee.gender}.svg`;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
-                showCustomizerToast("Đã tải tệp PNG nhân vật!");
-            };
-        }
-    });
+                URL.revokeObjectURL(url);
+                showCustomizerToast("Đã tải tệp SVG!");
+            }
+        });
+    }
 
-    // Save Work to Passport (Photobooth Studio)
-    dom.btnSavePhotoWork.addEventListener("click", () => {
-        if (state.user.tier === "Guest") {
-            dom.signupModal.classList.add("active");
-            return;
-        }
+    // 6. Tải ảnh PNG
+    if (dom.btnExportPng) {
+        dom.btnExportPng.addEventListener("click", () => {
+            const svgEl = dom.characterWrapper.querySelector("svg");
+            if (svgEl) {
+                const serializer = new XMLSerializer();
+                const svgStr = serializer.serializeToString(svgEl);
+                const img = new Image();
+                img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgStr)));
+                img.onload = () => {
+                    const canvas = document.createElement("canvas");
+                    canvas.width = 500;
+                    canvas.height = 1200;
+                    const ctx = canvas.getContext("2d");
+                    ctx.drawImage(img, 0, 0, 500, 1200);
+                    
+                    const url = canvas.toDataURL("image/png");
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = `mee_character_${state.mee.gender}.png`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    showCustomizerToast("Đã tải tệp PNG!");
+                };
+            }
+        });
+    }
 
-        const svgEl = dom.characterWrapper.querySelector("svg");
-        if (svgEl) {
-            const serializer = new XMLSerializer();
-            const svgStr = serializer.serializeToString(svgEl);
+    // 7. Chụp và lưu ảnh vào Passport
+    if (dom.btnSavePhotoWork) {
+        dom.btnSavePhotoWork.addEventListener("click", () => {
+            if (state.user.tier === "Guest") {
+                dom.signupModal.classList.add("active");
+                return;
+            }
+
+            const frameClone = dom.photoFramePreview.cloneNode(true);
+            const canvasInClone = frameClone.querySelector("#viewportCanvas");
+            if (canvasInClone) canvasInClone.remove();
             
-            // Preview data chính là chuỗi SVG nhân vật đã thiết kế
-            addWorkToPassport("photobooth", `Thiết Kế Nhân Vật: ${state.user.username}`, svgStr);
-            showCustomAlert("📸", "Chụp & Lưu Thành Công!", "Tác phẩm thiết kế nhân vật Mee của bé đã được ghi nhận trong Passport!");
-        } else {
-            showCustomAlert("❌", "Lỗi Kết Xuất", "Không tìm thấy dữ liệu nhân vật để lưu.");
-        }
-    });
+            const htmlStr = frameClone.outerHTML;
+            addWorkToPassport("photobooth", `Ảnh Chụp Mee: ${state.user.username}`, htmlStr);
+            showCustomAlert("📸", "Chụp & Lưu Thành Công!", "Tác phẩm ảnh chụp Mee của bé đã được ghi nhận trong Passport!");
+        });
+    }
 
-    buildCustomizerFacialUI();
     updateCustomizerUI();
     resetCustomizerCamera();
 }

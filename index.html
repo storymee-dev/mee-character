@@ -162,12 +162,9 @@
                     <div class="mii-editor-container" style="display: flex; gap: 20px; height: 500px;">
                         <!-- CỘT 1: THANH SIDEBAR ICON DỌC -->
                         <div class="mii-sidebar" style="width: 60px; display: flex; flex-direction: column; gap: 12px; background: #F7FAFC; border-radius: 16px; padding: 10px 0; border: 2px solid #E2E8F0; align-items: center; box-sizing: border-box;">
-                            <button class="mii-tab-btn mii-tab-main active" data-tab="face" title="Khuôn mặt & Màu da">👤</button>
-                            <button class="mii-tab-btn mii-tab-main" data-tab="hair" title="Kiểu tóc & Màu tóc">💇</button>
-                            <button class="mii-tab-btn mii-tab-main" data-tab="eyes" title="Mắt">👁️</button>
-                            <button class="mii-tab-btn mii-tab-main" data-tab="nose" title="Mũi">👃</button>
-                            <button class="mii-tab-btn mii-tab-main" data-tab="mouth" title="Miệng">👄</button>
-                            <button class="mii-tab-btn mii-tab-main" data-tab="outfit" title="Áo thun">👕</button>
+                            <button class="mii-tab-btn mii-tab-main active" data-tab="skin" title="Giới tính & Màu da">👤</button>
+                            <button class="mii-tab-btn mii-tab-main" data-tab="eyes" title="Đôi mắt">👁️</button>
+                            <button class="mii-tab-btn mii-tab-main" data-tab="eyebrows" title="Lông mày">✏️</button>
                         </div>
                         
                         <!-- CỘT 2: KHUNG PREVIEW NHÂN VẬT (BÊN TRÁI) -->
@@ -187,41 +184,68 @@
                             <div class="mee-mood-label" id="mee-builder-mood-text" style="font-size: 0.8rem; padding: 4px 12px; background: var(--color-primary); color: white; border-radius: 50px;">Mood: Vui vẻ 😊</div>
                         </div>
                         
-                        <!-- CỘT 3: KHU VỰC CHỌN KIỂU DÁNG (Ở GIỮA) -->
+                        <!-- CỘT 3: KHU VỰC TÙY CHỈNH CHỌN KIỂU DÁNG & MÀU SẮC (BÊN PHẢI) -->
                         <div class="mii-options-panel" style="flex: 1; background: white; border: 2px solid #E2E8F0; border-radius: 24px; padding: 20px; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; box-sizing: border-box;">
-                            <!-- Phụ trợ chọn Sets / Bangs / Back cho mục Hair -->
-                            <div class="mii-sub-tabs hidden" id="hair-sub-tabs" style="display: flex; gap: 8px; margin-bottom: 5px;">
-                                <button class="mii-sub-tab active" data-sub="sets" style="border: 2px solid var(--color-primary); background: rgba(255,107,139,0.05); padding: 4px 12px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 0.85rem; font-family: var(--font-primary);">Sets 💇</button>
-                                <button class="mii-sub-tab" data-sub="bangs" style="border: 2px solid #E2E8F0; background: white; padding: 4px 12px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 0.85rem; font-family: var(--font-primary);">Bangs 💇‍♀️</button>
-                                <button class="mii-sub-tab" data-sub="back" style="border: 2px solid #E2E8F0; background: white; padding: 4px 12px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 0.85rem; font-family: var(--font-primary);">Back 💇‍♂️</button>
-                            </div>
                             
-                            <!-- Grid item lựa chọn kiểu dáng -->
-                            <div class="mii-selector-grid" id="mii-items-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
-                                <!-- Sẽ tự sinh qua JS tương ứng với Tab đang chọn -->
-                            </div>
-                        </div>
-                        
-                        <!-- CỘT 4: BẢNG CHỌN MÀU SẮC (BÊN PHẢI) -->
-                        <div class="mii-color-panel" style="width: 180px; background: #F7FAFC; border: 2px solid #E2E8F0; border-radius: 24px; padding: 15px; display: flex; flex-direction: column; gap: 15px; box-sizing: border-box;">
-                            <h4 style="font-size: 0.9rem; margin-bottom: 5px; color: var(--color-text-main);">🎨 Chọn màu sắc:</h4>
-                            
-                            <!-- Màu chính (Main color) -->
-                            <div class="mii-color-grid" id="mii-main-color-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
-                                <!-- Tự sinh màu qua JS -->
-                            </div>
-                            
-                            <!-- Màu phụ (Sub color) -->
-                            <div id="mii-sub-color-section" style="margin-top: 10px; border-top: 1px solid #E2E8F0; padding-top: 12px;">
-                                <label style="display: flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: bold; cursor: pointer; color: var(--color-text-muted);">
-                                    <input type="checkbox" id="chk-sub-color"> Sub color
-                                </label>
-                                <div class="mii-color-grid hidden" id="mii-sub-color-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 8px;">
-                                    <!-- Tự sinh màu phụ qua JS -->
+                            <!-- Tab 1: Giới tính & Màu da -->
+                            <div id="mee-builder-skin-content" class="mee-builder-tab-content">
+                                <h4 style="margin-bottom: 8px; color: var(--color-text-main);">1. Chọn Giới Tính:</h4>
+                                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                                    <button class="opt-btn active" id="meeBuilderGenderMaleBtn" style="flex: 1; padding: 10px; font-weight: bold; border-radius: 10px; cursor: pointer;">Boy (Nam) 👦</button>
+                                    <button class="opt-btn" id="meeBuilderGenderFemaleBtn" style="flex: 1; padding: 10px; font-weight: bold; border-radius: 10px; cursor: pointer;">Girl (Nữ) 👧</button>
+                                </div>
+                                
+                                <h4 style="margin-bottom: 4px; color: var(--color-text-main);">2. Chọn Tông Màu Da:</h4>
+                                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: #94a3b8; margin-bottom: 8px;">
+                                    <span id="meeBuilderActiveSkinLabel">Mẫu #1</span>
+                                    <div style="display: flex; gap: 8px; align-items: center;">
+                                        <span id="meeBuilderHexSkinLabel" style="display: flex; align-items: center; gap: 4px;"><div id="meeBuilderSkinBadgeDot" style="width: 8px; height: 8px; border-radius: 50%; background-color: #ffe7e6;"></div><span>#FFE7E6</span></span>
+                                    </div>
+                                </div>
+                                <!-- Grid 10 màu da mặc định -->
+                                <div class="palette-grid" id="meeBuilderPaletteGrid" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 15px;"></div>
+                                
+                                <!-- Custom Skin Switch -->
+                                <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 15px; padding-top: 15px; border-top: 1px solid #E2E8F0;">
+                                    <span style="font-weight: bold; font-size: 0.9rem; color: var(--color-text-main);">Tùy chọn màu da riêng:</span>
+                                    <label class="switch-glow">
+                                        <input type="checkbox" id="meeBuilderCustomModeToggle">
+                                        <span class="slider-glow"></span>
+                                    </label>
+                                </div>
+                                
+                                <!-- Bảng Color Pickers cho Custom Mode -->
+                                <div id="meeBuilderCustomPickers" class="hidden" style="margin-top: 12px; display: flex; flex-direction: column; gap: 10px;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between; background: #F7FAFC; padding: 8px 12px; border-radius: 10px; border: 1px solid #E2E8F0;">
+                                        <span style="font-size: 0.85rem; color: var(--color-text-muted);">Màu da (Skin):</span>
+                                        <div style="display: flex; align-items: center; gap: 8px;">
+                                            <input type="color" id="meeBuilderCustomSkinPicker" value="#ffe7e6" style="width:28px; height:28px; border:none; border-radius:50%; cursor:pointer;">
+                                            <span id="meeBuilderCustomSkinHex" style="font-family: monospace; font-size: 0.85rem;">#FFE7E6</span>
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; align-items: center; justify-content: space-between; background: #F7FAFC; padding: 8px 12px; border-radius: 10px; border: 1px solid #E2E8F0;">
+                                        <span style="font-size: 0.85rem; color: var(--color-text-muted);">Màu bóng (Shadow):</span>
+                                        <div style="display: flex; align-items: center; gap: 8px;">
+                                            <input type="color" id="meeBuilderCustomShadingPicker" value="#ffcccc" style="width:28px; height:28px; border:none; border-radius:50%; cursor:pointer;">
+                                            <span id="meeBuilderCustomShadingHex" style="font-family: monospace; font-size: 0.85rem;">#FFCCCC</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+                            
+                            <!-- Tab 2: Đôi mắt -->
+                            <div id="mee-builder-eyes-content" class="mee-builder-tab-content hidden">
+                                <h4 style="margin-bottom: 8px; color: var(--color-text-main);">Chọn Kiểu Mắt:</h4>
+                                <div class="facial-grid" id="meeBuilderEyesGrid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;"></div>
+                            </div>
+                            
+                            <!-- Tab 3: Lông mày -->
+                            <div id="mee-builder-eyebrows-content" class="mee-builder-tab-content hidden">
+                                <h4 style="margin-bottom: 8px; color: var(--color-text-main);">Chọn Kiểu Lông Mày:</h4>
+                                <div class="facial-grid" id="meeBuilderEyebrowsGrid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;"></div>
+                            </div>
+                            
                         </div>
-                        
                     </div>
                 </div>
 
@@ -725,95 +749,24 @@
                                         </div>
                                     </div>
                                     
-                                    <!-- CỘT 2 BÊN PHẢI: Bảng điều khiển Customizer chia thành các Tab -->
-                                    <div class="photobooth-controls-side">
-                                        <!-- Thanh Tab buttons -->
-                                        <div class="customizer-tabs-row" style="display: flex; gap: 8px; margin-bottom: 12px; border-bottom: 2px solid rgba(255,255,255,0.05); padding-bottom: 8px;">
-                                            <button class="customizer-tab-btn active" data-tab="skin">Da & Giới Tính</button>
-                                            <button class="customizer-tab-btn" data-tab="eyes">Đôi Mắt</button>
-                                            <button class="customizer-tab-btn" data-tab="eyebrows">Lông Mày</button>
-                                            <button class="customizer-tab-btn" data-tab="frames">Khung & Nền AI</button>
-                                        </div>
+                                    <!-- CỘT 2 BÊN PHẢI: Bảng điều khiển Photobooth (Khung & Nền AI) -->
+                                    <div class="photobooth-controls-side" style="display: flex; flex-direction: column; gap: 15px; box-sizing: border-box; width: 100%; height: 100%;">
+                                        <h3 style="margin: 0; font-size: 1.2rem; color: #FFF;">🎨 Trang Trí Ảnh Chụp MEE</h3>
                                         
-                                        <!-- NỘI DUNG CÁC TAB -->
-                                        <!-- Tab 1: Da & Giới Tính -->
-                                        <div class="customizer-tab-content" id="customizer-tab-content-skin">
-                                            <!-- Chọn giới tính -->
-                                            <h4 style="margin-bottom: 8px;">1. Chọn Giới Tính:</h4>
-                                            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                                                <button class="opt-btn active" id="genderMaleBtn" style="flex: 1; padding: 10px; font-weight: bold; border-radius: 10px; cursor: pointer;">Boy (Nam) 👦</button>
-                                                <button class="opt-btn" id="genderFemaleBtn" style="flex: 1; padding: 10px; font-weight: bold; border-radius: 10px; cursor: pointer;">Girl (Nữ) 👧</button>
-                                            </div>
-                                            
-                                            <!-- Chọn màu da -->
-                                            <h4 style="margin-bottom: 4px;">2. Chọn Tông Màu Da:</h4>
-                                            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: #94a3b8; margin-bottom: 8px;">
-                                                <span id="activeSkinLabel">Mẫu #1</span>
-                                                <div style="display: flex; gap: 8px; align-items: center;">
-                                                    <span id="hexSkinLabel" style="display: flex; align-items: center; gap: 4px;"><div id="skinBadgeDot" style="width: 8px; height: 8px; border-radius: 50%;"></div><span>#FFE7E6</span></span>
-                                                    <span id="hexShadingLabel" style="display: flex; align-items: center; gap: 4px;"><div id="shadingBadgeDot" style="width: 8px; height: 8px; border-radius: 50%;"></div><span>#FFCCCC</span></span>
-                                                </div>
-                                            </div>
-                                            
-                                            <!-- Grid 10 màu da mặc định -->
-                                            <div class="palette-grid" id="paletteGrid"></div>
-                                            
-                                            <!-- Custom Color Mode -->
-                                            <div style="margin-top: 15px; border-top: 1px dashed rgba(255,255,255,0.08); padding-top: 12px;">
-                                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
-                                                    <label for="customModeToggle" style="font-weight: 500; cursor: pointer;">🎨 Tự Chọn Màu Da (Custom):</label>
-                                                    <input type="checkbox" id="customModeToggle" style="width: 18px; height: 18px; cursor: pointer;">
-                                                </div>
-                                                
-                                                <div id="customPickersContainer" class="custom-pickers-container hidden" style="display: flex; flex-direction: column; gap: 10px;">
-                                                    <div style="display: flex; gap: 10px;">
-                                                        <div style="flex: 1;">
-                                                            <span style="font-size: 0.8rem; color: #94a3b8;">Màu Da chính:</span>
-                                                            <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
-                                                                <input type="color" id="customSkinPicker" value="#ffe7e6" style="width: 32px; height: 32px; border: none; border-radius: 50%; cursor: pointer;">
-                                                                <span id="customSkinHex" style="font-family: monospace; font-size: 0.85rem;">#FFE7E6</span>
-                                                            </div>
-                                                        </div>
-                                                        <div style="flex: 1;">
-                                                            <span style="font-size: 0.8rem; color: #94a3b8;">Màu Bóng da:</span>
-                                                            <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
-                                                                <input type="color" id="customShadingPicker" value="#ffcccc" style="width: 32px; height: 32px; border: none; border-radius: 50%; cursor: pointer;">
-                                                                <span id="customShadingHex" style="font-family: monospace; font-size: 0.85rem;">#FFCCCC</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <button class="btn-micro" id="autoShadowBtn" style="width: 100%; padding: 8px; border-radius: 8px; background: rgba(255,255,255,0.05); cursor: pointer; transition: all 0.2s;">🪄 Tự Động Tạo Màu Bóng Da (Darken HSL)</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <!-- Tab 2: Đôi Mắt -->
-                                        <div class="customizer-tab-content hidden" id="customizer-tab-content-eyes">
-                                            <h4 style="margin-bottom: 10px;">Chọn Kiểu Mắt Cho Mee:</h4>
-                                            <div class="facial-grid" id="eyesGrid"></div>
-                                        </div>
-                                        
-                                        <!-- Tab 3: Lông Mày -->
-                                        <div class="customizer-tab-content hidden" id="customizer-tab-content-eyebrows">
-                                            <h4 style="margin-bottom: 10px;">Chọn Kiểu Lông Mày Cho Mee:</h4>
-                                            <div class="facial-grid" id="eyebrowsGrid"></div>
-                                        </div>
-                                        
-                                        <!-- Tab 4: Khung & Nền AI -->
-                                        <div class="customizer-tab-content hidden" id="customizer-tab-content-frames">
-                                            <h4 style="margin-bottom: 8px;">Chọn khung ảnh:</h4>
+                                        <div class="editor-section">
+                                            <h4 style="margin-bottom: 8px; color: #E2E8F0; font-size: 0.9rem;">Chọn khung ảnh nghệ thuật:</h4>
                                             <div class="options-row" id="photo-frame-selector" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                                                 <button class="opt-btn active" data-frame="star">Khung Sao ✨</button>
                                                 <button class="opt-btn" data-frame="heart">Khung Trái Tim ❤️</button>
                                                 <button class="opt-btn" data-frame="retro">Khung Retro 🎞️</button>
                                                 <button class="opt-btn premium-opt" data-frame="neon">Khung Neon ⚡ (VIP)</button>
                                             </div>
-                                            
-                                            <div class="editor-section" id="photo-ai-bg-section" style="margin-top: 15px; border-top: 1px dashed rgba(255,255,255,0.08); padding-top: 12px;">
-                                                <h4 style="margin-bottom: 6px;">🏞️ AI Ghép Nền Thông Minh (VIP):</h4>
-                                                <input type="text" id="photo-ai-bg-prompt" class="app-input" placeholder="Ví dụ: Lâu đài băng tuyết..." style="width: 100%; margin-bottom: 8px;">
-                                                <button class="btn-micro gold-glow" id="btn-photo-ai-bg" style="width: 100%; padding: 10px; cursor: pointer;">Đổi Nền Bằng AI 🪄</button>
-                                            </div>
+                                        </div>
+                                        
+                                        <div class="editor-section" id="photo-ai-bg-section" style="margin-top: 10px; border-top: 1px dashed rgba(255,255,255,0.08); padding-top: 12px;">
+                                            <h4 style="margin-bottom: 6px; color: #E2E8F0; font-size: 0.9rem;">🏞️ AI Ghép Nền Thông Minh (VIP):</h4>
+                                            <input type="text" id="photo-ai-bg-prompt" class="app-input" placeholder="Ví dụ: Lâu đài băng tuyết..." style="width: 100%; margin-bottom: 8px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); color: #FFF; padding: 10px; border-radius: 8px; box-sizing: border-box;">
+                                            <button class="btn-micro gold-glow" id="btn-photo-ai-bg" style="width: 100%; padding: 10px; cursor: pointer;">Đổi Nền Bằng AI 🪄</button>
                                         </div>
                                         
                                         <!-- Toast Notification inside panel -->
@@ -822,7 +775,7 @@
                                         </div>
                                         
                                         <!-- Nút Chụp & Lưu ảnh ở dưới cùng -->
-                                        <button class="action-btn-main" id="btn-save-photo-work" style="margin-top: 20px;">📸 Chụp & Lưu Nhân Vật Vào Passport</button>
+                                        <button class="action-btn-main" id="btn-save-photo-work" style="margin-top: auto; padding: 12px; font-weight: bold; background: var(--gradient-primary); border: none; border-radius: 12px; color: #FFF; cursor: pointer; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);">📸 Chụp & Lưu Vào Passport</button>
                                     </div>
                                     
                                 </div>

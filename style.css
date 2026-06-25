@@ -3115,5 +3115,108 @@ textarea.app-input {
     box-shadow: 0 8px 16px rgba(0,0,0,0.08);
 }
 
+/* PHOTOBOOTH ART FRAMES OVERLAYS */
+.photo-preview-card-new.frame-star {
+    border: 8px solid #FCD34D !important; /* Viền vàng */
+    box-shadow: 0 0 20px rgba(251, 191, 36, 0.6), 0 12px 30px rgba(0,0,0,0.3);
+}
+.photo-preview-card-new.frame-star::after {
+    content: "✨";
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1.5rem;
+    z-index: 10;
+    animation: bounceSlow 2s infinite;
+}
+.photo-preview-card-new.frame-star::before {
+    content: "🌟";
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    font-size: 1.5rem;
+    z-index: 10;
+    animation: bounceSlow 2.5s infinite;
+}
+
+.photo-preview-card-new.frame-heart {
+    border: 8px solid #F472B6 !important; /* Viền hồng */
+    box-shadow: 0 0 20px rgba(244, 114, 182, 0.6), 0 12px 30px rgba(0,0,0,0.3);
+}
+.photo-preview-card-new.frame-heart::after {
+    content: "❤️";
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 1.5rem;
+    z-index: 10;
+    animation: heartbeat 1.5s infinite;
+}
+.photo-preview-card-new.frame-heart::before {
+    content: "💖";
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    font-size: 1.5rem;
+    z-index: 10;
+    animation: heartbeat 1.8s infinite;
+}
+
+.photo-preview-card-new.frame-retro {
+    border: 8px solid #1F2937 !important; /* Viền xám đen */
+    box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+}
+.photo-preview-card-new.frame-retro::after {
+    content: "🎞️";
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 1.2rem;
+    z-index: 10;
+    opacity: 0.8;
+}
+.photo-preview-card-new.frame-retro::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 15px solid rgba(0,0,0,0.15);
+    box-sizing: border-box;
+    pointer-events: none;
+    z-index: 9;
+}
+
+/* Neon glow border */
+.photo-preview-card-new.frame-neon {
+    border: 8px solid #6366F1 !important;
+    animation: neonGlowBorder 4s infinite alternate;
+}
+@keyframes neonGlowBorder {
+    0% {
+        border-color: #6366F1 !important;
+        box-shadow: 0 0 15px #6366F1, 0 12px 30px rgba(0,0,0,0.3);
+    }
+    50% {
+        border-color: #EC4899 !important;
+        box-shadow: 0 0 25px #EC4899, 0 12px 30px rgba(0,0,0,0.3);
+    }
+    100% {
+        border-color: #10B981 !important;
+        box-shadow: 0 0 15px #10B981, 0 12px 30px rgba(0,0,0,0.3);
+    }
+}
+.photo-preview-card-new.frame-neon::after {
+    content: "⚡";
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 1.4rem;
+    color: #FBBF24;
+    z-index: 10;
+    animation: float 2s infinite;
+}
+
 
 
