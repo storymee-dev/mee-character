@@ -562,6 +562,10 @@ function initDOM() {
         artSubPanelMovie: document.getElementById("art-sub-panel-movie"),
         
         // Art: Xưởng Vẽ
+        artSubPanelColoring: document.getElementById("art-sub-panel-coloring"),
+        coloringTabsRow: document.getElementById("coloring-tabs-row"),
+        btnColoringTabPresets: document.getElementById("btn-coloring-tab-presets"),
+        btnColoringTabFree: document.getElementById("btn-coloring-tab-free"),
         artDraw68: document.getElementById("art-draw-6-8"),
         coloringCanvas68: document.getElementById("coloring-canvas-68"),
         btnColoringReset: document.getElementById("btn-coloring-reset"),
@@ -606,19 +610,41 @@ function initDOM() {
         btnComicAiBgGen: document.getElementById("btn-comic-ai-bg-gen"),
         btnSaveComicWork: document.getElementById("btn-save-comic-work"),
 
-        // Art: Photobooth
+        // Art: Photobooth & Mee Customizer
         photoFramePreview: document.getElementById("photo-frame-preview"),
         photoBgLayer: document.getElementById("photo-bg-layer"),
         photoMeeLayer: document.getElementById("photo-mee-layer"),
         photoFrameSelector: document.getElementById("photo-frame-selector"),
-        photoDrawFrameSection: document.getElementById("photo-draw-frame-section"),
-        btnPhotoCustomFrame: document.getElementById("btn-photo-custom-frame"),
         photoAiBgSection: document.getElementById("photo-ai-bg-section"),
         photoAiBgPrompt: document.getElementById("photo-ai-bg-prompt"),
         btnPhotoAiBg: document.getElementById("btn-photo-ai-bg"),
-        photoMarketplaceSection: document.getElementById("photo-marketplace-section"),
-        btnPhotoUploadMarket: document.getElementById("btn-photo-upload-market"),
         btnSavePhotoWork: document.getElementById("btn-save-photo-work"),
+        
+        characterWrapper: document.getElementById("characterWrapper"),
+        ambientGlow: document.getElementById("ambientGlow"),
+        paletteGrid: document.getElementById("paletteGrid"),
+        activeSkinLabel: document.getElementById("activeSkinLabel"),
+        hexSkinLabel: document.getElementById("hexSkinLabel"),
+        hexShadingLabel: document.getElementById("hexShadingLabel"),
+        skinBadgeDot: document.getElementById("skinBadgeDot"),
+        shadingBadgeDot: document.getElementById("shadingBadgeDot"),
+        customModeToggle: document.getElementById("customModeToggle"),
+        customPickersContainer: document.getElementById("customPickersContainer"),
+        customSkinPicker: document.getElementById("customSkinPicker"),
+        customShadingPicker: document.getElementById("customShadingPicker"),
+        customSkinHex: document.getElementById("customSkinHex"),
+        customShadingHex: document.getElementById("customShadingHex"),
+        autoShadowBtn: document.getElementById("autoShadowBtn"),
+        eyesGrid: document.getElementById("eyesGrid"),
+        eyebrowsGrid: document.getElementById("eyebrowsGrid"),
+        genderMaleBtn: document.getElementById("genderMaleBtn"),
+        genderFemaleBtn: document.getElementById("genderFemaleBtn"),
+        btnCameraZoomIn: document.getElementById("btn-camera-zoom-in"),
+        btnCameraZoomOut: document.getElementById("btn-camera-zoom-out"),
+        btnCameraReset: document.getElementById("btn-camera-reset"),
+        btnExportSvg: document.getElementById("btn-export-svg"),
+        btnExportPng: document.getElementById("btn-export-png"),
+        viewportCanvas: document.getElementById("viewportCanvas"),
 
         // Art: Studio
         studioMusic68: document.getElementById("studio-music-6-8"),
@@ -1108,6 +1134,7 @@ function syncAgeAndTier(age, tier) {
     
     // Đồng bộ các element theo logic tuổi
     syncAgeRulesForExplore(age);
+    syncArtSubPanelsByAge(age);
 }
 
 function syncAgeRulesForExplore(age) {
@@ -1118,6 +1145,78 @@ function syncAgeRulesForExplore(age) {
         dom.exploreMarketplaceBox.classList.remove("hidden");
     } else {
         dom.exploreMarketplaceBox.classList.add("hidden");
+    }
+}
+
+function syncArtSubPanelsByAge(age) {
+    // 1. Lobby cards: Ẩn/hiện xưởng Truyện Tranh
+    if (dom.artTabComic) {
+        dom.artTabComic.classList.toggle("hidden", age === "6-8");
+    }
+
+    // 2. Xưởng Vẽ (Coloring / Free Draw)
+    if (dom.coloringTabsRow) {
+        if (age === "6-8") {
+            dom.coloringTabsRow.classList.add("hidden");
+            dom.artDraw68.classList.remove("hidden");
+            dom.artDraw9Up.classList.add("hidden");
+            dom.artDraw1415Addons.classList.add("hidden");
+        } else {
+            dom.coloringTabsRow.classList.remove("hidden");
+            // Kích hoạt tab active hiện tại
+            const activeTabBtn = dom.coloringTabsRow.querySelector(".opt-btn.active");
+            if (activeTabBtn) {
+                if (activeTabBtn.id === "btn-coloring-tab-presets") {
+                    dom.artDraw68.classList.remove("hidden");
+                    dom.artDraw9Up.classList.add("hidden");
+                } else {
+                    dom.artDraw68.classList.add("hidden");
+                    dom.artDraw9Up.classList.remove("hidden");
+                }
+            } else {
+                // Mặc định tab 1
+                dom.artDraw68.classList.remove("hidden");
+                dom.artDraw9Up.classList.add("hidden");
+            }
+            // Addons cho 14-15 tuổi
+            dom.artDraw1415Addons.classList.toggle("hidden", age !== "14-15");
+        }
+    }
+
+    // 3. Thư Viện Cổ Tích (Library)
+    if (dom.artStory68 && dom.artStory9Up) {
+        // Bé nghe luôn hiện cho tất cả các tuổi (kế thừa)
+        dom.artStory68.classList.remove("hidden");
+        // Sáng tác AI chỉ hiện từ 9 tuổi trở lên
+        dom.artStory9Up.classList.toggle("hidden", age === "6-8");
+        // Phân cảnh Storyboard AI chỉ hiện từ 11 tuổi trở lên
+        if (age === "11-13" || age === "14-15") {
+            // Chỉ hiển thị storyboard khi đã tạo truyện
+        } else {
+            dom.aiStoryboardAddon.classList.add("hidden");
+        }
+    }
+
+    // 4. Studio Âm Nhạc (Studio)
+    if (dom.studioMusic68 && dom.studioMix9Up && dom.studioAi11Up) {
+        // Bé nghe nhạc ru ngủ luôn hiện cho tất cả các tuổi (kế thừa)
+        dom.studioMusic68.classList.remove("hidden");
+        // Mix nhạc loop chỉ hiện từ 9 tuổi trở lên
+        dom.studioMix9Up.classList.toggle("hidden", age === "6-8");
+        // Sinh nhạc AI 15s chỉ hiện từ 11 tuổi trở lên
+        dom.studioAi11Up.classList.toggle("hidden", age === "6-8" || age === "9-10");
+    }
+
+    // 5. Phim Trường Puppet (Movie)
+    if (dom.moviePuppet68 && dom.movieStoryboard9Up) {
+        // Kịch rối cơ bản luôn hiện
+        dom.moviePuppet68.classList.remove("hidden");
+        // Lồng tiếng / đổi giọng AI chỉ hiện từ 9 tuổi trở lên
+        dom.movieStoryboard9Up.classList.toggle("hidden", age === "6-8");
+        // Thu âm AI 11+
+        if (dom.movieAi11Up) {
+            dom.movieAi11Up.classList.toggle("hidden", age === "6-8" || age === "9-10");
+        }
     }
 }
 
@@ -1726,9 +1825,13 @@ function setupArtKingdomEvents() {
                 if (sub === "coloring") initColoringSubPanel();
                 if (sub === "library") initFairytaleLibrary();
                 if (sub === "photobooth") {
-                    dom.photoMeeLayer.style.width = "120px";
-                    dom.photoMeeLayer.style.height = "120px";
-                    dom.photoMeeLayer.innerHTML = renderHumanSVG(state.mee);
+                    if (typeof customizerInitialized === 'undefined' || !customizerInitialized) {
+                        initMeeCustomizer();
+                        window.customizerInitialized = true;
+                    } else {
+                        updateCustomizerUI();
+                        resetCustomizerCamera();
+                    }
                 }
                 if (sub === "movie") {
                     dom.stagePuppet.style.width = "100px";
@@ -1747,6 +1850,23 @@ function setupArtKingdomEvents() {
             const zoneView = document.getElementById("art-zone-view");
             if (lobbyView) lobbyView.classList.remove("hidden");
             if (zoneView) zoneView.classList.add("hidden");
+        });
+    }
+
+    // Sự kiện chuyển tab Xưởng Vẽ (Chỉ dành cho bé lớn >= 9)
+    if (dom.btnColoringTabPresets && dom.btnColoringTabFree) {
+        dom.btnColoringTabPresets.addEventListener("click", () => {
+            dom.btnColoringTabPresets.classList.add("active");
+            dom.btnColoringTabFree.classList.remove("active");
+            dom.artDraw68.classList.remove("hidden");
+            dom.artDraw9Up.classList.add("hidden");
+        });
+        
+        dom.btnColoringTabFree.addEventListener("click", () => {
+            dom.btnColoringTabFree.classList.add("active");
+            dom.btnColoringTabPresets.classList.remove("active");
+            dom.artDraw68.classList.add("hidden");
+            dom.artDraw9Up.classList.remove("hidden");
         });
     }
 
@@ -1770,7 +1890,13 @@ function setupArtKingdomEvents() {
             return;
         }
         
-        let canvas = (state.user.ageGroup === "6-8") ? dom.coloringCanvas68 : dom.drawingCanvas9;
+        let canvas = dom.coloringCanvas68;
+        if (state.user.ageGroup !== "6-8") {
+            const activeTabBtn = dom.coloringTabsRow.querySelector(".opt-btn.active");
+            if (activeTabBtn && activeTabBtn.id === "btn-coloring-tab-free") {
+                canvas = dom.drawingCanvas9;
+            }
+        }
         let previewData = `🎨 Bức tranh vẽ tay của bé ${state.user.username}`;
         
         addWorkToPassport("drawing", "Tác phẩm hội họa", previewData);
@@ -1848,9 +1974,7 @@ function initArtKingdomPanel() {
     const age = state.user.ageGroup;
     
     // Đồng bộ menu tab nghệ thuật theo độ tuổi
-    if (dom.artTabComic) {
-        dom.artTabComic.classList.toggle("hidden", age === "6-8"); // Truyện tranh chỉ có từ 9 tuổi trở lên
-    }
+    syncArtSubPanelsByAge(age);
 
     // Hiển thị sảnh chọn xưởng mặc định, ẩn vùng làm việc của từng xưởng
     const lobbyView = document.getElementById("art-lobby-view");
@@ -2315,171 +2439,145 @@ function initColoringSubPanel() {
     const age = state.user.ageGroup;
     const btnSave = document.getElementById("btn-save-drawing-work");
     
-    if (age === "6-8") {
-        dom.artDraw68.classList.remove("hidden");
-        dom.artDraw9Up.classList.add("hidden");
-        dom.artDraw1415Addons.classList.add("hidden");
+    // 1. Khởi tạo phần Tô Màu (Canvas 6-8)
+    const canvasPresets = dom.coloringCanvas68;
+    const ctxPresets = canvasPresets.getContext("2d");
+    
+    if (!state.currentColoringPreset) {
+        state.currentColoringPreset = "bear";
+    }
+    
+    const selectView = document.getElementById("coloring-select-view");
+    const workspaceView = document.getElementById("coloring-workspace-view");
+    
+    function drawCurrentPreset() {
+        ctxPresets.fillStyle = "#FFFFFF";
+        ctxPresets.fillRect(0, 0, canvasPresets.width, canvasPresets.height);
         
-        const canvas = dom.coloringCanvas68;
-        const ctx = canvas.getContext("2d");
-        
-        // Trạng thái preset mặc định
-        if (!state.currentColoringPreset) {
-            state.currentColoringPreset = "bear";
+        const presetKey = state.currentColoringPreset || "bear";
+        if (COLORING_PRESETS[presetKey]) {
+            COLORING_PRESETS[presetKey].draw(ctxPresets, canvasPresets);
         }
-        
-        const selectView = document.getElementById("coloring-select-view");
-        const workspaceView = document.getElementById("coloring-workspace-view");
-        
-        // Hàm vẽ nét preset hiện tại
-        function drawCurrentPreset() {
-            ctx.fillStyle = "#FFFFFF";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            const presetKey = state.currentColoringPreset || "bear";
+    }
+    
+    // Khởi tạo các card chọn tranh
+    document.querySelectorAll(".coloring-preset-card").forEach(card => {
+        card.onclick = () => {
+            const presetKey = card.dataset.preset;
             if (COLORING_PRESETS[presetKey]) {
-                COLORING_PRESETS[presetKey].draw(ctx, canvas);
-            }
-        }
-        
-        // Mặc định hiển thị sảnh chọn tranh, ẩn workspace canvas và ẩn nút lưu tranh
-        if (selectView) selectView.classList.remove("hidden");
-        if (workspaceView) workspaceView.classList.add("hidden");
-        if (btnSave) btnSave.classList.add("hidden");
-        
-        // Đăng ký sự kiện khi bé click chọn card tranh mẫu
-        document.querySelectorAll(".coloring-preset-card").forEach(card => {
-            card.onclick = () => {
-                const presetKey = card.dataset.preset;
-                if (COLORING_PRESETS[presetKey]) {
-                    state.currentColoringPreset = presetKey;
-                    
-                    // Cập nhật nhãn tiêu đề tranh
-                    const label = document.getElementById("coloring-current-preset-label");
-                    if (label) {
-                        label.innerText = `Đang tô màu: ${COLORING_PRESETS[presetKey].title}`;
-                    }
-                    
-                    // Chuyển view
-                    if (selectView) selectView.classList.add("hidden");
-                    if (workspaceView) workspaceView.classList.remove("hidden");
-                    if (btnSave) btnSave.classList.remove("hidden"); // Hiện nút lưu khi vẽ
-                    
-                    // Vẽ outline lên canvas
-                    drawCurrentPreset();
+                state.currentColoringPreset = presetKey;
+                const label = document.getElementById("coloring-current-preset-label");
+                if (label) {
+                    label.innerText = `Đang tô màu: ${COLORING_PRESETS[presetKey].title}`;
                 }
-            };
-        });
-        
-        // Đăng ký sự kiện nút "Trở lại chọn tranh"
-        const btnBack = document.getElementById("btn-back-to-coloring-select");
-        if (btnBack) {
-            btnBack.onclick = () => {
-                if (selectView) selectView.classList.remove("hidden");
-                if (workspaceView) workspaceView.classList.add("hidden");
-                if (btnSave) btnSave.classList.add("hidden"); // Ẩn nút lưu khi trở lại sảnh chọn
-            };
-        }
-        
-        // Click to color logic
-        let selectedColor = "#FF5722";
-        dom.colorsContainer68 = document.getElementById("color-num-palette");
-        if (dom.colorsContainer68) {
-            dom.colorsContainer68.querySelectorAll(".color-swatch").forEach(swatch => {
-                // Remove existing click to avoid duplicate registration
-                const newSwatch = swatch.cloneNode(true);
-                swatch.parentNode.replaceChild(newSwatch, swatch);
-                
-                newSwatch.addEventListener("click", () => {
-                    dom.colorsContainer68.querySelectorAll(".color-swatch").forEach(s => s.classList.remove("active"));
-                    newSwatch.classList.add("active");
-                    selectedColor = newSwatch.dataset.color;
-                });
-            });
-        }
-
-        canvas.onclick = (e) => {
-            const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            ctx.fillStyle = selectedColor;
-            ctx.beginPath();
-            ctx.arc(x, y, 22, 0, Math.PI * 2);
-            ctx.fill();
-            
-            // Vẽ lại nét đen outline đè lên
-            const presetKey = state.currentColoringPreset || "bear";
-            if (COLORING_PRESETS[presetKey]) {
-                COLORING_PRESETS[presetKey].draw(ctx, canvas);
-            }
-        };
-        
-        // Đăng ký sự kiện làm mới
-        const btnReset = document.getElementById("btn-coloring-reset");
-        if (btnReset) {
-            btnReset.onclick = () => {
+                if (selectView) selectView.classList.add("hidden");
+                if (workspaceView) workspaceView.classList.remove("hidden");
+                if (btnSave) btnSave.classList.remove("hidden");
                 drawCurrentPreset();
-            };
-        }
-    } else {
-        dom.artDraw68.classList.add("hidden");
-        dom.artDraw9Up.classList.remove("hidden");
-        if (btnSave) btnSave.classList.remove("hidden"); // Luôn hiện cho bé lớn
-        
-        // Kích hoạt addons làm hoạt hình cho 14-15 tuổi
-        dom.artDraw1415Addons.classList.toggle("hidden", age !== "14-15");
-        
-        // Setup Free drawing canvas 9+
-        const canvas = dom.drawingCanvas9;
-        const ctx = canvas.getContext("2d");
-        ctx.fillStyle = "#FFFFFF";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        
-        let isDrawing = false;
-        canvas.onmousedown = (e) => {
-            isDrawing = true;
-            ctx.beginPath();
-            ctx.moveTo(e.offsetX, e.offsetY);
-        };
-        canvas.onmousemove = (e) => {
-            if (!isDrawing) return;
-            ctx.strokeStyle = dom.brushColorPicker.value;
-            ctx.lineWidth = dom.brushSizeSlider.value;
-            ctx.lineCap = "round";
-            ctx.lineTo(e.offsetX, e.offsetY);
-            ctx.stroke();
-        };
-        canvas.onmouseup = () => isDrawing = false;
-        canvas.onmouseleave = () => isDrawing = false;
-
-        // Dán stickers
-        let selectedSticker = "";
-        dom.stickerShelfContainer.querySelectorAll(".sticker-item").forEach(st => {
-            st.addEventListener("click", () => {
-                dom.stickerShelfContainer.querySelectorAll(".sticker-item").forEach(s => s.classList.remove("active"));
-                st.classList.add("active");
-                selectedSticker = st.dataset.sticker;
-            });
-        });
-
-        canvas.addEventListener("click", (e) => {
-            if (selectedSticker) {
-                ctx.font = "40px Arial";
-                ctx.fillText(selectedSticker, e.offsetX - 20, e.offsetY + 15);
-                selectedSticker = ""; // Reset
-                dom.stickerShelfContainer.querySelectorAll(".sticker-item").forEach(s => s.classList.remove("active"));
             }
+        };
+    });
+    
+    const btnBack = document.getElementById("btn-back-to-coloring-select");
+    if (btnBack) {
+        btnBack.onclick = () => {
+            if (selectView) selectView.classList.remove("hidden");
+            if (workspaceView) workspaceView.classList.add("hidden");
+            if (btnSave) btnSave.classList.add("hidden");
+        };
+    }
+    
+    let selectedColor = "#FF5722";
+    dom.colorsContainer68 = document.getElementById("color-num-palette");
+    if (dom.colorsContainer68) {
+        dom.colorsContainer68.querySelectorAll(".color-swatch").forEach(swatch => {
+            const newSwatch = swatch.cloneNode(true);
+            swatch.parentNode.replaceChild(newSwatch, swatch);
+            
+            newSwatch.addEventListener("click", () => {
+                dom.colorsContainer68.querySelectorAll(".color-swatch").forEach(s => s.classList.remove("active"));
+                newSwatch.classList.add("active");
+                selectedColor = newSwatch.dataset.color;
+            });
         });
     }
 
-    // Đồng bộ tiểu phân hệ Thư viện cổ theo độ tuổi
-    const ageGroup = state.user.ageGroup;
-    dom.artStory68.classList.toggle("hidden", ageGroup !== "6-8");
-    dom.artStory9Up.classList.toggle("hidden", ageGroup === "6-8");
+    canvasPresets.onclick = (e) => {
+        const rect = canvasPresets.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        ctxPresets.fillStyle = selectedColor;
+        ctxPresets.beginPath();
+        ctxPresets.arc(x, y, 22, 0, Math.PI * 2);
+        ctxPresets.fill();
+        
+        const presetKey = state.currentColoringPreset || "bear";
+        if (COLORING_PRESETS[presetKey]) {
+            COLORING_PRESETS[presetKey].draw(ctxPresets, canvasPresets);
+        }
+    };
     
-    // Đồng bộ các addon vẽ / storyboard / sound
-    dom.artSubTabs.querySelector('[data-sub="comic"]').classList.toggle("hidden", ageGroup === "6-8");
+    const btnReset = document.getElementById("btn-coloring-reset");
+    if (btnReset) {
+        btnReset.onclick = () => {
+            drawCurrentPreset();
+        };
+    }
+
+    // 2. Khởi tạo phần Vẽ Tự Do (Canvas 9+)
+    const canvasFree = dom.drawingCanvas9;
+    const ctxFree = canvasFree.getContext("2d");
+    ctxFree.fillStyle = "#FFFFFF";
+    ctxFree.fillRect(0, 0, canvasFree.width, canvasFree.height);
+    
+    let isDrawing = false;
+    canvasFree.onmousedown = (e) => {
+        isDrawing = true;
+        ctxFree.beginPath();
+        ctxFree.moveTo(e.offsetX, e.offsetY);
+    };
+    canvasFree.onmousemove = (e) => {
+        if (!isDrawing) return;
+        ctxFree.strokeStyle = dom.brushColorPicker.value;
+        ctxFree.lineWidth = dom.brushSizeSlider.value;
+        ctxFree.lineCap = "round";
+        ctxFree.lineTo(e.offsetX, e.offsetY);
+        ctxFree.stroke();
+    };
+    canvasFree.onmouseup = () => isDrawing = false;
+    canvasFree.onmouseleave = () => isDrawing = false;
+
+    // Dán stickers
+    let selectedSticker = "";
+    dom.stickerShelfContainer.querySelectorAll(".sticker-item").forEach(st => {
+        const newSt = st.cloneNode(true);
+        st.parentNode.replaceChild(newSt, st);
+        newSt.addEventListener("click", () => {
+            dom.stickerShelfContainer.querySelectorAll(".sticker-item").forEach(s => s.classList.remove("active"));
+            newSt.classList.add("active");
+            selectedSticker = newSt.dataset.sticker;
+        });
+    });
+
+    canvasFree.onclick = (e) => {
+        if (selectedSticker) {
+            ctxFree.font = "40px Arial";
+            ctxFree.fillText(selectedSticker, e.offsetX - 20, e.offsetY + 15);
+            selectedSticker = "";
+            dom.stickerShelfContainer.querySelectorAll(".sticker-item").forEach(s => s.classList.remove("active"));
+        }
+    };
+
+    // 3. Đồng bộ hiển thị & Click tab mặc định cho bé lớn
+    syncArtSubPanelsByAge(age);
+    if (age !== "6-8") {
+        if (dom.btnColoringTabPresets) dom.btnColoringTabPresets.click();
+    } else {
+        if (selectView) selectView.classList.remove("hidden");
+        if (workspaceView) workspaceView.classList.add("hidden");
+        if (btnSave) btnSave.classList.add("hidden");
+    }
 }
 
 // 9. MODULE: BRAIN ARENA (ĐẤU TRÍ)
@@ -2926,4 +3024,655 @@ function renderParentModerationQueue() {
 
         dom.parentModerationList.appendChild(div);
     });
+}
+
+// ==========================================
+// MEE CHARACTER CUSTOMIZER LOGIC INTEGRATION
+// ==========================================
+let customizerState = {
+    gender: "male", // male or female
+    skinToneIndex: 1, // 1 to 10
+    customMode: false,
+    customSkin: "#ffe7e6",
+    customShading: "#ffcccc",
+    eyeIndex: 1, // 1 to 11
+    eyebrowIndex: 1 // 1 to 7
+};
+
+// Camera Variables
+let camZoom = 1.0;
+let camPanX = 0;
+let camPanY = 0;
+let camIsDragging = false;
+let camStartX, camStartY;
+
+// Audio context helper
+let customizerAudioCtx = null;
+function playCustomizerSound(type) {
+    try {
+        if (!customizerAudioCtx) {
+            customizerAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (customizerAudioCtx.state === 'suspended') {
+            customizerAudioCtx.resume();
+        }
+        const now = customizerAudioCtx.currentTime;
+        if (type === 'click') {
+            const osc = customizerAudioCtx.createOscillator();
+            const gain = customizerAudioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(500, now);
+            osc.frequency.exponentialRampToValueAtTime(100, now + 0.08);
+            gain.gain.setValueAtTime(0.12, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+            osc.connect(gain);
+            gain.connect(customizerAudioCtx.destination);
+            osc.start(now);
+            osc.stop(now + 0.08);
+        } else if (type === 'select') {
+            const osc = customizerAudioCtx.createOscillator();
+            const gain = customizerAudioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(350, now);
+            osc.frequency.exponentialRampToValueAtTime(550, now + 0.12);
+            gain.gain.setValueAtTime(0.08, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
+            osc.connect(gain);
+            gain.connect(customizerAudioCtx.destination);
+            osc.start(now);
+            osc.stop(now + 0.12);
+        }
+    } catch (e) {
+        console.log("Audio Context blocked: ", e);
+    }
+}
+
+// Color Lerp Helper
+function customizerLerpColor(color1, color2, factor) {
+    const r1 = parseInt(color1.substring(1, 3), 16);
+    const g1 = parseInt(color1.substring(3, 5), 16);
+    const b1 = parseInt(color1.substring(5, 7), 16);
+    const r2 = parseInt(color2.substring(1, 3), 16);
+    const g2 = parseInt(color2.substring(3, 5), 16);
+    const b2 = parseInt(color2.substring(5, 7), 16);
+    const r = Math.round(r1 + factor * (r2 - r1));
+    const g = Math.round(g1 + factor * (g2 - g1));
+    const b = Math.round(b1 + factor * (b2 - b1));
+    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+}
+
+// Darken HSL Shadow
+function customizerAutoShadow(hexColor) {
+    let r = parseInt(hexColor.substring(1, 3), 16) / 255;
+    let g = parseInt(hexColor.substring(3, 5), 16) / 255;
+    let b = parseInt(hexColor.substring(5, 7), 16) / 255;
+    let max = Math.max(r, g, b), min = Math.min(r, g, b);
+    let h, s, l = (max + min) / 2;
+    if (max === min) {
+        h = s = 0;
+    } else {
+        let d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch (max) {
+            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+            case g: h = (b - r) / d + 2; break;
+            case b: h = (r - g) / d + 4; break;
+        }
+        h /= 6;
+    }
+    l = Math.max(0.08, l - 0.12);
+    s = Math.min(1.0, s + 0.05);
+    let rOut, gOut, bOut;
+    if (s === 0) {
+        rOut = gOut = bOut = l;
+    } else {
+        function hue2rgb(p, q, t) {
+            if (t < 0) t += 1;
+            if (t > 1) t -= 1;
+            if (t < 1/6) return p + (q - p) * 6 * t;
+            if (t < 1/2) return q;
+            if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+            return p;
+        }
+        let q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        let p = 2 * l - q;
+        rOut = hue2rgb(p, q, h + 1/3);
+        gOut = hue2rgb(p, q, h);
+        bOut = hue2rgb(p, q, h - 1/3);
+    }
+    const rHex = Math.round(rOut * 255).toString(16).padStart(2, '0');
+    const gHex = Math.round(gOut * 255).toString(16).padStart(2, '0');
+    const bHex = Math.round(bOut * 255).toString(16).padStart(2, '0');
+    return `#${rHex}${gHex}${bHex}`;
+}
+
+// Load / Save State
+function loadCustomizerState() {
+    const saved = localStorage.getItem("mee_character_customizer_state");
+    if (saved) {
+        try {
+            const parsed = JSON.parse(saved);
+            if (["male", "female"].includes(parsed.gender)) customizerState.gender = parsed.gender;
+            if (parsed.skinToneIndex >= 1 && parsed.skinToneIndex <= 10) customizerState.skinToneIndex = parsed.skinToneIndex;
+            if (typeof parsed.customMode === 'boolean') customizerState.customMode = parsed.customMode;
+            if (parsed.customSkin) customizerState.customSkin = parsed.customSkin;
+            if (parsed.customShading) customizerState.customShading = parsed.customShading;
+            if (parsed.eyeIndex >= 1 && parsed.eyeIndex <= 11) customizerState.eyeIndex = parsed.eyeIndex;
+            if (parsed.eyebrowIndex >= 1 && parsed.eyebrowIndex <= 7) customizerState.eyebrowIndex = parsed.eyebrowIndex;
+        } catch(e) {}
+    }
+}
+
+function saveCustomizerState() {
+    localStorage.setItem("mee_character_customizer_state", JSON.stringify(customizerState));
+}
+
+// Colorize base SVG
+function applyCustomColorsToSVG(svgElement) {
+    const skinColor = customizerState.customSkin;
+    const shadingColor = customizerState.customShading;
+
+    svgElement.querySelectorAll(".cls-6").forEach(el => el.style.fill = skinColor);
+    svgElement.querySelectorAll(".cls-7").forEach(el => el.style.fill = shadingColor);
+
+    const linearGrad = svgElement.querySelector("#linear-gradient");
+    if (linearGrad) {
+        const stops = linearGrad.querySelectorAll("stop");
+        if (stops.length >= 5) {
+            stops[0].setAttribute("stop-color", skinColor);
+            stops[1].setAttribute("stop-color", customizerLerpColor(skinColor, shadingColor, 0.59));
+            stops[2].setAttribute("stop-color", customizerLerpColor(skinColor, shadingColor, 0.8));
+            stops[3].setAttribute("stop-color", customizerLerpColor(skinColor, shadingColor, 0.95));
+            stops[4].setAttribute("stop-color", shadingColor);
+        }
+    }
+
+    const linearGrad3 = svgElement.querySelector("#linear-gradient-3");
+    if (linearGrad3) {
+        linearGrad3.querySelectorAll("stop").forEach(stop => {
+            stop.setAttribute("stop-color", shadingColor);
+        });
+    }
+
+    let defs = svgElement.querySelector("defs");
+    if (!defs) {
+        defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+        svgElement.insertBefore(defs, svgElement.firstChild);
+    }
+
+    let filter = defs.querySelector("#custom-ear-filter");
+    if (!filter) {
+        filter = document.createElementNS("http://www.w3.org/2000/svg", "filter");
+        filter.setAttribute("id", "custom-ear-filter");
+        
+        const feGray = document.createElementNS("http://www.w3.org/2000/svg", "feColorMatrix");
+        feGray.setAttribute("type", "matrix");
+        feGray.setAttribute("values", "0.2126 0.7152 0.0722 0 0  0.2126 0.7152 0.0722 0 0  0.2126 0.7152 0.0722 0 0  0 0 0 1 0");
+        feGray.setAttribute("result", "gray");
+        filter.appendChild(feGray);
+        
+        const feTransfer = document.createElementNS("http://www.w3.org/2000/svg", "feComponentTransfer");
+        feTransfer.setAttribute("in", "gray");
+        
+        const feFuncR = document.createElementNS("http://www.w3.org/2000/svg", "feFuncR");
+        feFuncR.setAttribute("type", "linear");
+        feFuncR.setAttribute("id", "custom-ear-funcR");
+        feTransfer.appendChild(feFuncR);
+        
+        const feFuncG = document.createElementNS("http://www.w3.org/2000/svg", "feFuncG");
+        feFuncG.setAttribute("type", "linear");
+        feFuncG.setAttribute("id", "custom-ear-funcG");
+        feTransfer.appendChild(feFuncG);
+        
+        const feFuncB = document.createElementNS("http://www.w3.org/2000/svg", "feFuncB");
+        feFuncB.setAttribute("type", "linear");
+        feFuncB.setAttribute("id", "custom-ear-funcB");
+        feTransfer.appendChild(feFuncB);
+        
+        filter.appendChild(feTransfer);
+        defs.appendChild(filter);
+    }
+
+    const funcR = filter.querySelector("#custom-ear-funcR");
+    const funcG = filter.querySelector("#custom-ear-funcG");
+    const funcB = filter.querySelector("#custom-ear-funcB");
+
+    if (funcR && funcG && funcB) {
+        const r_skin = parseInt(skinColor.substring(1, 3), 16) / 255;
+        const g_skin = parseInt(skinColor.substring(3, 5), 16) / 255;
+        const b_skin = parseInt(skinColor.substring(5, 7), 16) / 255;
+        const r_shadow = parseInt(shadingColor.substring(1, 3), 16) / 255;
+        const g_shadow = parseInt(shadingColor.substring(3, 5), 16) / 255;
+        const b_shadow = parseInt(shadingColor.substring(5, 7), 16) / 255;
+
+        funcR.setAttribute("slope", r_skin - r_shadow);
+        funcR.setAttribute("intercept", r_shadow);
+        funcG.setAttribute("slope", g_skin - g_shadow);
+        funcG.setAttribute("intercept", g_shadow);
+        funcB.setAttribute("slope", b_skin - b_shadow);
+        funcB.setAttribute("intercept", b_shadow);
+    }
+
+    svgElement.querySelectorAll("image").forEach(img => {
+        img.setAttribute("filter", "url(#custom-ear-filter)");
+    });
+}
+
+// Render dynamic Mee SVG
+function updateCustomizerCharacter() {
+    if (!dom.characterWrapper) return;
+    let svgContent = "";
+    
+    if (customizerState.customMode) {
+        svgContent = SVG_DATABASE["base"][customizerState.gender];
+    } else {
+        svgContent = SVG_DATABASE["presets"][customizerState.gender][customizerState.skinToneIndex];
+    }
+    
+    if (svgContent) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(svgContent, "image/svg+xml");
+        const svgElement = doc.documentElement;
+        
+        if (customizerState.customMode) {
+            applyCustomColorsToSVG(svgElement);
+        }
+
+        const head = svgElement.querySelector("ellipse.cls-6");
+        if (head) {
+            if (customizerState.eyebrowIndex > 0) {
+                const eyebrowItem = FACIAL_DATABASE.eyebrows[customizerState.eyebrowIndex - 1];
+                const eyebrowsGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                eyebrowsGroup.setAttribute("id", "custom-eyebrows");
+                const dx = 52.31;
+                const dy = 72.435 - eyebrowItem.y_center;
+                eyebrowsGroup.setAttribute("transform", `translate(${dx}, ${dy})`);
+                eyebrowsGroup.innerHTML = eyebrowItem.left.join("") + eyebrowItem.right.join("");
+                head.insertAdjacentElement('afterend', eyebrowsGroup);
+            }
+            
+            if (customizerState.eyeIndex > 0) {
+                const eyeItem = FACIAL_DATABASE.eyes[customizerState.eyeIndex - 1];
+                const eyesGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                eyesGroup.setAttribute("id", "custom-eyes");
+                const dx = 52.30;
+                const dy = 87.37 - eyeItem.y_center;
+                eyesGroup.setAttribute("transform", `translate(${dx}, ${dy})`);
+                eyesGroup.innerHTML = eyeItem.left.join("") + eyeItem.right.join("");
+                
+                const eyebrowsEl = svgElement.querySelector("#custom-eyebrows");
+                if (eyebrowsEl) {
+                    eyebrowsEl.insertAdjacentElement('afterend', eyesGroup);
+                } else {
+                    head.insertAdjacentElement('afterend', eyesGroup);
+                }
+            }
+        }
+
+        dom.characterWrapper.innerHTML = "";
+        dom.characterWrapper.appendChild(svgElement);
+    }
+    
+    const activeSkinColor = customizerState.customMode ? customizerState.customSkin : PALETTE_DATA[customizerState.skinToneIndex - 1].skin;
+    document.documentElement.style.setProperty('--skin-glow-color', activeSkinColor + "25");
+}
+
+// Build customizer grids (Skin, Eyes, Eyebrows)
+function buildCustomizerPaletteUI() {
+    if (!dom.paletteGrid) return;
+    dom.paletteGrid.innerHTML = "";
+    PALETTE_DATA.forEach(item => {
+        const button = document.createElement("div");
+        button.className = "palette-item";
+        if (!customizerState.customMode && item.id === customizerState.skinToneIndex) {
+            button.classList.add("active");
+        }
+        button.dataset.id = item.id;
+        button.title = `Tông màu da #${item.id}`;
+
+        const shadingDiv = document.createElement("div");
+        shadingDiv.className = "palette-color shading";
+        shadingDiv.style.backgroundColor = item.shading;
+
+        const skinDiv = document.createElement("div");
+        skinDiv.className = "palette-color skin";
+        skinDiv.style.backgroundColor = item.skin;
+
+        const indicator = document.createElement("div");
+        indicator.className = "palette-indicator";
+        indicator.innerText = `#${item.id}`;
+
+        button.appendChild(shadingDiv);
+        button.appendChild(skinDiv);
+        button.appendChild(indicator);
+
+        button.addEventListener("click", () => {
+            customizerState.customMode = false;
+            customizerState.skinToneIndex = item.id;
+            customizerState.customSkin = item.skin;
+            customizerState.customShading = item.shading;
+            
+            playCustomizerSound('select');
+            updateCustomizerUI();
+            saveCustomizerState();
+        });
+
+        dom.paletteGrid.appendChild(button);
+    });
+
+    if (customizerState.customMode) {
+        dom.activeSkinLabel.innerText = "Tự chọn (Custom)";
+        dom.hexSkinLabel.querySelector("span:last-child").innerText = customizerState.customSkin;
+        dom.skinBadgeDot.style.backgroundColor = customizerState.customSkin;
+        dom.hexShadingLabel.querySelector("span:last-child").innerText = customizerState.customShading;
+        dom.shadingBadgeDot.style.backgroundColor = customizerState.customShading;
+    } else {
+        const activeColor = PALETTE_DATA[customizerState.skinToneIndex - 1];
+        dom.activeSkinLabel.innerText = `Mẫu #${activeColor.id}`;
+        dom.hexSkinLabel.querySelector("span:last-child").innerText = activeColor.skin.toUpperCase();
+        dom.skinBadgeDot.style.backgroundColor = activeColor.skin;
+        dom.hexShadingLabel.querySelector("span:last-child").innerText = activeColor.shading.toUpperCase();
+        dom.shadingBadgeDot.style.backgroundColor = activeColor.shading;
+    }
+}
+
+function buildCustomizerFacialUI() {
+    if (!dom.eyebrowsGrid || !dom.eyesGrid) return;
+    
+    // 1. Eyebrows Grid
+    dom.eyebrowsGrid.innerHTML = "";
+    FACIAL_DATABASE.eyebrows.forEach(item => {
+        const btn = document.createElement("button");
+        btn.className = "facial-select-btn";
+        if (item.id === customizerState.eyebrowIndex) btn.classList.add("active");
+        
+        const dy = 9 - item.y_center;
+        btn.innerHTML = `
+            <span class="facial-btn-label">Kiểu #${item.id}</span>
+            <svg viewBox="0 0 76.02 18" class="facial-btn-preview">
+                <g transform="translate(0, ${dy})">
+                    ${item.left.join("")} ${item.right.join("")}
+                </g>
+            </svg>
+        `;
+        
+        btn.addEventListener("click", () => {
+            if (customizerState.eyebrowIndex !== item.id) {
+                customizerState.eyebrowIndex = item.id;
+                playCustomizerSound('click');
+                syncCustomizerFacialActiveState(dom.eyebrowsGrid, item.id);
+                updateCustomizerCharacter();
+                saveCustomizerState();
+            }
+        });
+        dom.eyebrowsGrid.appendChild(btn);
+    });
+
+    // 2. Eyes Grid
+    dom.eyesGrid.innerHTML = "";
+    FACIAL_DATABASE.eyes.forEach(item => {
+        const btn = document.createElement("button");
+        btn.className = "facial-select-btn";
+        if (item.id === customizerState.eyeIndex) btn.classList.add("active");
+        
+        const dy = 11 - item.y_center;
+        btn.innerHTML = `
+            <span class="facial-btn-label">Kiểu #${item.id}</span>
+            <svg viewBox="0 0 76.04 22" class="facial-btn-preview">
+                <g transform="translate(0, ${dy})">
+                    ${item.left.join("")} ${item.right.join("")}
+                </g>
+            </svg>
+        `;
+        
+        btn.addEventListener("click", () => {
+            if (customizerState.eyeIndex !== item.id) {
+                customizerState.eyeIndex = item.id;
+                playCustomizerSound('click');
+                syncCustomizerFacialActiveState(dom.eyesGrid, item.id);
+                updateCustomizerCharacter();
+                saveCustomizerState();
+            }
+        });
+        dom.eyesGrid.appendChild(btn);
+    });
+}
+
+function syncCustomizerFacialActiveState(gridContainer, activeId) {
+    const buttons = gridContainer.querySelectorAll(".facial-select-btn");
+    buttons.forEach((btn, idx) => {
+        btn.classList.toggle("active", idx + 1 === activeId);
+    });
+}
+
+// Update Customizer UI elements
+function updateCustomizerUI() {
+    if (customizerState.gender === "male") {
+        dom.genderMaleBtn.classList.add("active");
+        dom.genderFemaleBtn.classList.remove("active");
+    } else {
+        dom.genderMaleBtn.classList.remove("active");
+        dom.genderFemaleBtn.classList.add("active");
+    }
+
+    dom.customModeToggle.checked = customizerState.customMode;
+    dom.customPickersContainer.classList.toggle("hidden", !customizerState.customMode);
+
+    dom.customSkinPicker.value = customizerState.customSkin;
+    dom.customShadingPicker.value = customizerState.customShading;
+    dom.customSkinHex.innerText = customizerState.customSkin.toUpperCase();
+    dom.customShadingHex.innerText = customizerState.customShading.toUpperCase();
+
+    updateCustomizerCharacter();
+    buildCustomizerPaletteUI();
+    
+    syncCustomizerFacialActiveState(dom.eyebrowsGrid, customizerState.eyebrowIndex);
+    syncCustomizerFacialActiveState(dom.eyesGrid, customizerState.eyeIndex);
+}
+
+// Camera pan & zoom logic
+function applyCustomizerCameraTransform() {
+    if (dom.photoMeeLayer) {
+        dom.photoMeeLayer.style.transform = `translate(${camPanX}px, ${camPanY}px) scale(${camZoom})`;
+    }
+}
+
+function resetCustomizerCamera() {
+    camZoom = 1.0;
+    camPanX = 0;
+    camPanY = 0;
+    applyCustomizerCameraTransform();
+}
+
+// Main initialisation function
+function initMeeCustomizer() {
+    loadCustomizerState();
+    
+    // Tab switching logic
+    document.querySelectorAll(".customizer-tab-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            document.querySelectorAll(".customizer-tab-btn").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            
+            document.querySelectorAll(".customizer-tab-content").forEach(p => p.classList.add("hidden"));
+            const target = document.getElementById(`customizer-tab-content-${btn.dataset.tab}`);
+            if (target) target.classList.remove("hidden");
+        });
+    });
+
+    // Gender buttons
+    dom.genderMaleBtn.addEventListener("click", () => {
+        if (customizerState.gender !== "male") {
+            customizerState.gender = "male";
+            playCustomizerSound('select');
+            updateCustomizerUI();
+            saveCustomizerState();
+        }
+    });
+    dom.genderFemaleBtn.addEventListener("click", () => {
+        if (customizerState.gender !== "female") {
+            customizerState.gender = "female";
+            playCustomizerSound('select');
+            updateCustomizerUI();
+            saveCustomizerState();
+        }
+    });
+
+    // Custom pickers
+    dom.customModeToggle.addEventListener("change", () => {
+        customizerState.customMode = dom.customModeToggle.checked;
+        if (customizerState.customMode) {
+            customizerState.customSkin = dom.customSkinPicker.value;
+            customizerState.customShading = dom.customShadingPicker.value;
+        }
+        playCustomizerSound('select');
+        updateCustomizerUI();
+        saveCustomizerState();
+    });
+
+    dom.customSkinPicker.addEventListener("input", (e) => {
+        customizerState.customSkin = e.target.value;
+        dom.customSkinHex.innerText = e.target.value.toUpperCase();
+        updateCustomizerCharacter();
+        buildCustomizerPaletteUI();
+    });
+    dom.customSkinPicker.addEventListener("change", () => {
+        saveCustomizerState();
+    });
+
+    dom.customShadingPicker.addEventListener("input", (e) => {
+        customizerState.customShading = e.target.value;
+        dom.customShadingHex.innerText = e.target.value.toUpperCase();
+        updateCustomizerCharacter();
+        buildCustomizerPaletteUI();
+    });
+    dom.customShadingPicker.addEventListener("change", () => {
+        saveCustomizerState();
+    });
+
+    dom.autoShadowBtn.addEventListener("click", () => {
+        const shadow = customizerAutoShadow(customizerState.customSkin);
+        customizerState.customShading = shadow;
+        dom.customShadingPicker.value = shadow;
+        dom.customShadingHex.innerText = shadow.toUpperCase();
+        playCustomizerSound('select');
+        updateCustomizerCharacter();
+        buildCustomizerPaletteUI();
+        saveCustomizerState();
+    });
+
+    // Camera events
+    dom.btnCameraZoomIn.addEventListener("click", () => {
+        camZoom = Math.min(2.5, camZoom + 0.15);
+        applyCustomizerCameraTransform();
+    });
+    dom.btnCameraZoomOut.addEventListener("click", () => {
+        camZoom = Math.max(0.6, camZoom - 0.15);
+        applyCustomizerCameraTransform();
+    });
+    dom.btnCameraReset.addEventListener("click", () => {
+        resetCustomizerCamera();
+    });
+
+    // Viewport drag pan events
+    if (dom.viewportCanvas) {
+        dom.viewportCanvas.addEventListener("mousedown", (e) => {
+            camIsDragging = true;
+            camStartX = e.clientX - camPanX;
+            camStartY = e.clientY - camPanY;
+            dom.photoMeeLayer.style.cursor = "grabbing";
+        });
+        window.addEventListener("mousemove", (e) => {
+            if (!camIsDragging) return;
+            camPanX = e.clientX - camStartX;
+            camPanY = e.clientY - camStartY;
+            applyCustomizerCameraTransform();
+        });
+        window.addEventListener("mouseup", () => {
+            camIsDragging = false;
+            dom.photoMeeLayer.style.cursor = "grab";
+        });
+    }
+
+    // Export SVG
+    dom.btnExportSvg.addEventListener("click", () => {
+        const svgEl = dom.characterWrapper.querySelector("svg");
+        if (svgEl) {
+            const serializer = new XMLSerializer();
+            const svgStr = serializer.serializeToString(svgEl);
+            const blob = new Blob([svgStr], {type: "image/svg+xml"});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `mee_character_${customizerState.gender}.svg`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showCustomizerToast("Đã tải tệp SVG nhân vật!");
+        }
+    });
+
+    // Export PNG
+    dom.btnExportPng.addEventListener("click", () => {
+        const svgEl = dom.characterWrapper.querySelector("svg");
+        if (svgEl) {
+            const serializer = new XMLSerializer();
+            const svgStr = serializer.serializeToString(svgEl);
+            const img = new Image();
+            img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgStr)));
+            img.onload = () => {
+                const canvas = document.createElement("canvas");
+                canvas.width = 500;
+                canvas.height = 1200; // Mee tỷ lệ cao ráo
+                const ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0, 500, 1200);
+                
+                const url = canvas.toDataURL("image/png");
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `mee_character_${customizerState.gender}.png`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                showCustomizerToast("Đã tải tệp PNG nhân vật!");
+            };
+        }
+    });
+
+    // Save Work to Passport (Photobooth Studio)
+    dom.btnSavePhotoWork.addEventListener("click", () => {
+        if (state.user.tier === "Guest") {
+            dom.signupModal.classList.add("active");
+            return;
+        }
+
+        const svgEl = dom.characterWrapper.querySelector("svg");
+        if (svgEl) {
+            const serializer = new XMLSerializer();
+            const svgStr = serializer.serializeToString(svgEl);
+            
+            // Preview data chính là chuỗi SVG nhân vật đã thiết kế
+            addWorkToPassport("photobooth", `Thiết Kế Nhân Vật: ${state.user.username}`, svgStr);
+            showCustomAlert("📸", "Chụp & Lưu Thành Công!", "Tác phẩm thiết kế nhân vật Mee của bé đã được ghi nhận trong Passport!");
+        } else {
+            showCustomAlert("❌", "Lỗi Kết Xuất", "Không tìm thấy dữ liệu nhân vật để lưu.");
+        }
+    });
+
+    buildCustomizerFacialUI();
+    updateCustomizerUI();
+    resetCustomizerCamera();
+}
+
+function showCustomizerToast(msg) {
+    const toast = document.getElementById("toast");
+    if (toast) {
+        const content = toast.querySelector("#toastContent");
+        if (content) content.innerText = msg;
+        toast.classList.add("show");
+        setTimeout(() => {
+            toast.classList.remove("show");
+        }, 3000);
+    }
 }

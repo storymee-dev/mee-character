@@ -379,6 +379,13 @@
                         <div class="art-workspace-container">
                             
                             <!-- Sub-tab 1: Xưởng Vẽ (Coloring / Free Draw) -->
+                            <div id="art-sub-panel-coloring" class="art-sub-panel hidden" style="width: 100%;">
+                                <!-- Tab chọn chế độ tô màu / vẽ tự do (Chỉ hiện khi bé từ 9 tuổi trở lên) -->
+                                <div class="coloring-tabs-row hidden" id="coloring-tabs-row" style="display: flex; gap: 12px; margin-bottom: 20px; justify-content: center; width: 100%; border-bottom: 1px dashed rgba(0,0,0,0.1); padding-bottom: 12px;">
+                                    <button class="opt-btn active" id="btn-coloring-tab-presets" style="padding: 8px 20px; font-weight: 700; border-radius: 12px; cursor: pointer; transition: all 0.2s;">🎨 Tô Màu Theo Số</button>
+                                    <button class="opt-btn" id="btn-coloring-tab-free" style="padding: 8px 20px; font-weight: 700; border-radius: 12px; cursor: pointer; transition: all 0.2s;">✏️ Vẽ Tranh Tự Do</button>
+                                </div>
+
                                 <div id="art-draw-6-8" class="coloring-interface" style="width: 100%;">
                                     <!-- 1. Sảnh chọn tranh tô màu phong cách Bluey -->
                                     <div id="coloring-select-view" class="coloring-select-bg" style="width: 100%;">
@@ -563,6 +570,7 @@
                                 <div class="art-save-row">
                                     <button class="action-btn-main" id="btn-save-drawing-work">💾 Lưu Tranh Vào Passport</button>
                                 </div>
+                            </div> <!-- Đóng art-sub-panel-coloring -->
                             </div>
 
                             <!-- Sub-tab 2: Thư Viện Cổ -->
@@ -689,35 +697,135 @@
 
                             <!-- Sub-tab 4: Photobooth -->
                             <div id="art-sub-panel-photobooth" class="art-sub-panel hidden">
-                                <h3>📸 Photobooth Studio Của Mee</h3>
-                                <div class="photobooth-workspace">
-                                    <div class="photo-preview-card" id="photo-frame-preview">
-                                        <div class="photo-bg-layer" id="photo-bg-layer">🏖️</div>
-                                        <div class="photo-mee-layer" id="photo-mee-layer">🐰</div>
+                                <h3>📸 Thiết Kế Nhân Vật & Photobooth Studio Của Mee</h3>
+                                <div class="photobooth-workspace-new">
+                                    
+                                    <!-- CỘT 1 BÊN TRÁI: Viewport nhân vật + Khung ảnh + Camera controls -->
+                                    <div class="photobooth-viewport-side">
+                                        <!-- Khung hiển thị ảnh kết xuất -->
+                                        <div class="photo-preview-card-new" id="photo-frame-preview">
+                                            <div class="photo-bg-layer" id="photo-bg-layer">🏖️</div>
+                                            <!-- Container chứa SVG động của Mee -->
+                                            <div class="photo-mee-layer-new" id="photo-mee-layer" style="cursor: grab;">
+                                                <div id="characterWrapper"></div>
+                                            </div>
+                                            <!-- Canvas ảo để kéo thả, pan, zoom chuột trên viewport -->
+                                            <div id="viewportCanvas" style="position: absolute; top:0; left:0; width:100%; height:100%; z-index: 5;"></div>
+                                            <div id="ambientGlow" class="ambient-glow"></div>
+                                        </div>
+                                        
+                                        <!-- Thanh camera tools phía dưới viewport -->
+                                        <div class="photo-camera-tools" style="display: flex; gap: 8px; justify-content: center; margin-top: 10px; width: 100%;">
+                                            <button class="btn-micro" id="btn-camera-zoom-in" title="Phóng to">➕ Zoom In</button>
+                                            <button class="btn-micro" id="btn-camera-zoom-out" title="Thu nhỏ">➖ Zoom Out</button>
+                                            <button class="btn-micro" id="btn-camera-reset" title="Đặt lại camera">🔄 Reset Cam</button>
+                                        </div>
+                                        <div class="photo-export-tools" style="display: flex; gap: 8px; justify-content: center; margin-top: 5px; width: 100%;">
+                                            <button class="btn-micro" id="btn-export-svg" style="background: rgba(99, 102, 241, 0.1); border: 1px solid #6366f1; color: #818cf8;">Tải SVG</button>
+                                            <button class="btn-micro" id="btn-export-png" style="background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; color: #34d399;">Tải PNG</button>
+                                        </div>
                                     </div>
-                                    <div class="photo-controls-shelf">
-                                        <h4>Chọn khung ảnh có sẵn:</h4>
-                                        <div class="options-row" id="photo-frame-selector">
-                                            <button class="opt-btn active" data-frame="star">Khung Sao ✨</button>
-                                            <button class="opt-btn" data-frame="heart">Khung Trái Tim ❤️</button>
-                                            <button class="opt-btn" data-frame="retro">Khung Retro 🎞️</button>
-                                            <button class="opt-btn premium-opt" data-frame="neon">Khung Neon ⚡ (VIP)</button>
+                                    
+                                    <!-- CỘT 2 BÊN PHẢI: Bảng điều khiển Customizer chia thành các Tab -->
+                                    <div class="photobooth-controls-side">
+                                        <!-- Thanh Tab buttons -->
+                                        <div class="customizer-tabs-row" style="display: flex; gap: 8px; margin-bottom: 12px; border-bottom: 2px solid rgba(255,255,255,0.05); padding-bottom: 8px;">
+                                            <button class="customizer-tab-btn active" data-tab="skin">Da & Giới Tính</button>
+                                            <button class="customizer-tab-btn" data-tab="eyes">Đôi Mắt</button>
+                                            <button class="customizer-tab-btn" data-tab="eyebrows">Lông Mày</button>
+                                            <button class="customizer-tab-btn" data-tab="frames">Khung & Nền AI</button>
                                         </div>
-                                        <div class="editor-section hidden" id="photo-draw-frame-section">
-                                            <h4>Tự thiết kế viền khung ảnh:</h4>
-                                            <button class="btn-micro" id="btn-photo-custom-frame">✏️ Bắt đầu vẽ viền</button>
+                                        
+                                        <!-- NỘI DUNG CÁC TAB -->
+                                        <!-- Tab 1: Da & Giới Tính -->
+                                        <div class="customizer-tab-content" id="customizer-tab-content-skin">
+                                            <!-- Chọn giới tính -->
+                                            <h4 style="margin-bottom: 8px;">1. Chọn Giới Tính:</h4>
+                                            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                                                <button class="opt-btn active" id="genderMaleBtn" style="flex: 1; padding: 10px; font-weight: bold; border-radius: 10px; cursor: pointer;">Boy (Nam) 👦</button>
+                                                <button class="opt-btn" id="genderFemaleBtn" style="flex: 1; padding: 10px; font-weight: bold; border-radius: 10px; cursor: pointer;">Girl (Nữ) 👧</button>
+                                            </div>
+                                            
+                                            <!-- Chọn màu da -->
+                                            <h4 style="margin-bottom: 4px;">2. Chọn Tông Màu Da:</h4>
+                                            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: #94a3b8; margin-bottom: 8px;">
+                                                <span id="activeSkinLabel">Mẫu #1</span>
+                                                <div style="display: flex; gap: 8px; align-items: center;">
+                                                    <span id="hexSkinLabel" style="display: flex; align-items: center; gap: 4px;"><div id="skinBadgeDot" style="width: 8px; height: 8px; border-radius: 50%;"></div><span>#FFE7E6</span></span>
+                                                    <span id="hexShadingLabel" style="display: flex; align-items: center; gap: 4px;"><div id="shadingBadgeDot" style="width: 8px; height: 8px; border-radius: 50%;"></div><span>#FFCCCC</span></span>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Grid 10 màu da mặc định -->
+                                            <div class="palette-grid" id="paletteGrid"></div>
+                                            
+                                            <!-- Custom Color Mode -->
+                                            <div style="margin-top: 15px; border-top: 1px dashed rgba(255,255,255,0.08); padding-top: 12px;">
+                                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                                                    <label for="customModeToggle" style="font-weight: 500; cursor: pointer;">🎨 Tự Chọn Màu Da (Custom):</label>
+                                                    <input type="checkbox" id="customModeToggle" style="width: 18px; height: 18px; cursor: pointer;">
+                                                </div>
+                                                
+                                                <div id="customPickersContainer" class="custom-pickers-container hidden" style="display: flex; flex-direction: column; gap: 10px;">
+                                                    <div style="display: flex; gap: 10px;">
+                                                        <div style="flex: 1;">
+                                                            <span style="font-size: 0.8rem; color: #94a3b8;">Màu Da chính:</span>
+                                                            <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
+                                                                <input type="color" id="customSkinPicker" value="#ffe7e6" style="width: 32px; height: 32px; border: none; border-radius: 50%; cursor: pointer;">
+                                                                <span id="customSkinHex" style="font-family: monospace; font-size: 0.85rem;">#FFE7E6</span>
+                                                            </div>
+                                                        </div>
+                                                        <div style="flex: 1;">
+                                                            <span style="font-size: 0.8rem; color: #94a3b8;">Màu Bóng da:</span>
+                                                            <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
+                                                                <input type="color" id="customShadingPicker" value="#ffcccc" style="width: 32px; height: 32px; border: none; border-radius: 50%; cursor: pointer;">
+                                                                <span id="customShadingHex" style="font-family: monospace; font-size: 0.85rem;">#FFCCCC</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <button class="btn-micro" id="autoShadowBtn" style="width: 100%; padding: 8px; border-radius: 8px; background: rgba(255,255,255,0.05); cursor: pointer; transition: all 0.2s;">🪄 Tự Động Tạo Màu Bóng Da (Darken HSL)</button>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="editor-section hidden" id="photo-ai-bg-section">
-                                            <h4>🏞️ AI Ghép Nền Thông Minh (VIP):</h4>
-                                            <input type="text" id="photo-ai-bg-prompt" class="app-input" placeholder="Ví dụ: Lâu đài băng tuyết...">
-                                            <button class="btn-micro gold-glow" id="btn-photo-ai-bg">Đổi Nền Bằng AI 🪄</button>
+                                        
+                                        <!-- Tab 2: Đôi Mắt -->
+                                        <div class="customizer-tab-content hidden" id="customizer-tab-content-eyes">
+                                            <h4 style="margin-bottom: 10px;">Chọn Kiểu Mắt Cho Mee:</h4>
+                                            <div class="facial-grid" id="eyesGrid"></div>
                                         </div>
-                                        <div class="editor-section hidden" id="photo-marketplace-section">
-                                            <h4>📦 Đăng bán Frame Pack lên Marketplace:</h4>
-                                            <button class="btn-micro gold-glow" id="btn-photo-upload-market">Upload Lên Marketplace</button>
+                                        
+                                        <!-- Tab 3: Lông Mày -->
+                                        <div class="customizer-tab-content hidden" id="customizer-tab-content-eyebrows">
+                                            <h4 style="margin-bottom: 10px;">Chọn Kiểu Lông Mày Cho Mee:</h4>
+                                            <div class="facial-grid" id="eyebrowsGrid"></div>
                                         </div>
-                                        <button class="action-btn-main" id="btn-save-photo-work">📸 Chụp Và Lưu Ảnh</button>
+                                        
+                                        <!-- Tab 4: Khung & Nền AI -->
+                                        <div class="customizer-tab-content hidden" id="customizer-tab-content-frames">
+                                            <h4 style="margin-bottom: 8px;">Chọn khung ảnh:</h4>
+                                            <div class="options-row" id="photo-frame-selector" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                                <button class="opt-btn active" data-frame="star">Khung Sao ✨</button>
+                                                <button class="opt-btn" data-frame="heart">Khung Trái Tim ❤️</button>
+                                                <button class="opt-btn" data-frame="retro">Khung Retro 🎞️</button>
+                                                <button class="opt-btn premium-opt" data-frame="neon">Khung Neon ⚡ (VIP)</button>
+                                            </div>
+                                            
+                                            <div class="editor-section" id="photo-ai-bg-section" style="margin-top: 15px; border-top: 1px dashed rgba(255,255,255,0.08); padding-top: 12px;">
+                                                <h4 style="margin-bottom: 6px;">🏞️ AI Ghép Nền Thông Minh (VIP):</h4>
+                                                <input type="text" id="photo-ai-bg-prompt" class="app-input" placeholder="Ví dụ: Lâu đài băng tuyết..." style="width: 100%; margin-bottom: 8px;">
+                                                <button class="btn-micro gold-glow" id="btn-photo-ai-bg" style="width: 100%; padding: 10px; cursor: pointer;">Đổi Nền Bằng AI 🪄</button>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Toast Notification inside panel -->
+                                        <div id="toast" class="toast-message">
+                                            <span id="toastContent">Lưu thành công!</span>
+                                        </div>
+                                        
+                                        <!-- Nút Chụp & Lưu ảnh ở dưới cùng -->
+                                        <button class="action-btn-main" id="btn-save-photo-work" style="margin-top: 20px;">📸 Chụp & Lưu Nhân Vật Vào Passport</button>
                                     </div>
+                                    
                                 </div>
                             </div>
 
@@ -1129,6 +1237,7 @@
     </div>
 
     <!-- Script điều khiển chính -->
+    <script src="assets/mee_database.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
