@@ -61,6 +61,14 @@ def main():
             with open(face_path, 'r', encoding='utf-8') as f:
                 svg_db["faces"][i] = clean_svg(f.read())
 
+    # Load 10 Ears SVGs
+    svg_db["ears"] = {}
+    for i in range(1, 11):
+        ears_path = os.path.join(base_dir, "facial", f"ears_{i}.svg")
+        if os.path.exists(ears_path):
+            with open(ears_path, 'r', encoding='utf-8') as f:
+                svg_db["ears"][i] = clean_svg(f.read())
+
     # Load Facial features database and rename conflicting classes
     facial_db = {"eyes": [], "eyebrows": [], "noses": [], "mouths": []}
     facial_path = os.path.join(base_dir, "facial_features.json")
@@ -1107,6 +1115,10 @@ def main():
                         <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
                         Dáng mặt
                     </button>
+                    <button class="tab-btn" data-tab="ears">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 2.76 1.12 5.26 2.93 7.07l1.41-1.41C4.9 16.21 4 14.21 4 12c0-4.42 3.58-8 8-8s8 3.58 8 8c0 2.21-.9 4.21-2.34 5.66l1.41 1.41C20.88 17.26 22 14.76 22 12c0-5.52-4.48-10-10-10z"/></svg>
+                        Tai
+                    </button>
                     <button class="tab-btn" data-tab="eyes">
                         <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
                         Mắt
@@ -1211,6 +1223,17 @@ def main():
                     </h3>
                     <div class="facial-select-grid" id="facesGrid">
                         <!-- Face buttons will be generated dynamically -->
+                    </div>
+                </div>
+
+                <!-- Tab 1.6: Ears Content -->
+                <div class="tab-content" id="tab-ears">
+                    <h3 class="card-title" style="font-size: 1rem; margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="var(--primary)"><path d="M12 2C6.48 2 2 6.48 2 12c0 2.76 1.12 5.26 2.93 7.07l1.41-1.41C4.9 16.21 4 14.21 4 12c0-4.42 3.58-8 8-8s8 3.58 8 8c0 2.21-.9 4.21-2.34 5.66l1.41 1.41C20.88 17.26 22 14.76 22 12c0-5.52-4.48-10-10-10z"/></svg>
+                        Chọn kiểu tai (Ears Style)
+                    </h3>
+                    <div class="facial-select-grid" id="earsGrid">
+                        <!-- Ear buttons will be generated dynamically -->
                     </div>
                 </div>
 
@@ -1450,7 +1473,8 @@ def main():
             eyeIndex: 1, // 1 to 11
             eyebrowIndex: 1, // 1 to 7
             noseIndex: 1, // 1 to 7
-            mouthIndex: 1 // 1 to 14
+            mouthIndex: 1, // 1 to 14
+            earIndex: 1 // 1 to 10
         };
 
         // UI References
@@ -1476,6 +1500,7 @@ def main():
 
         // Facial grids DOM
         const facesGrid = document.getElementById("facesGrid");
+        const earsGrid = document.getElementById("earsGrid");
         const eyesGrid = document.getElementById("eyesGrid");
         const eyebrowsGrid = document.getElementById("eyebrowsGrid");
         const nosesGrid = document.getElementById("nosesGrid");
@@ -1512,6 +1537,7 @@ def main():
                     if (parsed.eyebrowIndex >= 1 && parsed.eyebrowIndex <= 7) state.eyebrowIndex = parsed.eyebrowIndex;
                     if (parsed.noseIndex >= 1 && parsed.noseIndex <= 7) state.noseIndex = parsed.noseIndex;
                     if (parsed.mouthIndex >= 1 && parsed.mouthIndex <= 14) state.mouthIndex = parsed.mouthIndex;
+                    if (parsed.earIndex >= 1 && parsed.earIndex <= 10) state.earIndex = parsed.earIndex;
                 } catch(e) {}
             }
             buildFacialUI();
@@ -1700,14 +1726,99 @@ def main():
                                 }
                             }
                         }
+                        
+                        // Clean original ears from faceGroup, leaving only headPath
+                        while (faceGroup.firstChild) {
+                            faceGroup.removeChild(faceGroup.firstChild);
+                        }
                         if (headPath) {
                             headPath.style.fill = skinColor;
+                            faceGroup.appendChild(headPath);
                         }
                         
-                        // Apply ear filter to rects (ears) in face group
-                        faceGroup.querySelectorAll("rect").forEach(rect => {
-                            rect.setAttribute("filter", "url(#custom-ear-filter)");
-                        });
+                        // Inject Custom Ears
+                        if (state.earIndex > 0) {
+                            const earsSvgStr = SVG_DATABASE.ears[state.earIndex];
+                            if (earsSvgStr) {
+                                const earsDoc = parser.parseFromString(earsSvgStr, "image/svg+xml");
+                                
+                                // Copy defs patterns/images to main SVG
+                                const earsDefs = earsDoc.querySelector("defs");
+                                if (earsDefs) {
+                                    let mainDefs = svgElement.querySelector("defs");
+                                    if (!mainDefs) {
+                                        mainDefs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+                                        svgElement.insertBefore(mainDefs, svgElement.firstChild);
+                                    }
+                                    earsDefs.childNodes.forEach(child => {
+                                        if (child.nodeType === 1) {
+                                            const id = child.getAttribute("id");
+                                            if (!id || !mainDefs.querySelector(`#${id}`)) {
+                                                mainDefs.appendChild(child.cloneNode(true));
+                                            }
+                                        }
+                                    });
+                                }
+                                
+                                // Separate left and right ear nodes
+                                const leftEarNodes = [];
+                                const rightEarNodes = [];
+                                const childNodes = Array.from(earsDoc.documentElement.childNodes).filter(node => node.nodeType === 1 && node.tagName.toLowerCase() !== "defs");
+                                
+                                childNodes.forEach(node => {
+                                    let isLeft = false;
+                                    if (node.tagName.toLowerCase() === "mask") {
+                                        const x = parseFloat(node.getAttribute("x") || "0");
+                                        if (x < 87) isLeft = true;
+                                    } else if (node.tagName.toLowerCase() === "g") {
+                                        const maskAttr = node.getAttribute("mask");
+                                        if (maskAttr) {
+                                            const maskId = maskAttr.replace(/url\(#|\)/g, "");
+                                            const maskEl = earsDoc.getElementById(maskId);
+                                            if (maskEl) {
+                                                const x = parseFloat(maskEl.getAttribute("x") || "0");
+                                                if (x < 87) isLeft = true;
+                                            }
+                                        }
+                                    }
+                                    if (isLeft) {
+                                        leftEarNodes.push(node.cloneNode(true));
+                                    } else {
+                                        rightEarNodes.push(node.cloneNode(true));
+                                    }
+                                });
+                                
+                                const EAR_OFFSETS = {
+                                    1: { left: { dx: -12, dy: 62 }, right: { dx: -12, dy: 62 } },
+                                    2: { left: { dx: 146, dy: 62 }, right: { dx: 143, dy: 62 } },
+                                    3: { left: { dx: 302, dy: 62 }, right: { dx: 292, dy: 62 } },
+                                    4: { left: { dx: 452, dy: 62 }, right: { dx: 469, dy: 62 } },
+                                    5: { left: { dx: 624, dy: 62 }, right: { dx: 632, dy: 62 } },
+                                    6: { left: { dx: 793, dy: 60 }, right: { dx: 809, dy: 60 } }
+                                };
+                                
+                                const offsets = EAR_OFFSETS[state.faceIndex] || { left: { dx: -12, dy: 62 }, right: { dx: -12, dy: 62 } };
+                                
+                                // Create left ear group
+                                const leftEarGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                                leftEarGroup.setAttribute("id", "custom-left-ear");
+                                leftEarGroup.setAttribute("transform", `translate(${offsets.left.dx}, ${offsets.left.dy})`);
+                                leftEarNodes.forEach(node => leftEarGroup.appendChild(node));
+                                
+                                // Create right ear group
+                                const rightEarGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                                rightEarGroup.setAttribute("id", "custom-right-ear");
+                                rightEarGroup.setAttribute("transform", `translate(${offsets.right.dx}, ${offsets.right.dy})`);
+                                rightEarNodes.forEach(node => rightEarGroup.appendChild(node));
+                                
+                                // Apply ear filter to rects in both ear groups
+                                leftEarGroup.querySelectorAll("rect").forEach(rect => rect.setAttribute("filter", "url(#custom-ear-filter)"));
+                                rightEarGroup.querySelectorAll("rect").forEach(rect => rect.setAttribute("filter", "url(#custom-ear-filter)"));
+                                
+                                faceGroup.appendChild(leftEarGroup);
+                                faceGroup.appendChild(rightEarGroup);
+                            }
+                        }
                         
                         // Insert face group and remove old head/ears
                         const head = svgElement.querySelector("ellipse.cls-6");
@@ -2020,6 +2131,46 @@ def main():
                 facesGrid.appendChild(btn);
             }
 
+            // 3.6. Ears selection grid
+            earsGrid.innerHTML = "";
+            for (let i = 1; i <= 10; i++) {
+                const earsSvgStr = SVG_DATABASE.ears[i];
+                if (!earsSvgStr) continue;
+                
+                const btn = document.createElement("button");
+                btn.className = "facial-select-btn";
+                if (i === state.earIndex) {
+                    btn.classList.add("active");
+                }
+                
+                const parser = new DOMParser();
+                const earsDoc = parser.parseFromString(earsSvgStr, "image/svg+xml");
+                const svgEl = earsDoc.documentElement;
+                
+                svgEl.removeAttribute("width");
+                svgEl.removeAttribute("height");
+                svgEl.setAttribute("class", "facial-btn-preview");
+                
+                // Set the filter on any rects in the preview to apply custom-ear-filter
+                svgEl.querySelectorAll("rect").forEach(rect => {
+                    rect.setAttribute("filter", "url(#custom-ear-filter)");
+                });
+                
+                btn.innerHTML = `<span class="facial-btn-label">Tai #${i}</span>`;
+                btn.appendChild(svgEl);
+                
+                btn.addEventListener("click", () => {
+                    if (state.earIndex !== i) {
+                        state.earIndex = i;
+                        playSound('click');
+                        syncFacialActiveState(earsGrid, i);
+                        updateCharacter();
+                        saveState();
+                    }
+                });
+                earsGrid.appendChild(btn);
+            }
+
             // 4. Noses selection grid
             nosesGrid.innerHTML = "";
             FACIAL_DATABASE.noses.forEach(item => {
@@ -2126,6 +2277,7 @@ def main():
             
             // Sync facial selections
             syncFacialActiveState(facesGrid, state.faceIndex);
+            syncFacialActiveState(earsGrid, state.earIndex);
             syncFacialActiveState(eyebrowsGrid, state.eyebrowIndex);
             syncFacialActiveState(eyesGrid, state.eyeIndex);
             syncFacialActiveState(nosesGrid, state.noseIndex);
@@ -2281,7 +2433,8 @@ def main():
                 eyeIndex: 1,
                 eyebrowIndex: 1,
                 noseIndex: 1,
-                mouthIndex: 1
+                mouthIndex: 1,
+                earIndex: 1
             };
             resetCamera();
             updateUI();
@@ -2310,7 +2463,7 @@ def main():
             downloadLink.href = url;
             
             const modeName = state.customMode ? "custom" : `preset_${state.skinToneIndex}`;
-            const filename = `mee_${state.gender}_skin_${modeName}_face_${state.faceIndex}_eye_${state.eyeIndex}_eb_${state.eyebrowIndex}_nose_${state.noseIndex}_mouth_${state.mouthIndex}.svg`;
+            const filename = `mee_${state.gender}_skin_${modeName}_face_${state.faceIndex}_ear_${state.earIndex}_eye_${state.eyeIndex}_eb_${state.eyebrowIndex}_nose_${state.noseIndex}_mouth_${state.mouthIndex}.svg`;
             downloadLink.download = filename;
             
             document.body.appendChild(downloadLink);
@@ -2355,7 +2508,7 @@ def main():
                 downloadLink.href = pngURL;
                 
                 const modeName = state.customMode ? "custom" : `preset_${state.skinToneIndex}`;
-                downloadLink.download = `mee_${state.gender}_skin_${modeName}_face_${state.faceIndex}_eye_${state.eyeIndex}_eb_${state.eyebrowIndex}_nose_${state.noseIndex}_mouth_${state.mouthIndex}.png`;
+                downloadLink.download = `mee_${state.gender}_skin_${modeName}_face_${state.faceIndex}_ear_${state.earIndex}_eye_${state.eyeIndex}_eb_${state.eyebrowIndex}_nose_${state.noseIndex}_mouth_${state.mouthIndex}.png`;
                 
                 document.body.appendChild(downloadLink);
                 downloadLink.click();
