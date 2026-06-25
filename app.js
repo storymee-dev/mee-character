@@ -2098,57 +2098,61 @@ function initFairytaleLibrary() {
     const story68 = document.getElementById("art-story-6-8");
     const story9Up = document.getElementById("art-story-9-up");
     
-    if (age === "6-8") {
-        if (story68) story68.classList.remove("hidden");
-        if (story9Up) story9Up.classList.add("hidden");
-        
-        currentFairytaleIndex = 0;
-        updateFairytaleSlide(currentFairytaleIndex);
-        resetFairytaleAudio();
-        
-        // Sinh động lưới "Thế Giới Truyện" 3x3 ở bên phải
-        const grid = document.getElementById("fairytale-story-grid");
-        if (grid) {
-            grid.innerHTML = "";
-            FAIRYTALE_DATA.forEach((story, idx) => {
-                const card = document.createElement("div");
-                card.className = `story-shelf-card ${idx === currentFairytaleIndex ? "active" : ""}`;
-                card.dataset.index = idx;
-                card.innerHTML = `
-                    <img src="${story.image}" alt="${story.title}">
-                    <span>${story.title}</span>
-                `;
-                card.addEventListener("click", () => {
-                    currentFairytaleIndex = idx;
-                    updateFairytaleSlide(currentFairytaleIndex);
-                    resetFairytaleAudio(); // Reset audio khi đổi câu chuyện mới
-                    
-                    // Cập nhật active card trong grid
-                    document.querySelectorAll(".story-shelf-card").forEach((c, i) => {
-                        c.classList.toggle("active", i === idx);
-                    });
+    // Bé nghe luôn hiện cho tất cả các tuổi (kế thừa)
+    if (story68) story68.classList.remove("hidden");
+    
+    // Sáng tác AI chỉ hiện từ 9 tuổi trở lên
+    if (story9Up) {
+        if (age === "6-8") {
+            story9Up.classList.add("hidden");
+        } else {
+            story9Up.classList.remove("hidden");
+        }
+    }
+    
+    currentFairytaleIndex = 0;
+    updateFairytaleSlide(currentFairytaleIndex);
+    resetFairytaleAudio();
+    
+    // Sinh động lưới "Thế Giới Truyện" 3x3 ở bên phải
+    const grid = document.getElementById("fairytale-story-grid");
+    if (grid) {
+        grid.innerHTML = "";
+        FAIRYTALE_DATA.forEach((story, idx) => {
+            const card = document.createElement("div");
+            card.className = `story-shelf-card ${idx === currentFairytaleIndex ? "active" : ""}`;
+            card.dataset.index = idx;
+            card.innerHTML = `
+                <img src="${story.image}" alt="${story.title}">
+                <span>${story.title}</span>
+            `;
+            card.addEventListener("click", () => {
+                currentFairytaleIndex = idx;
+                updateFairytaleSlide(currentFairytaleIndex);
+                resetFairytaleAudio(); // Reset audio khi đổi câu chuyện mới
+                
+                // Cập nhật active card trong grid
+                document.querySelectorAll(".story-shelf-card").forEach((c, i) => {
+                    c.classList.toggle("active", i === idx);
                 });
-                grid.appendChild(card);
             });
-        }
+            grid.appendChild(card);
+        });
+    }
+    
+    // Khởi tạo sự kiện Audio Player
+    const btnPlay = document.getElementById("btn-story-play-68");
+    if (btnPlay) {
+        const newBtn = btnPlay.cloneNode(true);
+        btnPlay.parentNode.replaceChild(newBtn, btnPlay);
         
-        // Khởi tạo sự kiện Audio Player
-        const btnPlay = document.getElementById("btn-story-play-68");
-        if (btnPlay) {
-            const newBtn = btnPlay.cloneNode(true);
-            btnPlay.parentNode.replaceChild(newBtn, btnPlay);
-            
-            newBtn.addEventListener("click", () => {
-                if (isFairytaleAudioPlaying) {
-                    pauseFairytaleAudio();
-                } else {
-                    playFairytaleAudio();
-                }
-            });
-        }
-    } else {
-        if (story68) story68.classList.add("hidden");
-        if (story9Up) story9Up.classList.remove("hidden");
+        newBtn.addEventListener("click", () => {
+            if (isFairytaleAudioPlaying) {
+                pauseFairytaleAudio();
+            } else {
+                playFairytaleAudio();
+            }
+        });
     }
 }
 
