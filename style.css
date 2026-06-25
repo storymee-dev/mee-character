@@ -1695,15 +1695,33 @@ textarea.app-input {
     pointer-events: none;
 }
 
-/* Fix character SVG overflowing preview wrapper */
+/* Fix character SVG overflowing preview wrapper and make it larger */
 #human-avatar-preview svg {
     max-width: 100%;
     max-height: 100%;
     width: auto;
-    height: 200px; /* Cố định chiều cao nhân vật để nằm trọn trong khung 240px */
+    height: 250px; /* Tăng chiều cao lên 250px */
     display: block;
-    transform: scale(1.0); /* Đưa về tỷ lệ chuẩn sau khi giới hạn height */
+    transform: scale(1.22); /* Tăng tỷ lệ scale lên 1.22 để người to rõ ràng */
+    transform-origin: bottom center; /* Scale từ gót chân để Mee đứng đúng vị trí */
     overflow: visible;
+}
+
+/* Style color picker inputs to be perfectly round and borderless */
+input[type="color"] {
+    -webkit-appearance: none;
+    appearance: none;
+    border: none;
+    border-radius: 50% !important;
+    overflow: hidden;
+}
+input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+    border-radius: 50% !important;
+}
+input[type="color"]::-webkit-color-swatch {
+    border: none !important;
+    border-radius: 50% !important;
 }
 .facial-grid {
     display: grid;

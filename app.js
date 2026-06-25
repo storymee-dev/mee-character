@@ -1232,13 +1232,8 @@ function buildMeeBuilderPaletteUI() {
         skinDiv.className = "palette-color skin";
         skinDiv.style.backgroundColor = item.skin;
 
-        const indicator = document.createElement("div");
-        indicator.className = "palette-indicator";
-        indicator.innerText = `#${item.id}`;
-
         button.appendChild(shadingDiv);
         button.appendChild(skinDiv);
-        button.appendChild(indicator);
 
         button.addEventListener("click", () => {
             saveMeeHistory();
