@@ -1647,27 +1647,30 @@ textarea.app-input {
 }
 .palette-grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 12px;
+    grid-template-columns: repeat(5, 42px);
+    gap: 10px;
+    justify-content: flex-start;
 }
 .palette-item {
+    width: 42px;
+    height: 42px;
     aspect-ratio: 1;
     border-radius: 50%;
-    border: 2px solid rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(0, 0, 0, 0.08);
     position: relative;
     cursor: pointer;
     overflow: hidden;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .palette-item:hover {
-    transform: scale(1.12);
-    border-color: rgba(255, 255, 255, 0.4);
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+    border-color: rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
 }
 .palette-item.active {
-    transform: scale(1.15);
+    transform: scale(1.1);
     border-color: #6366f1;
-    box-shadow: 0 0 12px #6366f1;
+    box-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
 }
 .palette-color {
     position: absolute;
@@ -1685,11 +1688,22 @@ textarea.app-input {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 0.65rem;
+    font-size: 0.6rem;
     font-weight: 800;
     color: #0b0f19;
     text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
     pointer-events: none;
+}
+
+/* Fix character SVG overflowing preview wrapper */
+#human-avatar-preview svg {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: 200px; /* Cố định chiều cao nhân vật để nằm trọn trong khung 240px */
+    display: block;
+    transform: scale(1.0); /* Đưa về tỷ lệ chuẩn sau khi giới hạn height */
+    overflow: visible;
 }
 .facial-grid {
     display: grid;
