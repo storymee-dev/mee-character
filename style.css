@@ -23,6 +23,13 @@
     font-style: normal;
 }
 
+@font-face {
+    font-family: 'CherryBombOne';
+    src: url('assets/fonts/CherryBombOne-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 /* 1. INITIAL SETUP & THEME VARIABLES */
 :root {
     --font-primary: 'DFVN TAN - HARMONI', 'DFVN-SomeTimeLater', 'Fredoka', 'Outfit', sans-serif;
@@ -529,95 +536,118 @@ body {
     border: none;
     aspect-ratio: auto;
     box-shadow: none;
-    background-color: #BEE3F8;
-}
-.main-map-image {
-    width: 100%;
-    height: 100%;
-    object-fit: fill;
-    display: block;
+    background: url('assets/homepage_background.png') no-repeat center center;
+    background-size: 100% 100%;
+    overflow: hidden;
 }
 
-/* Hotspots (Vùng bấm đè lên các hòn đảo) */
-.map-hotspot {
+/* PACO Homepage Map Blocks */
+.map-block {
     position: absolute;
     cursor: pointer;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s ease;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    transition: all 0.3s ease;
-}
-.map-hotspot:hover {
-    transform: scale(1.02);
+    justify-content: center;
+    z-index: 5;
 }
 
-/* Định vị tuyệt đối từng đảo theo tỉ lệ % ảnh vẽ */
-.island-art {
-    top: 9%;
-    left: 4%;
-    width: 26%;
-    height: 38%;
-}
-.island-brain {
-    top: 54%;
-    left: 4%;
-    width: 31%;
-    height: 38%;
-}
-.island-home {
-    top: 20%;
-    left: 33%;
-    width: 34%;
-    height: 52%;
-    border-radius: 50% 50% 30% 30%;
-}
-.island-academy {
-    top: 8%;
-    left: 70%;
-    width: 26%;
-    height: 38%;
-}
-.island-explore {
-    top: 54%;
-    left: 70%;
-    width: 26%;
-    height: 38%;
-}
-.island-ideas {
-    top: 74%;
-    left: 40%;
-    width: 15%;
-    height: 20%;
+.map-block.active-block {
+    filter: drop-shadow(0 0 15px rgba(234, 179, 8, 0.8)) drop-shadow(0 8px 25px rgba(0,0,0,0.25)) !important;
 }
 
-/* Thiết lập ảnh đảo con */
-.island-img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    pointer-events: none; /* Click xuyên qua ảnh vào hotspot */
+.map-block img {
+    pointer-events: none;
 }
 
-/* Hover hiệu ứng zoom nhẹ hòn đảo */
-.map-hotspot:hover .island-img {
-    transform: scale(1.08);
-    filter: brightness(1.1) drop-shadow(0 10px 20px rgba(255,255,255,0.4));
+.block-label {
+    font-family: 'CherryBombOne', sans-serif;
+    font-size: 1.5rem !important;
+    color: #1A202C;
+    text-shadow: 2px 2px 0px #FFF, -2px -2px 0px #FFF, 2px -2px 0px #FFF, -2px 2px 0px #FFF;
+    margin-top: 8px;
+    font-weight: bold;
+    pointer-events: none;
 }
 
-/* SVG đảo Ý tưởng */
-.ideas-bulb-svg {
-    width: 100%;
-    height: 100%;
-    transition: transform 0.3s ease;
-}
-.map-hotspot:hover .ideas-bulb-svg {
-    transform: scale(1.1);
-    filter: drop-shadow(0 0 15px rgba(255,235,59,0.8));
+/* Bus Vehicle styles */
+#bus-vehicle {
+    bottom: 1%;
+    transition: left 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    z-index: 10;
+    pointer-events: none;
 }
 
-/* Thiết lập hiệu ứng bay lơ lửng lệch pha cho từng đảo */
+/* Nav Arrows */
+.nav-arrow-btn {
+    transition: transform 0.15s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+    z-index: 20;
+    user-select: none;
+}
+
+.nav-arrow-btn:hover {
+    transform: translateY(-50%) scale(1.1) !important;
+    background-color: #F8FAFC !important;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2) !important;
+}
+
+.nav-arrow-btn:active {
+    transform: translateY(-50%) scale(0.95) !important;
+}
+
+/* Comic Speech Bubble */
+.comic-panel-item {
+    position: relative;
+}
+
+.speech-bubble {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    border: 2px solid #1A1A1A;
+    border-radius: 12px;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #1A1A1A;
+    max-width: 80%;
+    word-wrap: break-word;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    z-index: 10;
+    display: none;
+}
+
+.speech-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 10px 8px 0;
+    border-style: solid;
+    border-color: white transparent;
+    display: block;
+    width: 0;
+}
+
+.speech-bubble::before {
+    content: '';
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 11px 9px 0;
+    border-style: solid;
+    border-color: #1A1A1A transparent;
+    display: block;
+    width: 0;
+    z-index: -1;
+}
+
+/* Thiết lập hiệu ứng bay lơ lửng lệch pha cho các block */
 @keyframes floatIsland1 {
     0%, 100% { transform: translateY(0px) rotate(0deg); }
     50% { transform: translateY(-6px) rotate(0.5deg); }

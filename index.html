@@ -99,44 +99,29 @@
             <div class="world-map-instruction">🎡 Bé hãy click vào đảo trung tâm **Home & Pet** để chọn nhân vật nhé! 🎡</div>
             
             <div class="interactive-map-container">
-                <!-- Ảnh nền sóng biển xanh chính -->
-                <img src="assets/background_hero_sector.jpeg" alt="Ocean Background" class="main-map-image">
-                
-                <!-- Các hòn đảo lẻ đè lên nền sóng biển -->
-                <div class="map-hotspot island-art" data-zone="art">
-                    <img src="assets/art_lab.png" alt="Art Workshop" class="island-img float-art">
-                </div>
-                <div class="map-hotspot island-brain" data-zone="brain">
-                    <img src="assets/brain.png" alt="Brainstorming" class="island-img float-brain">
-                </div>
-                <div class="map-hotspot island-home" data-zone="home">
-                    <img src="assets/home_pet.png" alt="Home & Pet" class="island-img float-home">
-                    <!-- Avatar của bé hiển thị trên đảo Home -->
+                <!-- 3 block ngôi nhà/địa điểm trên map -->
+                <div class="map-block block-left" data-zone="mee" style="left: calc(50% - 870px); bottom: 12%;">
+                    <img src="assets/right_house.png" alt="Nhà Của Bé" style="width: 580px; height: auto;">
+                    <!-- Avatar của bé hiển thị trên đảo Home cũ vẫn giữ làm dấu mốc ẩn -->
                     <div class="island-active-avatar hidden" id="map-home-avatar"></div>
                 </div>
-                <div class="map-hotspot island-academy" data-zone="academy">
-                    <img src="assets/academy.png" alt="Academy" class="island-img float-academy">
+                
+                <div class="map-block block-center" data-zone="art" style="left: 50%; bottom: 12%; transform: translateX(-50%); z-index: 6;">
+                    <img src="assets/center_house.png" alt="Xưởng Sáng Tạo" style="width: 680px; height: auto;">
                 </div>
-                <div class="map-hotspot island-explore" data-zone="explore">
-                    <img src="assets/explore.png" alt="Exploration" class="island-img float-explore">
+                
+                <div class="map-block block-right" data-zone="passport" style="right: calc(50% - 870px); bottom: 12%;">
+                    <img src="assets/left_house.png" alt="Nhật Ký" style="width: 580px; height: auto;">
                 </div>
-                <div class="map-hotspot island-ideas" data-zone="ideas">
-                    <!-- Dựng đảo Ideas Outpost bằng SVG bóng đèn phát sáng hoạt hình -->
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="ideas-bulb-svg float-ideas">
-                        <ellipse cx="50" cy="82" rx="35" ry="12" fill="#8D6E63" opacity="0.8"/>
-                        <ellipse cx="50" cy="80" rx="30" ry="8" fill="#4CAF50"/>
-                        <g>
-                            <path d="M50,22 C37,22 32,32 32,45 C32,54 39,61 43,65 L43,72 C43,73.5 44.5,75 46,75 L54,75 C55.5,75 57,73.5 57,72 L57,65 C61,61 68,54 68,45 C68,32 63,22 50,22 Z" fill="#FFEB3B" opacity="0.95" filter="drop-shadow(0 0 12px #FFD54F)"/>
-                            <rect x="45" y="75" width="10" height="3" fill="#B0BEC5"/>
-                            <rect x="47" y="78" width="6" height="3" fill="#90A4AE"/>
-                            <!-- Nét vẽ tóc bóng đèn -->
-                            <path d="M46,40 Q50,30 54,40" stroke="#F57F17" stroke-width="2" fill="none"/>
-                            <circle cx="45" cy="48" r="2" fill="#000"/>
-                            <circle cx="55" cy="48" r="2" fill="#000"/>
-                            <path d="M48,54 Q50,56 52,54" stroke="#000" stroke-width="2" fill="none"/>
-                        </g>
-                    </svg>
+
+                <!-- Chiếc Xe Bus Paco -->
+                <div class="bus-sprite" id="bus-vehicle" style="position: absolute; width: 580px; height: auto; left: 35%; bottom: 1%;">
+                    <img src="assets/bus.png" alt="Xe Bus Paco" style="width: 100%; height: auto; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.15));">
                 </div>
+
+                <!-- Nút điều hướng Trái/Phải -->
+                <button class="nav-arrow-btn arrow-left" id="btn-bus-left" style="position: absolute; left: 30px; top: 50%; transform: translateY(-50%); width: 60px; height: 60px; border-radius: 50%; border: none; background: white; box-shadow: 0 6px 20px rgba(0,0,0,0.15); font-size: 2rem; cursor: pointer; display: flex; align-items: center; justify-content: center;">◀️</button>
+                <button class="nav-arrow-btn arrow-right" id="btn-bus-right" style="position: absolute; right: 30px; top: 50%; transform: translateY(-50%); width: 60px; height: 60px; border-radius: 50%; border: none; background: white; box-shadow: 0 6px 20px rgba(0,0,0,0.15); font-size: 2rem; cursor: pointer; display: flex; align-items: center; justify-content: center;">▶️</button>
             </div>
         </div>
 
@@ -165,6 +150,8 @@
                             <button class="mii-tab-btn mii-tab-main active" data-tab="skin" title="Giới tính & Màu da">👤</button>
                             <button class="mii-tab-btn mii-tab-main" data-tab="eyes" title="Đôi mắt">👁️</button>
                             <button class="mii-tab-btn mii-tab-main" data-tab="eyebrows" title="Lông mày">✏️</button>
+                            <button class="mii-tab-btn mii-tab-main" data-tab="nose" title="Chiếc mũi">👃</button>
+                            <button class="mii-tab-btn mii-tab-main" data-tab="mouth" title="Khuôn miệng">👄</button>
                         </div>
                         
                         <!-- CỘT 2: KHUNG PREVIEW NHÂN VẬT (BÊN TRÁI) -->
@@ -245,6 +232,18 @@
                                 <div class="facial-grid" id="meeBuilderEyebrowsGrid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;"></div>
                             </div>
                             
+                            <!-- Tab 4: Chiếc mũi -->
+                            <div id="mee-builder-nose-content" class="mee-builder-tab-content hidden">
+                                <h4 style="margin-bottom: 8px; color: var(--color-text-main);">Chọn Kiểu Mũi:</h4>
+                                <div class="facial-grid" id="meeBuilderNoseGrid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;"></div>
+                            </div>
+
+                            <!-- Tab 5: Khuôn miệng -->
+                            <div id="mee-builder-mouth-content" class="mee-builder-tab-content hidden">
+                                <h4 style="margin-bottom: 8px; color: var(--color-text-main);">Chọn Kiểu Miệng:</h4>
+                                <div class="facial-grid" id="meeBuilderMouthGrid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;"></div>
+                            </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -304,7 +303,7 @@
                     
                     <!-- LOBBY VIEW: Sẽ hiển thị 6 xưởng như hình 2 -->
                     <div id="art-lobby-view" class="art-lobby-container" style="margin-top: 20px;">
-                        <div class="art-lobby-grid">
+                        <div class="art-lobby-grid" style="grid-template-columns: repeat(3, 1fr) !important;">
                             <!-- Card 1: Xưởng Vẽ -->
                             <div class="art-card" data-sub="coloring">
                                 <div class="art-card-img card-img-coloring">
@@ -312,79 +311,37 @@
                                     <span class="art-card-emoji">🎨</span>
                                 </div>
                                 <div class="art-card-content">
-                                    <span class="art-card-tag tag-new">Mới ✨</span>
+                                    <span class="art-card-tag tag-new">VẼ TRANH ✨</span>
                                     <h3>Xưởng Vẽ Thần Kỳ</h3>
                                     <p>Tô màu số hóa thông minh hoặc tự do sáng tạo tranh vẽ tay cùng cọ vẽ ma thuật và nhãn dán sticker.</p>
                                     <button class="art-card-btn">Vào Xưởng 🚀</button>
                                 </div>
                             </div>
                             
-                            <!-- Card 2: Thư Viện Cổ -->
-                            <div class="art-card" data-sub="library">
-                                <div class="art-card-img card-img-library">
-                                    <img src="assets/thu_vien.jpeg" alt="Thư Viện Cổ Tích AI" class="art-card-banner">
-                                    <span class="art-card-emoji">📖</span>
-                                </div>
-                                <div class="art-card-content">
-                                    <span class="art-card-tag tag-popular">Yêu Thích ❤️</span>
-                                    <h3>Thư Viện Cổ Tích AI</h3>
-                                    <p>Lắng nghe kể chuyện cổ tích audio AI truyền cảm, hoặc tự biên soạn cốt truyện phiêu lưu ma thuật cùng AI.</p>
-                                    <button class="art-card-btn">Vào Xưởng 🚀</button>
-                                </div>
-                            </div>
-                            
-                            <!-- Card 3: Truyện Tranh (Hiện theo chặng tuổi 9+) -->
+                            <!-- Card 2: Truyện Tranh -->
                             <div class="art-card" id="card-art-comic" data-sub="comic">
                                 <div class="art-card-img card-img-comic">
                                     <img src="assets/truyen_tranh.jpeg" alt="Studio Truyện Tranh" class="art-card-banner">
                                     <span class="art-card-emoji">💬</span>
                                 </div>
                                 <div class="art-card-content">
-                                    <span class="art-card-tag tag-creative">Sáng Tạo 🪄</span>
+                                    <span class="art-card-tag tag-creative">TRUYỆN TRANH 🪄</span>
                                     <h3>Studio Truyện Tranh</h3>
-                                    <p>Phân chia các khung tranh panel, tự thiết kế ảnh nền AI độc lạ và viết lời thoại đối thoại sinh động cho Mee.</p>
+                                    <p>Tự thiết kế ảnh nền AI độc lạ và viết lời thoại đối thoại sinh động cho Mee trên các panel phân cảnh.</p>
                                     <button class="art-card-btn">Vào Xưởng 🚀</button>
                                 </div>
                             </div>
-                            
-                            <!-- Card 4: Photobooth -->
-                            <div class="art-card" data-sub="photobooth">
-                                <div class="art-card-img card-img-photobooth">
-                                    <img src="assets/photobooth.jpeg" alt="Mee Photobooth" class="art-card-banner">
-                                    <span class="art-card-emoji">📸</span>
+
+                            <!-- Card 3: Sáng Tác Truyện Chữ -->
+                            <div class="art-card" data-sub="library">
+                                <div class="art-card-img card-img-library">
+                                    <img src="assets/thu_vien.jpeg" alt="Sáng Tác Truyện Chữ AI" class="art-card-banner">
+                                    <span class="art-card-emoji">📖</span>
                                 </div>
                                 <div class="art-card-content">
-                                    <span class="art-card-tag tag-fun">Vui Nhộn 🎉</span>
-                                    <h3>Mee Photobooth</h3>
-                                    <p>Chụp ảnh cùng Mee với nhiều khung hình xinh xắn, tự thiết kế khung hoặc đổi phong cảnh lâu đài băng bằng AI.</p>
-                                    <button class="art-card-btn">Vào Xưởng 🚀</button>
-                                </div>
-                            </div>
-                            
-                            <!-- Card 5: Phòng Thu -->
-                            <div class="art-card" data-sub="studio">
-                                <div class="art-card-img card-img-studio">
-                                    <img src="assets/phong_thu.jpeg" alt="Phòng Thu & Mix Nhạc" class="art-card-banner">
-                                    <span class="art-card-emoji">🎵</span>
-                                </div>
-                                <div class="art-card-content">
-                                    <span class="art-card-tag tag-vip">VIP ⭐</span>
-                                    <h3>Phòng Thu & Mix Nhạc</h3>
-                                    <p>Hòa mình vào âm thanh ru ngủ êm dịu, phối khí beat nhạc sôi động hoặc tự tạo bản nhạc 15 giây bằng trí tuệ nhân tạo.</p>
-                                    <button class="art-card-btn">Vào Xưởng 🚀</button>
-                                </div>
-                            </div>
-                            
-                            <!-- Card 6: Phim Trường -->
-                            <div class="art-card" data-sub="movie">
-                                <div class="art-card-img card-img-movie">
-                                    <img src="assets/phim_truong.jpeg" alt="Phim Trường Puppet" class="art-card-banner">
-                                    <span class="art-card-emoji">🎬</span>
-                                </div>
-                                <div class="art-card-content">
-                                    <span class="art-card-tag tag-vip">VIP ⭐</span>
-                                    <h3>Phim Trường Puppet</h3>
-                                    <p>Diễn kịch rối bóng đầy sắc màu, thu âm lồng tiếng kể chuyện và biến đổi chất giọng siêu ngộ nghĩnh bằng AI.</p>
+                                    <span class="art-card-tag tag-popular">TRUYỆN CHỮ ❤️</span>
+                                    <h3>Truyện Chữ AI & Cổ Tích</h3>
+                                    <p>Lắng nghe kể chuyện cổ tích audio AI truyền cảm, hoặc tự biên soạn câu chuyện phiêu lưu thần kỳ cùng AI.</p>
                                     <button class="art-card-btn">Vào Xưởng 🚀</button>
                                 </div>
                             </div>
@@ -688,32 +645,64 @@
 
                             <!-- Sub-tab 3: Truyện Tranh -->
                             <div id="art-sub-panel-comic" class="art-sub-panel hidden">
-                                <h3>💬 Sáng Tác Truyện Tranh Panel Canvas</h3>
-                                <div class="comic-creator-layout">
-                                    <div class="comic-panel-grid">
-                                        <div class="comic-panel-item" data-panel="1">
-                                            <span class="panel-num">Panel 1</span>
-                                            <div class="panel-canvas-preview" id="comic-p1-view">🎨 Click vẽ panel này</div>
-                                            <input type="text" class="panel-bubble-input" id="comic-p1-text" placeholder="Nhập lời thoại...">
+                                <h3>💬 Sáng Tác Truyện Tranh Của Mee</h3>
+                                <div class="comic-creator-layout" style="display: flex; flex-direction: column; gap: 15px;">
+                                    <div class="comic-panel-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                                        <!-- Panel 1 -->
+                                        <div class="comic-panel-item" data-panel="1" style="border: 2px solid #E2E8F0; border-radius: 16px; padding: 10px; cursor: pointer; transition: all 0.3s; background: #F8FAFC;">
+                                            <span class="panel-num" style="font-weight: bold; font-size: 0.9rem; color: var(--color-primary); display: block; margin-bottom: 5px;">Khung Hình 1</span>
+                                            <div class="panel-canvas-preview" id="comic-p1-view" style="height: 180px; display: flex; align-items: center; justify-content: center; background: #EDF2F7; overflow: hidden; border-radius: 12px; position: relative; border: 1.5px dashed #CBD5E0; transition: all 0.3s;">
+                                                <div class="speech-bubble" id="comic-p1-bubble"></div>
+                                                <div class="mee-character-svg" style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; transform: scale(1.1); transform-origin: bottom center;"></div>
+                                            </div>
+                                            <input type="text" class="panel-bubble-input" id="comic-p1-text" placeholder="Nhập lời thoại panel 1..." style="width: 100%; margin-top: 8px; padding: 8px; border: 1.5px solid #CBD5E0; border-radius: 8px; box-sizing: border-box;">
                                         </div>
-                                        <div class="comic-panel-item" data-panel="2">
-                                            <span class="panel-num">Panel 2</span>
-                                            <div class="panel-canvas-preview" id="comic-p2-view">🎨 Click vẽ panel này</div>
-                                            <input type="text" class="panel-bubble-input" id="comic-p2-text" placeholder="Nhập lời thoại...">
+                                        
+                                        <!-- Panel 2 -->
+                                        <div class="comic-panel-item" data-panel="2" style="border: 2px solid #E2E8F0; border-radius: 16px; padding: 10px; cursor: pointer; transition: all 0.3s; background: #F8FAFC;">
+                                            <span class="panel-num" style="font-weight: bold; font-size: 0.9rem; color: var(--color-primary); display: block; margin-bottom: 5px;">Khung Hình 2</span>
+                                            <div class="panel-canvas-preview" id="comic-p2-view" style="height: 180px; display: flex; align-items: center; justify-content: center; background: #EDF2F7; overflow: hidden; border-radius: 12px; position: relative; border: 1.5px dashed #CBD5E0; transition: all 0.3s;">
+                                                <div class="speech-bubble" id="comic-p2-bubble"></div>
+                                                <div class="mee-character-svg" style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; transform: scale(1.1); transform-origin: bottom center;"></div>
+                                            </div>
+                                            <input type="text" class="panel-bubble-input" id="comic-p2-text" placeholder="Nhập lời thoại panel 2..." style="width: 100%; margin-top: 8px; padding: 8px; border: 1.5px solid #CBD5E0; border-radius: 8px; box-sizing: border-box;">
                                         </div>
-                                        <div class="comic-panel-item" data-panel="3">
-                                            <span class="panel-num">Panel 3</span>
-                                            <div class="panel-canvas-preview" id="comic-p3-view">🎨 Click vẽ panel này</div>
-                                            <input type="text" class="panel-bubble-input" id="comic-p3-text" placeholder="Nhập lời thoại...">
+                                        
+                                        <!-- Panel 3 -->
+                                        <div class="comic-panel-item" data-panel="3" style="border: 2px solid #E2E8F0; border-radius: 16px; padding: 10px; cursor: pointer; transition: all 0.3s; background: #F8FAFC;">
+                                            <span class="panel-num" style="font-weight: bold; font-size: 0.9rem; color: var(--color-primary); display: block; margin-bottom: 5px;">Khung Hình 3</span>
+                                            <div class="panel-canvas-preview" id="comic-p3-view" style="height: 180px; display: flex; align-items: center; justify-content: center; background: #EDF2F7; overflow: hidden; border-radius: 12px; position: relative; border: 1.5px dashed #CBD5E0; transition: all 0.3s;">
+                                                <div class="speech-bubble" id="comic-p3-bubble"></div>
+                                                <div class="mee-character-svg" style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; transform: scale(1.1); transform-origin: bottom center;"></div>
+                                            </div>
+                                            <input type="text" class="panel-bubble-input" id="comic-p3-text" placeholder="Nhập lời thoại panel 3..." style="width: 100%; margin-top: 8px; padding: 8px; border: 1.5px solid #CBD5E0; border-radius: 8px; box-sizing: border-box;">
                                         </div>
                                     </div>
-                                    <div class="comic-tools">
-                                        <div class="editor-section hidden" id="comic-ai-bg-section">
-                                            <h4>🏞️ AI Sinh Ảnh Nền Panel (VIP):</h4>
-                                            <input type="text" id="comic-ai-bg-prompt" class="app-input" placeholder="Mô tả cảnh nền...">
-                                            <button class="btn-micro gold-glow" id="btn-comic-ai-bg-gen">Gen Ảnh Nền AI</button>
+                                    
+                                    <div class="comic-tools" style="display: flex; gap: 15px; background: #F7FAFC; padding: 15px; border-radius: 16px; border: 1.5px solid #E2E8F0;">
+                                        <!-- Chọn background preset màu sắc nghệ thuật -->
+                                        <div style="flex: 1;">
+                                            <h4 style="margin: 0 0 8px 0; font-size: 0.9rem; color: var(--color-text-main);">🌈 Chọn Nền Nghệ Thuật:</h4>
+                                            <div style="display: flex; gap: 8px;" id="comic-bg-presets-row">
+                                                <button class="btn-micro" data-bg="linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)" style="background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%); color: #1a202c; border: 1.5px solid #cbd5e0; text-shadow: 0 1px 2px #fff;">Hửng Đông</button>
+                                                <button class="btn-micro" data-bg="linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%)" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%); color: #1a202c; border: 1.5px solid #cbd5e0; text-shadow: 0 1px 2px #fff;">Kẹo Ngọt</button>
+                                                <button class="btn-micro" data-bg="linear-gradient(135deg, #30cfd0 0%, #330867 100%)" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%); color: white; border: 1.5px solid #cbd5e0;">Vũ Trụ</button>
+                                                <button class="btn-micro" data-bg="linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)" style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); color: #1a202c; border: 1.5px solid #cbd5e0; text-shadow: 0 1px 2px #fff;">Lâu Đài</button>
+                                            </div>
                                         </div>
-                                        <button class="action-btn-main" id="btn-save-comic-work">💾 Lưu Truyện Tranh Vào Passport</button>
+
+                                        <!-- AI Background Generator -->
+                                        <div class="editor-section hidden" id="comic-ai-bg-section" style="flex: 1.2;">
+                                            <h4 style="margin: 0 0 8px 0; font-size: 0.9rem; color: var(--color-text-main);">🏞️ AI Sinh Ảnh Nền Panel (VIP):</h4>
+                                            <div style="display: flex; gap: 8px;">
+                                                <input type="text" id="comic-ai-bg-prompt" class="app-input" placeholder="Ví dụ: Rừng kẹo ngọt..." style="flex: 1; padding: 6px 10px; font-size: 0.85rem; border: 1.5px solid #CBD5E0; border-radius: 8px;">
+                                                <button class="btn-micro gold-glow" id="btn-comic-ai-bg-gen">Gen Nền AI</button>
+                                            </div>
+                                        </div>
+
+                                        <div style="display: flex; align-items: flex-end;">
+                                            <button class="action-btn-main gold-glow" id="btn-save-comic-work" style="padding: 10px 20px; font-size: 0.95rem; margin: 0; box-shadow: 0 4px 12px var(--theme-6-8-shadow);">💾 Lưu Truyện Tranh</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

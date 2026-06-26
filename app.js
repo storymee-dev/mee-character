@@ -24,9 +24,12 @@ const state = {
         customShading: "#ffcccc",
         eyeIndex: 3,
         eyebrowIndex: 1,
+        noseIndex: 1,
+        mouthIndex: 1,
         mood: "happy",
         rotation: 0
     },
+    busPosition: "center",
     // Thú cưng Pet hiện tại của bé
     pet: {
         type: "dog",
@@ -371,34 +374,66 @@ function renderHumanSVG(mee) {
         });
     }
 
-    // 5. Inject eyebrows & eyes after head ellipse
+    // 5. Inject eyebrows, eyes, nose & mouth after head ellipse
     const head = svgElement.querySelector("ellipse.cls-6");
     if (head) {
-        if (eyebrowIndex > 0) {
+        let lastElement = head;
+
+        if (eyebrowIndex > 0 && FACIAL_DATABASE.eyebrows) {
             const eyebrowItem = FACIAL_DATABASE.eyebrows[eyebrowIndex - 1];
-            const eyebrowsGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
-            eyebrowsGroup.setAttribute("id", "custom-eyebrows");
-            const dx = 52.31;
-            const dy = 72.435 - eyebrowItem.y_center;
-            eyebrowsGroup.setAttribute("transform", `translate(${dx}, ${dy})`);
-            eyebrowsGroup.innerHTML = eyebrowItem.left.join("") + eyebrowItem.right.join("");
-            head.insertAdjacentElement('afterend', eyebrowsGroup);
+            if (eyebrowItem) {
+                const eyebrowsGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                eyebrowsGroup.setAttribute("id", "custom-eyebrows");
+                const dx = 52.31;
+                const dy = 72.435 - eyebrowItem.y_center;
+                eyebrowsGroup.setAttribute("transform", `translate(${dx}, ${dy})`);
+                eyebrowsGroup.innerHTML = eyebrowItem.left.join("") + eyebrowItem.right.join("");
+                lastElement.insertAdjacentElement('afterend', eyebrowsGroup);
+                lastElement = eyebrowsGroup;
+            }
         }
         
-        if (eyeIndex > 0) {
+        if (eyeIndex > 0 && FACIAL_DATABASE.eyes) {
             const eyeItem = FACIAL_DATABASE.eyes[eyeIndex - 1];
-            const eyesGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
-            eyesGroup.setAttribute("id", "custom-eyes");
-            const dx = 52.30;
-            const dy = 87.37 - eyeItem.y_center;
-            eyesGroup.setAttribute("transform", `translate(${dx}, ${dy})`);
-            eyesGroup.innerHTML = eyeItem.left.join("") + eyeItem.right.join("");
-            
-            const eyebrowsEl = svgElement.querySelector("#custom-eyebrows");
-            if (eyebrowsEl) {
-                eyebrowsEl.insertAdjacentElement('afterend', eyesGroup);
-            } else {
-                head.insertAdjacentElement('afterend', eyesGroup);
+            if (eyeItem) {
+                const eyesGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                eyesGroup.setAttribute("id", "custom-eyes");
+                const dx = 52.30;
+                const dy = 87.37 - eyeItem.y_center;
+                eyesGroup.setAttribute("transform", `translate(${dx}, ${dy})`);
+                eyesGroup.innerHTML = eyeItem.left.join("") + eyeItem.right.join("");
+                lastElement.insertAdjacentElement('afterend', eyesGroup);
+                lastElement = eyesGroup;
+            }
+        }
+
+        const noseIndex = mee.noseIndex || 1;
+        if (noseIndex > 0 && FACIAL_DATABASE.noses) {
+            const noseItem = FACIAL_DATABASE.noses[noseIndex - 1];
+            if (noseItem) {
+                const noseGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                noseGroup.setAttribute("id", "custom-nose");
+                const dx = 52.30;
+                const dy = 99.0 - noseItem.y_center;
+                noseGroup.setAttribute("transform", `translate(${dx}, ${dy})`);
+                noseGroup.innerHTML = noseItem.left.join("") + (noseItem.right ? noseItem.right.join("") : "");
+                lastElement.insertAdjacentElement('afterend', noseGroup);
+                lastElement = noseGroup;
+            }
+        }
+
+        const mouthIndex = mee.mouthIndex || 1;
+        if (mouthIndex > 0 && FACIAL_DATABASE.mouths) {
+            const mouthItem = FACIAL_DATABASE.mouths[mouthIndex - 1];
+            if (mouthItem) {
+                const mouthGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                mouthGroup.setAttribute("id", "custom-mouth");
+                const dx = 52.30;
+                const dy = 112.0 - mouthItem.y_center;
+                mouthGroup.setAttribute("transform", `translate(${dx}, ${dy})`);
+                mouthGroup.innerHTML = mouthItem.left.join("") + (mouthItem.right ? mouthItem.right.join("") : "");
+                lastElement.insertAdjacentElement('afterend', mouthGroup);
+                lastElement = mouthGroup;
             }
         }
     }
@@ -459,6 +494,10 @@ function initDOM() {
         // World Map & Detal viewport
         worldMapScreen: document.getElementById("world-map-screen"),
         mapZones: document.querySelectorAll(".map-hotspot"),
+        busVehicle: document.getElementById("bus-vehicle"),
+        btnBusLeft: document.getElementById("btn-bus-left"),
+        btnBusRight: document.getElementById("btn-bus-right"),
+        mapBlocks: document.querySelectorAll(".map-block"),
         zoneDetailViewport: document.getElementById("zone-detail-viewport"),
         btnBackToMap: document.getElementById("btn-back-to-map"),
         
@@ -609,6 +648,8 @@ function initDOM() {
         meeBuilderCustomShadingHex: document.getElementById("meeBuilderCustomShadingHex"),
         meeBuilderEyesGrid: document.getElementById("meeBuilderEyesGrid"),
         meeBuilderEyebrowsGrid: document.getElementById("meeBuilderEyebrowsGrid"),
+        meeBuilderNoseGrid: document.getElementById("meeBuilderNoseGrid"),
+        meeBuilderMouthGrid: document.getElementById("meeBuilderMouthGrid"),
         btnMeeExit: document.getElementById("btn-mee-exit"),
         btnMeeDone: document.getElementById("btn-mee-done"),
 
@@ -721,6 +762,65 @@ function initDOM() {
     };
 }
 
+function moveBusTo(position, autoOpen = false) {
+    if (!dom.busVehicle) return;
+    const oldPosition = state.busPosition || "center";
+    state.busPosition = position;
+
+    let leftVal = "35%";
+    let scaleVal = 1;
+
+    if (position === "left") {
+        leftVal = "8%";
+        scaleVal = 1;
+    } else if (position === "right") {
+        leftVal = "58%";
+        scaleVal = -1;
+    } else {
+        leftVal = "35%";
+        if (oldPosition === "left") {
+            scaleVal = 1;
+        } else if (oldPosition === "right") {
+            scaleVal = -1;
+        } else {
+            scaleVal = 1;
+        }
+    }
+
+    dom.busVehicle.style.left = leftVal;
+    dom.busVehicle.style.transform = `scaleX(${scaleVal})`;
+
+    if (dom.mapBlocks) {
+        dom.mapBlocks.forEach(block => {
+            const zone = block.dataset.zone;
+            const targetZone = position === "left" ? "mee" : (position === "right" ? "passport" : "art");
+            if (zone === targetZone) {
+                block.classList.add("active-block");
+            } else {
+                block.classList.remove("active-block");
+            }
+        });
+    }
+
+    if (autoOpen) {
+        if (window.busMoveTimeout) {
+            clearTimeout(window.busMoveTimeout);
+        }
+        window.busMoveTimeout = setTimeout(() => {
+            const zone = position === "left" ? "mee" : (position === "right" ? "passport" : "art");
+            if (!state.user.hasOnboarded) {
+                if (zone === "mee") {
+                    openZone("mee");
+                } else {
+                    showCustomAlert("🐻", "Tạo Nhân Vật Trước", "Bé cần click vào **Nhà Của Bé** để tạo nhân vật đại diện trước nhé!");
+                }
+            } else {
+                openZone(zone);
+            }
+        }, 800);
+    }
+}
+
 function bindEvents() {
     // Welcome Screen (Chỉ chọn tuổi & Tier)
     dom.welcomeAgeBtns.forEach(btn => {
@@ -774,6 +874,9 @@ function bindEvents() {
                 mapHomeAvatar.classList.remove("hidden");
                 updateMeePreview(mapHomeAvatar, state.mee.type, state.mee.color);
             }
+            
+            // Di chuyển xe bus về center
+            moveBusTo("center", false);
             
             // Mở xưởng Mee Builder
             openZone("mee");
@@ -899,6 +1002,7 @@ function bindEvents() {
             state.user.isPremium = (state.user.tier === "Premium");
             
             syncAgeAndTier(state.user.ageGroup, state.user.tier);
+            moveBusTo("center", false); // Di chuyển xe bus về center
             
             // Hiện các chỉ số và nút Header
             document.getElementById("header-stats-panel").classList.remove("hidden");
@@ -959,38 +1063,38 @@ function bindEvents() {
         });
     });
 
-    // Map zone click
-    dom.mapZones.forEach(card => {
-        card.addEventListener("click", () => {
-            const zone = card.dataset.zone;
-            
-            if (zone === "home") {
-                if (!state.user.hasOnboarded) {
-                    // Mở Onboarding nếu click lần đầu
-                    dom.welcomeScreen.classList.add("active");
-                } else {
-                    // Mở khu vực Pet & Mee nếu đã onboarded
-                    openZone("pet");
-                }
-            } else if (zone === "ideas") {
-                if (!state.user.hasOnboarded) {
-                    showCustomAlert("🐻", "Tạo Nhân Vật Trước", "Bé cần click vào Đảo trung tâm **Home & Pet** để tạo nhân vật đại diện trước nhé!");
-                } else {
-                    // Easter egg: Tặng 20 Credits mỗi ngày
-                    state.user.credits += 20;
-                    dom.coinCount.textContent = `🪙 ${state.user.credits} Credits`;
-                    showCustomAlert("💡", "Đảo Ý Tưởng!", "Bé ghé thăm Đảo Ý Tưởng và nhận được quà tặng 20 Credits hàng ngày! 🌟");
-                }
-            } else {
-                // Các hòn đảo Nghệ thuật, Đấu trí, Học viện, Khám phá
-                if (!state.user.hasOnboarded) {
-                    showCustomAlert("🐻", "Tạo Nhân Vật Trước", "Bé cần click vào Đảo trung tâm **Home & Pet** để tạo nhân vật đại diện trước nhé!");
-                } else {
-                    openZone(zone);
-                }
-            }
+    // Map blocks click (left / center / right houses)
+    if (dom.mapBlocks) {
+        dom.mapBlocks.forEach(block => {
+            block.addEventListener("click", () => {
+                const zone = block.dataset.zone;
+                let pos = "center";
+                if (zone === "mee") pos = "left";
+                else if (zone === "passport") pos = "right";
+                moveBusTo(pos, true);
+            });
         });
-    });
+    }
+
+    // Bus navigation buttons
+    if (dom.btnBusLeft) {
+        dom.btnBusLeft.addEventListener("click", () => {
+            let nextPos = "center";
+            if (state.busPosition === "center") nextPos = "left";
+            else if (state.busPosition === "right") nextPos = "center";
+            else if (state.busPosition === "left") nextPos = "right";
+            moveBusTo(nextPos, true);
+        });
+    }
+    if (dom.btnBusRight) {
+        dom.btnBusRight.addEventListener("click", () => {
+            let nextPos = "center";
+            if (state.busPosition === "center") nextPos = "right";
+            else if (state.busPosition === "left") nextPos = "center";
+            else if (state.busPosition === "right") nextPos = "left";
+            moveBusTo(nextPos, true);
+        });
+    }
 
     // Hàm khởi tạo trạng thái ban đầu của luồng
     window.initAppFlow = function() {
@@ -1008,6 +1112,9 @@ function bindEvents() {
         
         // Reset logo không badge lúc đầu
         document.getElementById("logo-back-to-home").innerHTML = `<span>🌈 StoryMee</span>`;
+        
+        // Định vị xe bus lúc đầu
+        moveBusTo("center", false);
     };
 
     // Setup sub-panels buttons
@@ -1117,7 +1224,12 @@ function syncAgeRulesForExplore(age) {
 function syncArtSubPanelsByAge(age) {
     // 1. Lobby cards: Ẩn/hiện xưởng Truyện Tranh
     if (dom.artTabComic) {
-        dom.artTabComic.classList.toggle("hidden", age === "6-8");
+        dom.artTabComic.classList.remove("hidden"); // Luôn hiện truyện tranh cho mọi độ tuổi
+    }
+
+    // Ẩn/hiện sinh nền AI dựa vào chặng tuổi
+    if (dom.comicAiBgSection) {
+        dom.comicAiBgSection.classList.toggle("hidden", age === "6-8");
     }
 
     // 2. Xưởng Vẽ (Coloring / Free Draw)
@@ -1268,65 +1380,131 @@ function buildMeeBuilderPaletteUI() {
 }
 
 function buildMeeBuilderFacialUI() {
-    if (!dom.meeBuilderEyebrowsGrid || !dom.meeBuilderEyesGrid) return;
+    if (!dom.meeBuilderEyebrowsGrid || !dom.meeBuilderEyesGrid || !dom.meeBuilderNoseGrid || !dom.meeBuilderMouthGrid) return;
     
     // 1. Eyebrows Grid
     dom.meeBuilderEyebrowsGrid.innerHTML = "";
-    FACIAL_DATABASE.eyebrows.forEach(item => {
-        const btn = document.createElement("button");
-        btn.className = "facial-select-btn";
-        if (item.id === state.mee.eyebrowIndex) btn.classList.add("active");
-        
-        const dy = 9 - item.y_center;
-        btn.innerHTML = `
-            <span class="facial-btn-label">Kiểu #${item.id}</span>
-            <svg viewBox="0 0 76.02 18" class="facial-btn-preview" style="width: 100%; height: 36px;">
-                <g transform="translate(0, ${dy})">
-                    ${item.left.join("")} ${item.right.join("")}
-                </g>
-            </svg>
-        `;
-        
-        btn.addEventListener("click", () => {
-            if (state.mee.eyebrowIndex !== item.id) {
-                saveMeeHistory();
-                state.mee.eyebrowIndex = item.id;
-                playCustomizerSound('click');
-                syncMeeBuilderFacialActiveState(dom.meeBuilderEyebrowsGrid, item.id);
-                updateMeeBuilderVisual();
-            }
+    if (FACIAL_DATABASE.eyebrows) {
+        FACIAL_DATABASE.eyebrows.forEach(item => {
+            const btn = document.createElement("button");
+            btn.className = "facial-select-btn";
+            if (item.id === state.mee.eyebrowIndex) btn.classList.add("active");
+            
+            const dy = 9 - item.y_center;
+            btn.innerHTML = `
+                <span class="facial-btn-label">Kiểu #${item.id}</span>
+                <svg viewBox="0 0 76.02 18" class="facial-btn-preview" style="width: 100%; height: 36px;">
+                    <g transform="translate(0, ${dy})">
+                        ${item.left.join("")} ${item.right.join("")}
+                    </g>
+                </svg>
+            `;
+            
+            btn.addEventListener("click", () => {
+                if (state.mee.eyebrowIndex !== item.id) {
+                    saveMeeHistory();
+                    state.mee.eyebrowIndex = item.id;
+                    playCustomizerSound('click');
+                    syncMeeBuilderFacialActiveState(dom.meeBuilderEyebrowsGrid, item.id);
+                    updateMeeBuilderVisual();
+                }
+            });
+            dom.meeBuilderEyebrowsGrid.appendChild(btn);
         });
-        dom.meeBuilderEyebrowsGrid.appendChild(btn);
-    });
+    }
 
     // 2. Eyes Grid
     dom.meeBuilderEyesGrid.innerHTML = "";
-    FACIAL_DATABASE.eyes.forEach(item => {
-        const btn = document.createElement("button");
-        btn.className = "facial-select-btn";
-        if (item.id === state.mee.eyeIndex) btn.classList.add("active");
-        
-        const dy = 11 - item.y_center;
-        btn.innerHTML = `
-            <span class="facial-btn-label">Kiểu #${item.id}</span>
-            <svg viewBox="0 0 76.04 22" class="facial-btn-preview" style="width: 100%; height: 44px;">
-                <g transform="translate(0, ${dy})">
-                    ${item.left.join("")} ${item.right.join("")}
-                </g>
-            </svg>
-        `;
-        
-        btn.addEventListener("click", () => {
-            if (state.mee.eyeIndex !== item.id) {
-                saveMeeHistory();
-                state.mee.eyeIndex = item.id;
-                playCustomizerSound('click');
-                syncMeeBuilderFacialActiveState(dom.meeBuilderEyesGrid, item.id);
-                updateMeeBuilderVisual();
-            }
+    if (FACIAL_DATABASE.eyes) {
+        FACIAL_DATABASE.eyes.forEach(item => {
+            const btn = document.createElement("button");
+            btn.className = "facial-select-btn";
+            if (item.id === state.mee.eyeIndex) btn.classList.add("active");
+            
+            const dy = 11 - item.y_center;
+            btn.innerHTML = `
+                <span class="facial-btn-label">Kiểu #${item.id}</span>
+                <svg viewBox="0 0 76.04 22" class="facial-btn-preview" style="width: 100%; height: 44px;">
+                    <g transform="translate(0, ${dy})">
+                        ${item.left.join("")} ${item.right.join("")}
+                    </g>
+                </svg>
+            `;
+            
+            btn.addEventListener("click", () => {
+                if (state.mee.eyeIndex !== item.id) {
+                    saveMeeHistory();
+                    state.mee.eyeIndex = item.id;
+                    playCustomizerSound('click');
+                    syncMeeBuilderFacialActiveState(dom.meeBuilderEyesGrid, item.id);
+                    updateMeeBuilderVisual();
+                }
+            });
+            dom.meeBuilderEyesGrid.appendChild(btn);
         });
-        dom.meeBuilderEyesGrid.appendChild(btn);
-    });
+    }
+
+    // 3. Nose Grid
+    dom.meeBuilderNoseGrid.innerHTML = "";
+    if (FACIAL_DATABASE.noses) {
+        FACIAL_DATABASE.noses.forEach(item => {
+            const btn = document.createElement("button");
+            btn.className = "facial-select-btn";
+            if (item.id === state.mee.noseIndex) btn.classList.add("active");
+            
+            const dy = 7.5 - item.y_center;
+            btn.innerHTML = `
+                <span class="facial-btn-label">Kiểu #${item.id}</span>
+                <svg viewBox="0 0 76.04 15" class="facial-btn-preview" style="width: 100%; height: 30px;">
+                    <g transform="translate(0, ${dy})">
+                        ${item.left.join("")}
+                    </g>
+                </svg>
+            `;
+            
+            btn.addEventListener("click", () => {
+                if (state.mee.noseIndex !== item.id) {
+                    saveMeeHistory();
+                    state.mee.noseIndex = item.id;
+                    playCustomizerSound('click');
+                    syncMeeBuilderFacialActiveState(dom.meeBuilderNoseGrid, item.id);
+                    updateMeeBuilderVisual();
+                }
+            });
+            dom.meeBuilderNoseGrid.appendChild(btn);
+        });
+    }
+
+    // 4. Mouth Grid
+    dom.meeBuilderMouthGrid.innerHTML = "";
+    if (FACIAL_DATABASE.mouths) {
+        FACIAL_DATABASE.mouths.forEach(item => {
+            const btn = document.createElement("button");
+            btn.className = "facial-select-btn";
+            if (item.id === state.mee.mouthIndex) btn.classList.add("active");
+            
+            const dy = 9 - item.y_center;
+            btn.innerHTML = `
+                <span class="facial-btn-label">Kiểu #${item.id}</span>
+                <svg viewBox="0 0 76.04 18" class="facial-btn-preview" style="width: 100%; height: 36px;">
+                    <g transform="translate(0, ${dy})">
+                        ${item.left.join("")}
+                    </g>
+                </svg>
+            `;
+            
+            btn.addEventListener("click", () => {
+                if (state.mee.mouthIndex !== item.id) {
+                    saveMeeHistory();
+                    state.mee.mouthIndex = item.id;
+                    playCustomizerSound('click');
+                    syncMeeBuilderFacialActiveState(dom.meeBuilderMouthGrid, item.id);
+                    updateMeeBuilderVisual();
+                }
+            });
+            dom.meeBuilderMouthGrid.appendChild(btn);
+        });
+    }
 }
 
 function syncMeeBuilderFacialActiveState(gridContainer, activeId) {
@@ -1500,6 +1678,8 @@ function initMeeBuilderPanel() {
     if (savedState) {
         try {
             state.mee = JSON.parse(savedState);
+            if (state.mee.noseIndex === undefined) state.mee.noseIndex = 1;
+            if (state.mee.mouthIndex === undefined) state.mee.mouthIndex = 1;
         } catch(e) {}
     }
 
@@ -1560,6 +1740,8 @@ function updateMeeBuilderVisual() {
     buildMeeBuilderPaletteUI();
     syncMeeBuilderFacialActiveState(dom.meeBuilderEyebrowsGrid, state.mee.eyebrowIndex);
     syncMeeBuilderFacialActiveState(dom.meeBuilderEyesGrid, state.mee.eyeIndex);
+    syncMeeBuilderFacialActiveState(dom.meeBuilderNoseGrid, state.mee.noseIndex);
+    syncMeeBuilderFacialActiveState(dom.meeBuilderMouthGrid, state.mee.mouthIndex);
 }
 
 // 7. MODULE: PET CARE (NHÀ THÚ CƯNG)
@@ -1801,6 +1983,7 @@ function setupArtKingdomEvents() {
                 // Khởi tạo cụ thể cho từng xưởng nếu cần
                 if (sub === "coloring") initColoringSubPanel();
                 if (sub === "library") initFairytaleLibrary();
+                if (sub === "comic") renderMeeToComicPanels();
                 if (sub === "photobooth") {
                     if (typeof customizerInitialized === 'undefined' || !customizerInitialized) {
                         initMeeCustomizer();
@@ -1945,6 +2128,135 @@ Với ý tưởng sáng tạo: "${customIdea || 'Đi tìm cuộc phiêu lưu lý
         state.moderationQueue.push(newWork);
         showCustomAlert("🛡️", "Đã Gửi Duyệt!", "Tác phẩm đã được gửi tới Cổng Phụ Huynh. Bố mẹ duyệt xong sẽ được đăng lên feed!");
     });
+
+    // Khởi tạo sự kiện truyện tranh
+    setupComicEvents();
+}
+
+function renderMeeToComicPanels() {
+    const svgMarkup = renderHumanSVG(state.mee);
+    document.querySelectorAll("#art-sub-panel-comic .mee-character-svg").forEach(div => {
+        div.innerHTML = svgMarkup;
+    });
+}
+
+function setupComicEvents() {
+    const panelItems = document.querySelectorAll("#art-sub-panel-comic .comic-panel-item");
+    let activeComicPanel = 1;
+
+    const updateActivePanelStyle = () => {
+        panelItems.forEach(item => {
+            const pNum = parseInt(item.dataset.panel);
+            if (pNum === activeComicPanel) {
+                item.style.border = "2.5px solid var(--color-primary)";
+                item.style.background = "#EDF2F7";
+                item.style.boxShadow = "0 8px 16px rgba(0,0,0,0.1)";
+            } else {
+                item.style.border = "2px solid #E2E8F0";
+                item.style.background = "#F8FAFC";
+                item.style.boxShadow = "none";
+            }
+        });
+    };
+    updateActivePanelStyle();
+
+    panelItems.forEach(item => {
+        item.addEventListener("click", () => {
+            activeComicPanel = parseInt(item.dataset.panel);
+            updateActivePanelStyle();
+        });
+    });
+
+    [1, 2, 3].forEach(idx => {
+        const input = document.getElementById(`comic-p${idx}-text`);
+        const bubble = document.getElementById(`comic-p${idx}-bubble`);
+        if (input && bubble) {
+            bubble.style.display = "none";
+            input.addEventListener("input", (e) => {
+                const val = e.target.value.trim();
+                if (val) {
+                    bubble.textContent = val;
+                    bubble.style.display = "block";
+                } else {
+                    bubble.textContent = "";
+                    bubble.style.display = "none";
+                }
+            });
+        }
+    });
+
+    const presetRow = document.getElementById("comic-bg-presets-row");
+    if (presetRow) {
+        presetRow.querySelectorAll("button").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const bgVal = btn.dataset.bg;
+                const activeView = document.getElementById(`comic-p${activeComicPanel}-view`);
+                if (activeView) {
+                    activeView.style.background = bgVal;
+                }
+            });
+        });
+    }
+
+    if (dom.btnComicAiBgGen) {
+        dom.btnComicAiBgGen.addEventListener("click", () => {
+            const promptVal = dom.comicAiBgPrompt.value.trim();
+            if (!promptVal) {
+                showCustomAlert("🪄", "Nhập Ý Tưởng", "Bé hãy nhập ý tưởng hình nền muốn vẽ nhé! Ví dụ: Rừng kẹo ngọt, Dải ngân hà...");
+                return;
+            }
+            showCustomAlert("🪄", "AI Đang Vẽ Nền...", "Gemini-1.5-Flash đang tưởng tượng và sinh ảnh nền nghệ thuật cho Khung Hình " + activeComicPanel + "...");
+            
+            setTimeout(() => {
+                const activeView = document.getElementById(`comic-p${activeComicPanel}-view`);
+                if (activeView) {
+                    let aiBg = "linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%)";
+                    if (promptVal.toLowerCase().includes("kẹo") || promptVal.toLowerCase().includes("hồng")) {
+                        aiBg = "linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)";
+                    } else if (promptVal.toLowerCase().includes("vũ trụ") || promptVal.toLowerCase().includes("sao") || promptVal.toLowerCase().includes("tối")) {
+                        aiBg = "linear-gradient(135deg, #2e0854 0%, #000000 100%)";
+                    } else if (promptVal.toLowerCase().includes("rừng") || promptVal.toLowerCase().includes("cây") || promptVal.toLowerCase().includes("lá")) {
+                        aiBg = "linear-gradient(135deg, #11998e 0%, #38ef7d 100%)";
+                    } else if (promptVal.toLowerCase().includes("biển") || promptVal.toLowerCase().includes("nước") || promptVal.toLowerCase().includes("cá")) {
+                        aiBg = "linear-gradient(135deg, #2193b0 0%, #6dd5ed 100%)";
+                    } else {
+                        const randomGradients = [
+                            "linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%)",
+                            "linear-gradient(135deg, #8ec5fc 0%, #e0c3fc 100%)",
+                            "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+                            "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
+                            "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)"
+                        ];
+                        aiBg = randomGradients[Math.floor(Math.random() * randomGradients.length)];
+                    }
+                    activeView.style.background = aiBg;
+                }
+                showCustomAlert("🎨", "Vẽ Nền Xong!", "Ảnh nền AI cực đẹp đã được vẽ vào Khung Hình " + activeComicPanel + "!");
+            }, 1200);
+        });
+    }
+
+    if (dom.btnSaveComicWork) {
+        dom.btnSaveComicWork.addEventListener("click", () => {
+            if (state.user.tier === "Guest") {
+                dom.signupModal.classList.add("active");
+                return;
+            }
+
+            const comicData = {
+                title: "Bộ Truyện Tranh Của Mee",
+                panels: [
+                    { bg: document.getElementById("comic-p1-view").style.background, text: document.getElementById("comic-p1-text").value.trim() },
+                    { bg: document.getElementById("comic-p2-view").style.background, text: document.getElementById("comic-p2-text").value.trim() },
+                    { bg: document.getElementById("comic-p3-view").style.background, text: document.getElementById("comic-p3-text").value.trim() }
+                ],
+                mee: JSON.parse(JSON.stringify(state.mee))
+            };
+
+            addWorkToPassport("comic", "Truyện Tranh Sáng Tạo", JSON.stringify(comicData));
+            showCustomAlert("💾", "Đã Lưu Truyện Tranh!", "Bộ truyện tranh của bé đã được cất giữ cẩn thận trong Passport!");
+        });
+    }
 }
 
 function initArtKingdomPanel() {
