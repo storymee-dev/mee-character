@@ -94,37 +94,67 @@
             </div>
         </header>
 
-        <!-- BẢN ĐỒ THẾ GIỚI TƯƠNG TÁC (BẢN ĐỒ ĐẢO NỔI LƠ LỬNG) -->
+        <!-- BẢN ĐỒ THẾ GIỚI TƯƠNG TÁC (ĐỔI THÀNH HOMEPAGE LANDING PAGE HÌNH 3) -->
         <div id="world-map-screen" class="world-map-wrapper">
-            <div class="world-map-instruction">🎡 Bé hãy click vào đảo trung tâm **Home & Pet** để chọn nhân vật nhé! 🎡</div>
-            
-            <div class="interactive-map-container">
-                <!-- 3 block ngôi nhà/địa điểm trên map -->
-                <div class="map-block block-left" data-zone="mee" style="left: calc(50% - 870px); bottom: 12%;">
-                    <img src="assets/right_house.png" alt="Nhà Của Bé" style="width: 580px; height: auto;">
-                    <!-- Avatar của bé hiển thị trên đảo Home cũ vẫn giữ làm dấu mốc ẩn -->
-                    <div class="island-active-avatar hidden" id="map-home-avatar"></div>
+            <!-- Landing page container -->
+            <div class="homepage-landing-container">
+                <!-- Cột trái: Tiêu đề, CTA & 3 Card -->
+                <div class="homepage-landing-left">
+                    <span class="landing-badge">🚀 StoryMee Universe</span>
+                    <h1 class="landing-title">Let's Play and Learn</h1>
+                    
+                    <!-- Khung trắng giới thiệu dưới Let's Play and Learn -->
+                    <div class="landing-intro-box">
+                        <p>Chào mừng bé đến với vũ trụ sáng tạo diệu kỳ! Hãy tự tay thiết kế nhân vật Mee đáng yêu, sáng tác những cuốn truyện tranh đầy màu sắc và ghi lại hành trình thú vị của riêng mình nhé!</p>
+                    </div>
+                    
+                    <button id="btn-landing-cta" class="landing-cta-btn gold-glow">Let's Create! ✨</button>
+
+                    <!-- 3 Zone Cards được đẩy sang trái nằm trong cột trái -->
+                    <div class="homepage-zones-grid">
+                        <!-- Card 1: Mee Builder -->
+                        <div class="zone-card card-mee" data-zone="mee">
+                            <span class="card-num">1</span>
+                            <div class="zone-card-top-glow"></div>
+                            <img src="assets/images/home_icon.png" alt="Mee House" class="zone-card-image">
+                            <div class="zone-card-content">
+                                <h3>HOME</h3>
+                            </div>
+                        </div>
+                        
+                        <!-- Card 2: Art Kingdom -->
+                        <div class="zone-card card-art" data-zone="art">
+                            <span class="card-num">2</span>
+                            <div class="zone-card-top-glow"></div>
+                            <img src="assets/images/art_icon.png" alt="Art Kingdom" class="zone-card-image">
+                            <div class="zone-card-content">
+                                <h3>ART</h3>
+                            </div>
+                        </div>
+                        
+                        <!-- Card 3: Passport / Diary -->
+                        <div class="zone-card card-passport" data-zone="passport">
+                            <span class="card-num">3</span>
+                            <div class="zone-card-top-glow"></div>
+                            <img src="assets/images/diary_icon.png" alt="Passport / Diary" class="zone-card-image">
+                            <div class="zone-card-content">
+                                <h3>DIARY</h3>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 
-                <div class="map-block block-center" data-zone="art" style="left: 50%; bottom: 12%; transform: translateX(-50%); z-index: 6;">
-                    <img src="assets/center_house.png" alt="Xưởng Sáng Tạo" style="width: 680px; height: auto;">
+                <!-- Cột phải: Preview Mee khổng lồ -->
+                <div class="homepage-landing-right">
+                    <div class="landing-avatar-platform">
+                        <div id="map-home-avatar" class="landing-avatar-svg-container">
+                            <img src="assets/images/character.png" alt="Mascot Character" style="width: 100%; height: 100%; object-fit: contain;">
+                        </div>
+                        <div class="landing-avatar-shadow"></div>
+                    </div>
                 </div>
-                
-                <div class="map-block block-right" data-zone="passport" style="right: calc(50% - 870px); bottom: 12%;">
-                    <img src="assets/left_house.png" alt="Nhật Ký" style="width: 580px; height: auto;">
-                </div>
-
-                <!-- Chiếc Xe Bus Paco -->
-                <div class="bus-sprite" id="bus-vehicle" style="position: absolute; width: 580px; height: auto; left: 35%; bottom: 1%;">
-                    <img src="assets/bus.png" alt="Xe Bus Paco" style="width: 100%; height: auto; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.15));">
-                </div>
-
-                <!-- Nút điều hướng Trái/Phải -->
-                <button class="nav-arrow-btn arrow-left" id="btn-bus-left" style="position: absolute; left: 30px; top: 50%; transform: translateY(-50%); width: 60px; height: 60px; border-radius: 50%; border: none; background: white; box-shadow: 0 6px 20px rgba(0,0,0,0.15); font-size: 2rem; cursor: pointer; display: flex; align-items: center; justify-content: center;">◀️</button>
-                <button class="nav-arrow-btn arrow-right" id="btn-bus-right" style="position: absolute; right: 30px; top: 50%; transform: translateY(-50%); width: 60px; height: 60px; border-radius: 50%; border: none; background: white; box-shadow: 0 6px 20px rgba(0,0,0,0.15); font-size: 2rem; cursor: pointer; display: flex; align-items: center; justify-content: center;">▶️</button>
             </div>
         </div>
-
         <!-- CÁC PANEL CHI TIẾT KHI CLICK VÀO ZONE -->
         <div id="zone-detail-viewport" class="detail-viewport-wrapper hidden">
             <button id="btn-back-to-map" class="back-to-map-btn">🗺️ Trở Lại Bản Đồ Thế Giới</button>
@@ -298,51 +328,51 @@
 
                 <!-- 2.3 PANEL ART KINGDOM -->
                 <div id="panel-art" class="detail-panel hidden">
-                    <h2 class="panel-title">Vương Quốc Nghệ Thuật</h2>
-                    <p class="panel-subtitle">Nơi chắp cánh cho tài năng hội họa, sáng tác truyện, nhạc và phim của bé.</p>
+                    <div class="art-cloud-header-wrapper">
+                        <div class="art-cloud-header">
+                            <h2 class="panel-title">XƯỞNG SÁNG TẠO</h2>
+                        </div>
+                    </div>
                     
-                    <!-- LOBBY VIEW: Sẽ hiển thị 6 xưởng như hình 2 -->
+                    <!-- LOBBY VIEW: Sẽ hiển thị 3 xưởng dạng card dọc dài giống hình Sếp gửi -->
                     <div id="art-lobby-view" class="art-lobby-container" style="margin-top: 20px;">
-                        <div class="art-lobby-grid" style="grid-template-columns: repeat(3, 1fr) !important;">
+                        <div class="art-lobby-grid">
                             <!-- Card 1: Xưởng Vẽ -->
                             <div class="art-card" data-sub="coloring">
-                                <div class="art-card-img card-img-coloring">
-                                    <img src="assets/xuong_ve.jpeg" alt="Xưởng Vẽ Thần Kỳ" class="art-card-banner">
-                                    <span class="art-card-emoji">🎨</span>
+                                <div class="art-card-img">
+                                    <img src="assets/images/drawing.jpeg" alt="DRAWING" class="art-card-banner">
                                 </div>
                                 <div class="art-card-content">
-                                    <span class="art-card-tag tag-new">VẼ TRANH ✨</span>
-                                    <h3>Xưởng Vẽ Thần Kỳ</h3>
-                                    <p>Tô màu số hóa thông minh hoặc tự do sáng tạo tranh vẽ tay cùng cọ vẽ ma thuật và nhãn dán sticker.</p>
-                                    <button class="art-card-btn">Vào Xưởng 🚀</button>
+                                    <span class="art-card-tag tag-blue">Season 1 • Drawing</span>
+                                    <h3 class="art-card-title">DRAWING</h3>
+                                    <p class="art-card-desc">Tô màu số hóa thông minh hoặc tự do sáng tạo nét vẽ tay cùng cọ vẽ ma thuật và nhãn dán sticker dễ thương.</p>
+                                    <button class="art-card-btn">PLAY NOW</button>
                                 </div>
                             </div>
                             
                             <!-- Card 2: Truyện Tranh -->
                             <div class="art-card" id="card-art-comic" data-sub="comic">
-                                <div class="art-card-img card-img-comic">
-                                    <img src="assets/truyen_tranh.jpeg" alt="Studio Truyện Tranh" class="art-card-banner">
-                                    <span class="art-card-emoji">💬</span>
+                                <div class="art-card-img">
+                                    <img src="assets/images/comic.jpeg" alt="COMIC" class="art-card-banner">
                                 </div>
                                 <div class="art-card-content">
-                                    <span class="art-card-tag tag-creative">TRUYỆN TRANH 🪄</span>
-                                    <h3>Studio Truyện Tranh</h3>
-                                    <p>Tự thiết kế ảnh nền AI độc lạ và viết lời thoại đối thoại sinh động cho Mee trên các panel phân cảnh.</p>
-                                    <button class="art-card-btn">Vào Xưởng 🚀</button>
+                                    <span class="art-card-tag tag-green">Season 1 • Comic</span>
+                                    <h3 class="art-card-title">COMIC</h3>
+                                    <p class="art-card-desc">Tự thiết kế ảnh nền AI độc đáo và viết kịch bản hội thoại sinh động cho các nhân vật đại diện Mee trên từng khung hình.</p>
+                                    <button class="art-card-btn">PLAY NOW</button>
                                 </div>
                             </div>
 
                             <!-- Card 3: Sáng Tác Truyện Chữ -->
                             <div class="art-card" data-sub="library">
-                                <div class="art-card-img card-img-library">
-                                    <img src="assets/thu_vien.jpeg" alt="Sáng Tác Truyện Chữ AI" class="art-card-banner">
-                                    <span class="art-card-emoji">📖</span>
+                                <div class="art-card-img">
+                                    <img src="assets/images/stories.jpeg" alt="STORIES" class="art-card-banner">
                                 </div>
                                 <div class="art-card-content">
-                                    <span class="art-card-tag tag-popular">TRUYỆN CHỮ ❤️</span>
-                                    <h3>Truyện Chữ AI & Cổ Tích</h3>
-                                    <p>Lắng nghe kể chuyện cổ tích audio AI truyền cảm, hoặc tự biên soạn câu chuyện phiêu lưu thần kỳ cùng AI.</p>
-                                    <button class="art-card-btn">Vào Xưởng 🚀</button>
+                                    <span class="art-card-tag tag-purple">Season 1 • Audio</span>
+                                    <h3 class="art-card-title">STORIES</h3>
+                                    <p class="art-card-desc">Lắng nghe kể chuyện cổ tích audio AI truyền cảm, hoặc tự biên soạn các câu chuyện phiêu lưu diệu kỳ cho riêng bé.</p>
+                                    <button class="art-card-btn">PLAY NOW</button>
                                 </div>
                             </div>
                         </div>
@@ -359,197 +389,124 @@
                         
                         <div class="art-workspace-container">
                             
-                            <!-- Sub-tab 1: Xưởng Vẽ (Coloring / Free Draw) -->
+                            <!-- Sub-tab 1: Xưởng Vẽ (Coloring / Free Draw - AI Style Transfer) -->
                             <div id="art-sub-panel-coloring" class="art-sub-panel hidden" style="width: 100%;">
-                                <!-- Tab chọn chế độ tô màu / vẽ tự do (Chỉ hiện khi bé từ 9 tuổi trở lên) -->
-                                <div class="coloring-tabs-row hidden" id="coloring-tabs-row" style="display: flex; gap: 12px; margin-bottom: 20px; justify-content: center; width: 100%; border-bottom: 1px dashed rgba(0,0,0,0.1); padding-bottom: 12px;">
-                                    <button class="opt-btn active" id="btn-coloring-tab-presets" style="padding: 8px 20px; font-weight: 700; border-radius: 12px; cursor: pointer; transition: all 0.2s;">🎨 Tô Màu Theo Số</button>
-                                    <button class="opt-btn" id="btn-coloring-tab-free" style="padding: 8px 20px; font-weight: 700; border-radius: 12px; cursor: pointer; transition: all 0.2s;">✏️ Vẽ Tranh Tự Do</button>
-                                </div>
-
-                                <div id="art-draw-6-8" class="coloring-interface" style="width: 100%;">
-                                    <!-- 1. Sảnh chọn tranh tô màu phong cách Bluey -->
-                                    <div id="coloring-select-view" class="coloring-select-bg" style="width: 100%;">
-                                        <div class="coloring-select-layout">
-                                            <!-- Cột trái: Mascot Mee dễ thương -->
-                                            <div class="coloring-mascot-wrapper">
-                                                <svg viewBox="0 0 200 240" class="coloring-mascot-svg">
-                                                    <!-- Balo màu xanh lá dã ngoại -->
-                                                    <rect x="45" y="110" width="35" height="60" rx="10" fill="#4CAF50" stroke="#1B5E20" stroke-width="4" />
-                                                    <rect x="120" y="110" width="35" height="60" rx="10" fill="#4CAF50" stroke="#1B5E20" stroke-width="4" />
-                                                    <!-- Đuôi cáo xù -->
-                                                    <path d="M 50 170 C 30 190, 10 180, 20 150 C 30 130, 50 140, 50 170 Z" fill="#FF7043" stroke="#D84315" stroke-width="4" />
-                                                    <path d="M 20 150 C 15 160, 15 170, 20 175 C 25 170, 25 160, 20 150 Z" fill="#FFFFFF" />
-                                                    <!-- Thân mình -->
-                                                    <rect x="65" y="100" width="70" height="80" rx="20" fill="#FF7043" stroke="#D84315" stroke-width="4" />
-                                                    <rect x="80" y="110" width="40" height="60" rx="15" fill="#FFF" />
-                                                    <!-- Chân trái và phải -->
-                                                    <rect x="75" y="175" width="20" height="25" rx="8" fill="#FF7043" stroke="#D84315" stroke-width="4" />
-                                                    <rect x="105" y="175" width="20" height="25" rx="8" fill="#FF7043" stroke="#D84315" stroke-width="4" />
-                                                    <!-- Sandal chân -->
-                                                    <rect x="70" y="195" width="30" height="8" rx="4" fill="#8D6E63" />
-                                                    <rect x="100" y="195" width="30" height="8" rx="4" fill="#8D6E63" />
-                                                    <!-- Cánh tay ôm máy ảnh -->
-                                                    <path d="M 60 115 C 50 125, 65 145, 80 140" stroke="#D84315" stroke-width="4" fill="none" stroke-linecap="round"/>
-                                                    <path d="M 140 115 C 150 125, 135 145, 120 140" stroke="#D84315" stroke-width="4" fill="none" stroke-linecap="round"/>
-                                                    <!-- Chiếc máy ảnh nhỏ xám -->
-                                                    <rect x="80" y="125" width="40" height="26" rx="6" fill="#78909C" stroke="#37474F" stroke-width="3" />
-                                                    <circle cx="100" cy="138" r="8" fill="#ECEFF1" stroke="#37474F" stroke-width="3" />
-                                                    <rect x="87" y="120" width="8" height="5" fill="#37474F" />
-                                                    <!-- Đầu Mee -->
-                                                    <path d="M 50 80 C 50 40, 150 40, 150 80 C 150 110, 50 110, 50 80 Z" fill="#FF7043" stroke="#D84315" stroke-width="4" />
-                                                    <!-- Tai trái cáo -->
-                                                    <polygon points="55,50 35,15 70,35" fill="#FF7043" stroke="#D84315" stroke-width="4" />
-                                                    <polygon points="57,45 45,23 67,34" fill="#FFAB91" />
-                                                    <!-- Tai phải cáo -->
-                                                    <polygon points="145,50 165,15 130,35" fill="#FF7043" stroke="#D84315" stroke-width="4" />
-                                                    <polygon points="143,45 155,23 133,34" fill="#FFAB91" />
-                                                    <!-- Mũ thám hiểm dã ngoại màu kem -->
-                                                    <path d="M 40 45 C 50 20, 150 20, 160 45 Z" fill="#FFF59D" stroke="#FBC02D" stroke-width="4" />
-                                                    <ellipse cx="100" cy="45" rx="70" ry="10" fill="#FFF59D" stroke="#FBC02D" stroke-width="4" />
-                                                    <rect x="60" y="38" width="80" height="6" fill="#FF8A65" />
-                                                    <!-- Má trắng xù -->
-                                                    <path d="M 50 80 C 40 85, 45 95, 60 95 Z" fill="#FFF" stroke="#D84315" stroke-width="3" />
-                                                    <path d="M 150 80 C 160 85, 155 95, 140 95 Z" fill="#FFF" stroke="#D84315" stroke-width="3" />
-                                                    <!-- Mắt lấp lánh (trái & phải) -->
-                                                    <ellipse cx="80" cy="75" rx="10" ry="12" fill="#000" />
-                                                    <circle cx="78" cy="71" r="3" fill="#FFF" />
-                                                    <circle cx="82" cy="77" r="1" fill="#FFF" />
-                                                    <ellipse cx="120" cy="75" rx="10" ry="12" fill="#000" />
-                                                    <circle cx="118" cy="71" r="3" fill="#FFF" />
-                                                    <circle cx="122" cy="77" r="1" fill="#FFF" />
-                                                    <!-- Mũi cáo đen nhỏ -->
-                                                    <polygon points="95,85 105,85 100,90" fill="#000" />
-                                                    <!-- Miệng cười tinh nghịch -->
-                                                    <path d="M 94 93 Q 100 98 106 93" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round" />
-                                                </svg>
-                                            </div>
-                                            
-                                            <!-- Cột phải: 3 trang card vẽ nét xếp nghiêng -->
-                                            <div class="coloring-presets-grid">
-                                                <!-- Card 1: Gấu con -->
-                                                <div class="coloring-preset-card" data-preset="bear" style="--rotation: -3deg; --y-offset: 8px;">
-                                                    <div class="card-brand-header">
-                                                        <span class="brand-text">StoryMee</span>
-                                                    </div>
-                                                    <div class="card-preview-area">
-                                                        <svg viewBox="0 0 160 110" class="preset-lineart-svg">
-                                                            <!-- Nét vẽ con gấu -->
-                                                            <circle cx="80" cy="60" r="25" stroke="#333" stroke-width="2.5" fill="none" />
-                                                            <circle cx="54" cy="38" r="9" stroke="#333" stroke-width="2.5" fill="none" />
-                                                            <circle cx="106" cy="38" r="9" stroke="#333" stroke-width="2.5" fill="none" />
-                                                            <circle cx="70" cy="53" r="3" fill="#333" />
-                                                            <circle cx="90" cy="53" r="3" fill="#333" />
-                                                            <ellipse cx="80" cy="65" rx="5" ry="3.5" stroke="#333" stroke-width="2.0" fill="none" />
-                                                        </svg>
-                                                    </div>
-                                                    <div class="card-title-footer">
-                                                        <h4>CHÚ GẤU CON</h4>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Card 2: Lâu đài -->
-                                                <div class="coloring-preset-card" data-preset="castle" style="--rotation: 2.5deg; --y-offset: -5px;">
-                                                    <div class="card-brand-header">
-                                                        <span class="brand-text">StoryMee</span>
-                                                    </div>
-                                                    <div class="card-preview-area">
-                                                        <svg viewBox="0 0 160 110" class="preset-lineart-svg">
-                                                            <!-- Nét vẽ lâu đài cổ tích -->
-                                                            <rect x="55" y="55" width="50" height="35" stroke="#333" stroke-width="2.5" fill="none" />
-                                                            <rect x="70" y="70" width="20" height="20" rx="3" stroke="#333" stroke-width="2.0" fill="none" />
-                                                            <!-- Tháp trái -->
-                                                            <rect x="42" y="45" width="13" height="45" stroke="#333" stroke-width="2.5" fill="none" />
-                                                            <polygon points="42,45 48.5,25 55,45" stroke="#333" stroke-width="2.5" fill="none" />
-                                                            <!-- Tháp phải -->
-                                                            <rect x="105" y="45" width="13" height="45" stroke="#333" stroke-width="2.5" fill="none" />
-                                                            <polygon points="105,45 111.5,25 118,45" stroke="#333" stroke-width="2.5" fill="none" />
-                                                            <!-- Mái vòm chính giữa -->
-                                                            <polygon points="55,55 80,35 105,55" stroke="#333" stroke-width="2.5" fill="none" />
-                                                        </svg>
-                                                    </div>
-                                                    <div class="card-title-footer">
-                                                        <h4>LÂU ĐÀI CỔ TÍCH</h4>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Card 3: Thảm bay -->
-                                                <div class="coloring-preset-card" data-preset="carpet" style="--rotation: -1.5deg; --y-offset: 4px;">
-                                                    <div class="card-brand-header">
-                                                        <span class="brand-text">StoryMee</span>
-                                                    </div>
-                                                    <div class="card-preview-area">
-                                                        <svg viewBox="0 0 160 110" class="preset-lineart-svg">
-                                                            <!-- Nét vẽ thảm bay -->
-                                                            <path d="M 30 65 Q 80 40 130 65 Q 80 80 30 65 Z" stroke="#333" stroke-width="2.5" fill="none" />
-                                                            <path d="M 30 65 Q 80 50 130 65" stroke="#333" stroke-width="1.5" fill="none" />
-                                                            <circle cx="80" cy="58" r="4" stroke="#333" stroke-width="1.5" fill="none" />
-                                                            <!-- Tua rua -->
-                                                            <line x1="30" y1="65" x2="22" y2="70" stroke="#333" stroke-width="2" />
-                                                            <line x1="130" y1="65" x2="138" y2="70" stroke="#333" stroke-width="2" />
-                                                            <!-- Mây -->
-                                                            <path d="M 20 30 Q 30 20 40 30 Q 50 30 45 40 Q 35 45 25 40 Q 15 35 20 30 Z" stroke="#333" stroke-width="1.5" fill="none" />
-                                                            <path d="M 115 25 Q 125 15 135 25 Q 145 25 140 35 Q 130 40 120 35 Q 110 30 115 25 Z" stroke="#333" stroke-width="1.5" fill="none" />
-                                                        </svg>
-                                                    </div>
-                                                    <div class="card-title-footer">
-                                                        <h4>THẠM BAY KỲ DIỆU</h4>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- 2. Giao diện canvas vẽ và tô màu (Mặc định ẩn) -->
-                                    <div id="coloring-workspace-view" class="hidden" style="width: 100%; display: flex; flex-direction: column; align-items: center; gap: 15px;">
-                                        <div style="width: 100%; display: flex; align-items: center; justify-content: flex-start; margin-bottom: 5px;">
-                                            <button id="btn-back-to-coloring-select" class="opt-btn" style="background: white; border: 2px solid var(--color-primary); color: var(--color-primary); padding: 8px 16px; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s;">
-                                                ⬅️ Trở Lại Chọn Tranh
-                                            </button>
-                                            <h4 id="coloring-current-preset-label" style="margin: 0 auto 0 20px; font-family: var(--font-primary); font-size: 1.2rem; color: var(--color-text-main);">Đang tô màu: Chú Gấu Con</h4>
-                                        </div>
-
-                                        <div class="app-toolbar">
-                                            <div class="color-palette" id="color-num-palette">
-                                                <div class="color-swatch active" data-color="#FF5722" data-num="1" style="background:#FF5722;">1</div>
-                                                <div class="color-swatch" data-color="#4CAF50" data-num="2" style="background:#4CAF50;">2</div>
-                                                <div class="color-swatch" data-color="#2196F3" data-num="3" style="background:#2196F3;">3</div>
-                                                <div class="color-swatch" data-color="#FFEB3B" data-num="4" style="background:#FFEB3B;">4</div>
-                                            </div>
-                                            <button class="btn-micro" id="btn-coloring-reset">Làm Mới</button>
-                                        </div>
-                                        <canvas id="coloring-canvas-68" width="500" height="300" style="border:2px solid var(--color-primary); border-radius:16px; background:#fff; cursor: crosshair;"></canvas>
-                                    </div>
-                                </div>
-
-                                <div id="art-draw-9-up" class="drawing-interface hidden">
-                                    <h3>✨ Sáng Tạo Tranh Vẽ Tự Do & Dán Sticker</h3>
-                                    <div class="app-toolbar">
-                                        <input type="color" id="brush-color-picker" value="#9C27B0">
-                                        <input type="range" id="brush-size-slider" min="2" max="25" value="8" title="Kích thước cọ">
-                                        <div class="sticker-shelf" id="sticker-shelf-container">
-                                            <span class="sticker-item" data-sticker="⭐">⭐</span>
-                                            <span class="sticker-item" data-sticker="🎈">🎈</span>
-                                            <span class="sticker-item" data-sticker="🐱">🐱</span>
-                                            <span class="sticker-item" data-sticker="🦖">🦖</span>
-                                            <span class="sticker-item" data-sticker="🍔">🍔</span>
-                                        </div>
-                                        <button class="btn-micro" id="btn-drawing-clear">Xóa Sạch</button>
-                                    </div>
-                                    <canvas id="drawing-canvas-9" width="500" height="300" style="border:2px solid var(--color-primary); border-radius:16px; background:#fff;"></canvas>
-                                </div>
-
-                                <div id="art-draw-14-15-addons" class="animation-addons hidden">
-                                    <h4>🎬 Tạo hoạt hình ngắn từ tranh vẽ:</h4>
-                                    <div class="anim-control-row">
-                                        <button class="btn-micro" id="btn-anim-add-frame">➕ Thêm Khung Hình (Frame)</button>
-                                        <button class="btn-micro gold-glow" id="btn-anim-play">▶ Chạy Thử Hoạt Hình</button>
-                                        <span id="anim-frame-count">Khung hình hiện tại: 1</span>
-                                    </div>
-                                </div>
                                 
-                                <div class="art-save-row">
-                                    <button class="action-btn-main" id="btn-save-drawing-work">💾 Lưu Tranh Vào Passport</button>
+                                <!-- PAGE 1: CHỌN STYLE -->
+                                <div id="drawing-step-1" class="drawing-step-panel">
+                                    <div class="step-header-title">
+                                        <h3>✨ Bước 1: Chọn Phong Cách Vẽ Phép Thuật ✨</h3>
+                                        <p>Bé hãy chọn một phong cách nghệ thuật yêu thích dưới đây nhé!</p>
+                                    </div>
+                                    
+                                    <div class="ai-style-selector-row">
+                                        <div class="ai-style-options" id="ai-style-list">
+                                            <button class="style-btn active" data-style="chibi">
+                                                <img src="assets/images/style_chibi.png" alt="Chibi">
+                                                <span>Chibi</span>
+                                            </button>
+                                            <button class="style-btn" data-style="anime">
+                                                <img src="assets/images/style_anime.png" alt="Anime">
+                                                <span>Anime</span>
+                                            </button>
+                                            <button class="style-btn" data-style="pixar">
+                                                <img src="assets/images/style_pixar.png" alt="Pixar 3D">
+                                                <span>Pixar 3D</span>
+                                            </button>
+                                            <button class="style-btn" data-style="comic">
+                                                <img src="assets/images/style_comic.png" alt="Comic">
+                                                <span>Comic</span>
+                                            </button>
+                                            <button class="style-btn" data-style="watercolor">
+                                                <img src="assets/images/style_watercolor.png" alt="Màu Nước">
+                                                <span>Màu Nước</span>
+                                            </button>
+                                            <button class="style-btn" data-style="neon">
+                                                <img src="assets/images/style_neon.png" alt="Neon Glow">
+                                                <span>Neon Glow</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="step-footer-actions">
+                                        <button class="action-btn-main gold-glow" id="btn-goto-step2" style="font-size: 1.1rem; padding: 14px 45px;">Tiếp Tục Vẽ ➡️</button>
+                                    </div>
+                                </div>
+
+                                <!-- PAGE 2: VẼ / UPLOAD & GEN -->
+                                <div id="drawing-step-2" class="drawing-step-panel hidden">
+                                    <div class="step2-header-nav">
+                                        <button id="btn-back-to-step1" class="opt-btn" style="background: white; border: 2px solid var(--color-primary); color: var(--color-primary); padding: 8px 18px; font-size: 0.9rem; border-radius: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s;">
+                                            ⬅️ Chọn Lại Style
+                                        </button>
+                                        <span class="active-style-badge" id="active-style-label">Phong cách: CHIBI 🧸</span>
+                                    </div>
+
+                                    <div class="drawing-ai-workspace">
+                                        <!-- Khung 1: Bé Vẽ & Tải Lên -->
+                                        <div class="workspace-box left-box">
+                                            <div class="box-header">
+                                                <h4>🎨 Tranh Của Bé Vẽ</h4>
+                                                <div class="box-actions">
+                                                    <label for="drawing-upload-input" class="upload-btn-label">📤 Tải Ảnh Lên</label>
+                                                    <input type="file" id="drawing-upload-input" accept="image/*" style="display: none;">
+                                                    <button class="btn-micro" id="btn-ai-drawing-clear">Xóa Sạch</button>
+                                                </div>
+                                            </div>
+                                            <!-- Toolbar vẽ tranh -->
+                                            <div class="drawing-canvas-toolbar">
+                                                <!-- Chọn màu -->
+                                                <input type="color" id="ai-brush-color" value="#4F46E5" title="Chọn màu cọ">
+                                                
+                                                <!-- Thanh kéo kích thước kèm chấm tròn minh họa nét vẽ -->
+                                                <div class="brush-size-control-group">
+                                                    <span class="size-dot small-dot" data-size="4" title="Nét mảnh"></span>
+                                                    <input type="range" id="ai-brush-size" min="2" max="35" value="8" title="Độ dày cọ">
+                                                    <span class="size-dot large-dot" data-size="24" title="Nét dày"></span>
+                                                </div>
+
+                                                <!-- Các nút chọn công cụ vẽ -->
+                                                <button class="tool-btn active" id="tool-brush">🎨 Bút Vẽ</button>
+                                                <button class="tool-btn" id="tool-pencil">✏️ Bút Chì</button>
+                                                <button class="tool-btn" id="tool-eraser">🧽 Tẩy</button>
+                                                
+                                                <div class="sticker-shelf" id="ai-sticker-shelf">
+                                                    <span class="sticker-item" data-sticker="⭐">⭐</span>
+                                                    <span class="sticker-item" data-sticker="🎈">🎈</span>
+                                                    <span class="sticker-item" data-sticker="🌈">🌈</span>
+                                                    <span class="sticker-item" data-sticker="🐱">🐱</span>
+                                                    <span class="sticker-item" data-sticker="👑">👑</span>
+                                                </div>
+                                            </div>
+                                            <div class="canvas-wrapper">
+                                                <canvas id="ai-user-canvas" width="800" height="450" style="background: #ffffff; cursor: crosshair; display: block;"></canvas>
+                                            </div>
+                                        </div>
+
+                                        <!-- Khung 2: AI Biến Hóa -->
+                                        <div class="workspace-box right-box">
+                                            <div class="box-header">
+                                                <h4>🪄 AI Biến Hóa Thần Kỳ</h4>
+                                            </div>
+                                            <div class="ai-output-container">
+                                                <div id="ai-image-placeholder" class="ai-image-placeholder">
+                                                    <span class="magic-wand-icon">🪄</span>
+                                                    <p>Hãy vẽ tranh hoặc tải ảnh lên, sau đó bấm **AI Vẽ Lại** để xem phép thuật nhé!</p>
+                                                </div>
+                                                <img id="ai-generated-img" class="hidden" alt="AI Generated Artwork" style="width: 100%; height: 100%; object-fit: contain; display: block; border-radius: 16px;">
+                                                <div id="ai-loading-overlay" class="ai-loading-overlay hidden">
+                                                    <div class="magic-spinner"></div>
+                                                    <p>AI đang múa cọ vẽ tranh cho bé...</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Thanh dưới: Các nút hành động chính -->
+                                    <div class="drawing-action-footer">
+                                        <button class="action-btn-main gold-glow" id="btn-ai-generate">🪄 AI Vẽ Lại! (Gen lại)</button>
+                                        <button class="action-btn-main" id="btn-push-to-diary" style="background: #10B981; box-shadow: 0 6px 0 #059669;">📖 Đẩy Vào Nhật Ký (Diary)</button>
+                                    </div>
                                 </div>
                             </div> <!-- Đóng art-sub-panel-coloring -->
 

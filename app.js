@@ -497,7 +497,7 @@ function initDOM() {
         busVehicle: document.getElementById("bus-vehicle"),
         btnBusLeft: document.getElementById("btn-bus-left"),
         btnBusRight: document.getElementById("btn-bus-right"),
-        mapBlocks: document.querySelectorAll(".map-block"),
+        zoneCards: document.querySelectorAll(".zone-card"),
         zoneDetailViewport: document.getElementById("zone-detail-viewport"),
         btnBackToMap: document.getElementById("btn-back-to-map"),
         
@@ -1063,16 +1063,21 @@ function bindEvents() {
         });
     });
 
-    // Map blocks click (left / center / right houses)
-    if (dom.mapBlocks) {
-        dom.mapBlocks.forEach(block => {
-            block.addEventListener("click", () => {
-                const zone = block.dataset.zone;
-                let pos = "center";
-                if (zone === "mee") pos = "left";
-                else if (zone === "passport") pos = "right";
-                moveBusTo(pos, true);
+    // Zone cards click (Home / Art / Diary)
+    if (dom.zoneCards) {
+        dom.zoneCards.forEach(card => {
+            card.addEventListener("click", () => {
+                const zone = card.dataset.zone;
+                openZone(zone);
             });
+        });
+    }
+
+    // Landing CTA button click
+    const btnLandingCTA = document.getElementById("btn-landing-cta");
+    if (btnLandingCTA) {
+        btnLandingCTA.addEventListener("click", () => {
+            openZone("art");
         });
     }
 
@@ -1141,7 +1146,9 @@ function openZone(zone) {
     
     // Toggle class background tràn viền đặc thù cho đảo nghệ thuật
     if (dom.zoneDetailViewport) {
+        dom.zoneDetailViewport.classList.toggle("home-theme-active", zone === "mee");
         dom.zoneDetailViewport.classList.toggle("art-theme-active", zone === "art");
+        dom.zoneDetailViewport.classList.toggle("passport-theme-active", zone === "passport");
     }
     
     // Hiện panel được chọn
@@ -1234,31 +1241,31 @@ function syncArtSubPanelsByAge(age) {
 
     // 2. Xưởng Vẽ (Coloring / Free Draw)
     if (dom.coloringTabsRow) {
+        dom.coloringTabsRow.classList.add("hidden");
         if (age === "6-8") {
-            dom.coloringTabsRow.classList.add("hidden");
-            dom.artDraw68.classList.remove("hidden");
-            dom.artDraw9Up.classList.add("hidden");
-            dom.artDraw1415Addons.classList.add("hidden");
+            if (dom.artDraw68) dom.artDraw68.classList.remove("hidden");
+            if (dom.artDraw9Up) dom.artDraw9Up.classList.add("hidden");
+            if (dom.artDraw1415Addons) dom.artDraw1415Addons.classList.add("hidden");
         } else {
-            dom.coloringTabsRow.classList.remove("hidden");
-            // Kích hoạt tab active hiện tại
             const activeTabBtn = dom.coloringTabsRow.querySelector(".opt-btn.active");
             if (activeTabBtn) {
                 if (activeTabBtn.id === "btn-coloring-tab-presets") {
-                    dom.artDraw68.classList.remove("hidden");
-                    dom.artDraw9Up.classList.add("hidden");
+                    if (dom.artDraw68) dom.artDraw68.classList.remove("hidden");
+                    if (dom.artDraw9Up) dom.artDraw9Up.classList.add("hidden");
                 } else {
-                    dom.artDraw68.classList.add("hidden");
-                    dom.artDraw9Up.classList.remove("hidden");
+                    if (dom.artDraw68) dom.artDraw68.classList.add("hidden");
+                    if (dom.artDraw9Up) dom.artDraw9Up.classList.remove("hidden");
                 }
             } else {
-                // Mặc định tab 1
-                dom.artDraw68.classList.remove("hidden");
-                dom.artDraw9Up.classList.add("hidden");
+                if (dom.artDraw68) dom.artDraw68.classList.remove("hidden");
+                if (dom.artDraw9Up) dom.artDraw9Up.classList.add("hidden");
             }
-            // Addons cho 14-15 tuổi
-            dom.artDraw1415Addons.classList.toggle("hidden", age !== "14-15");
+            if (dom.artDraw1415Addons) dom.artDraw1415Addons.classList.toggle("hidden", age !== "14-15");
         }
+    } else {
+        // Nếu không có tab row (luồng xưởng vẽ mới 2 bước)
+        if (dom.artDraw68) dom.artDraw68.classList.remove("hidden");
+        if (dom.artDraw9Up) dom.artDraw9Up.classList.add("hidden");
     }
 
     // 3. Thư Viện Cổ Tích (Library)
@@ -2015,53 +2022,63 @@ function setupArtKingdomEvents() {
 
     // Sự kiện chuyển tab Xưởng Vẽ (Chỉ dành cho bé lớn >= 9)
     if (dom.btnColoringTabPresets && dom.btnColoringTabFree) {
-        dom.btnColoringTabPresets.addEventListener("click", () => {
-            dom.btnColoringTabPresets.classList.add("active");
-            dom.btnColoringTabFree.classList.remove("active");
-            dom.artDraw68.classList.remove("hidden");
-            dom.artDraw9Up.classList.add("hidden");
-        });
+        if (dom.btnColoringTabPresets) {
+            dom.btnColoringTabPresets.addEventListener("click", () => {
+                dom.btnColoringTabPresets.classList.add("active");
+                if (dom.btnColoringTabFree) dom.btnColoringTabFree.classList.remove("active");
+                if (dom.artDraw68) dom.artDraw68.classList.remove("hidden");
+                if (dom.artDraw9Up) dom.artDraw9Up.classList.add("hidden");
+            });
+        }
         
-        dom.btnColoringTabFree.addEventListener("click", () => {
-            dom.btnColoringTabFree.classList.add("active");
-            dom.btnColoringTabPresets.classList.remove("active");
-            dom.artDraw68.classList.add("hidden");
-            dom.artDraw9Up.classList.remove("hidden");
-        });
+        if (dom.btnColoringTabFree) {
+            dom.btnColoringTabFree.addEventListener("click", () => {
+                dom.btnColoringTabFree.classList.add("active");
+                if (dom.btnColoringTabPresets) dom.btnColoringTabPresets.classList.remove("active");
+                if (dom.artDraw68) dom.artDraw68.classList.add("hidden");
+                if (dom.artDraw9Up) dom.artDraw9Up.classList.remove("hidden");
+            });
+        }
     }
 
     // Reset tô màu 6-8
-    dom.btnColoringReset.addEventListener("click", () => {
-        initColoringSubPanel();
-    });
+    if (dom.btnColoringReset) {
+        dom.btnColoringReset.addEventListener("click", () => {
+            initColoringSubPanel();
+        });
+    }
 
     // Reset vẽ tự do 9+
-    dom.btnDrawingClear.addEventListener("click", () => {
-        const canvas = dom.drawingCanvas9;
-        const ctx = canvas.getContext("2d");
-        ctx.fillStyle = "#FFFFFF";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-    });
+    if (dom.btnDrawingClear && dom.drawingCanvas9) {
+        dom.btnDrawingClear.addEventListener("click", () => {
+            const canvas = dom.drawingCanvas9;
+            const ctx = canvas.getContext("2d");
+            ctx.fillStyle = "#FFFFFF";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        });
+    }
 
     // Bấm lưu tranh
-    dom.btnSaveDrawingWork.addEventListener("click", () => {
-        if (state.user.tier === "Guest") {
-            dom.signupModal.classList.add("active");
-            return;
-        }
-        
-        let canvas = dom.coloringCanvas68;
-        if (state.user.ageGroup !== "6-8") {
-            const activeTabBtn = dom.coloringTabsRow.querySelector(".opt-btn.active");
-            if (activeTabBtn && activeTabBtn.id === "btn-coloring-tab-free") {
-                canvas = dom.drawingCanvas9;
+    if (dom.btnSaveDrawingWork) {
+        dom.btnSaveDrawingWork.addEventListener("click", () => {
+            if (state.user.tier === "Guest") {
+                dom.signupModal.classList.add("active");
+                return;
             }
-        }
-        let previewData = `🎨 Bức tranh vẽ tay của bé ${state.user.username}`;
-        
-        addWorkToPassport("drawing", "Tác phẩm hội họa", previewData);
-        showCustomAlert("💾", "Đã Lưu Bức Tranh!", "Tranh vẽ của bé đã được cất giữ cẩn thận trong Passport!");
-    });
+            
+            let canvas = dom.coloringCanvas68;
+            if (state.user.ageGroup !== "6-8" && dom.coloringTabsRow) {
+                const activeTabBtn = dom.coloringTabsRow.querySelector(".opt-btn.active");
+                if (activeTabBtn && activeTabBtn.id === "btn-coloring-tab-free") {
+                    canvas = dom.drawingCanvas9;
+                }
+            }
+            let previewData = `🎨 Bức tranh vẽ tay của bé ${state.user.username}`;
+            
+            addWorkToPassport("drawing", "Tác phẩm hội họa", previewData);
+            showCustomAlert("💾", "Đã Lưu Bức Tranh!", "Tranh vẽ của bé đã được cất giữ cẩn thận trong Passport!");
+        });
+    }
 
     // AI sinh truyện
     dom.btnGenerateAiStory.addEventListener("click", () => {
@@ -2729,150 +2746,315 @@ const COLORING_PRESETS = {
 };
 
 function initColoringSubPanel() {
-    const age = state.user.ageGroup;
-    const btnSave = document.getElementById("btn-save-drawing-work");
+    // Canvas & Context vẽ
+    const canvas = document.getElementById("ai-user-canvas");
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
     
-    // 1. Khởi tạo phần Tô Màu (Canvas 6-8)
-    const canvasPresets = dom.coloringCanvas68;
-    const ctxPresets = canvasPresets.getContext("2d");
+    // Đặt màu nền trắng mặc định
+    ctx.fillStyle = "#FFFFFF";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     
-    if (!state.currentColoringPreset) {
-        state.currentColoringPreset = "bear";
+    // Trạng thái vẽ
+    let isDrawing = false;
+    let activeTool = "brush"; // "brush", "pencil", hoặc "eraser"
+    let selectedStyle = "chibi";
+    
+    const brushColor = document.getElementById("ai-brush-color");
+    const brushSize = document.getElementById("ai-brush-size");
+    const toolBrush = document.getElementById("tool-brush");
+    const toolPencil = document.getElementById("tool-pencil");
+    const toolEraser = document.getElementById("tool-eraser");
+    const stickerShelf = document.getElementById("ai-sticker-shelf");
+    const btnClear = document.getElementById("btn-ai-drawing-clear");
+    const uploadInput = document.getElementById("drawing-upload-input");
+    const btnGen = document.getElementById("btn-ai-generate");
+    const btnDiary = document.getElementById("btn-push-to-diary");
+    
+    // Giả lập AI vẽ lại
+    const placeholder = document.getElementById("ai-image-placeholder");
+    const genImg = document.getElementById("ai-generated-img");
+    const loader = document.getElementById("ai-loading-overlay");
+
+    // Step Elements
+    const step1 = document.getElementById("drawing-step-1");
+    const step2 = document.getElementById("drawing-step-2");
+    const btnGotoStep2 = document.getElementById("btn-goto-step2");
+    const btnBackToStep1 = document.getElementById("btn-back-to-step1");
+    const activeStyleLabel = document.getElementById("active-style-label");
+    
+    // Reset về step 1 khi mở xưởng vẽ
+    if (step1) step1.classList.remove("hidden");
+    if (step2) step2.classList.add("hidden");
+    
+    // Style Map Emojis
+    const styleEmojis = {
+        chibi: "🧸 Chibi",
+        anime: "🌸 Anime",
+        pixar: "🎬 Pixar 3D",
+        comic: "💬 Comic",
+        watercolor: "🎨 Màu Nước",
+        neon: "⚡ Neon Glow"
+    };
+    
+    // Click Tiếp tục
+    if (btnGotoStep2) {
+        btnGotoStep2.onclick = () => {
+            if (step1) step1.classList.add("hidden");
+            if (step2) step2.classList.remove("hidden");
+            if (activeStyleLabel) {
+                activeStyleLabel.textContent = `Phong cách: ${styleEmojis[selectedStyle] || selectedStyle.toUpperCase()}`;
+            }
+            // Reset kích thước canvas vẽ khi chuyển sang step 2
+            ctx.fillStyle = "#FFFFFF";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Reset kết quả AI bên phải
+            if (placeholder) placeholder.classList.remove("hidden");
+            if (genImg) genImg.classList.add("hidden");
+            if (loader) loader.classList.add("hidden");
+            state.lastAiArt = "";
+        };
     }
     
-    const selectView = document.getElementById("coloring-select-view");
-    const workspaceView = document.getElementById("coloring-workspace-view");
+    // Click Chọn lại style
+    if (btnBackToStep1) {
+        btnBackToStep1.onclick = () => {
+            if (step2) step2.classList.add("hidden");
+            if (step1) step1.classList.remove("hidden");
+        };
+    }
     
-    function drawCurrentPreset() {
-        ctxPresets.fillStyle = "#FFFFFF";
-        ctxPresets.fillRect(0, 0, canvasPresets.width, canvasPresets.height);
+    // Lấy tọa độ tương đối trên canvas (hỗ trợ cả mobile cảm ứng)
+    function getMousePos(canvasDom, clientX, clientY) {
+        const rect = canvasDom.getBoundingClientRect();
+        return {
+            x: clientX - rect.left,
+            y: clientY - rect.top
+        };
+    }
+    
+    // Bắt đầu vẽ
+    function startDraw(e) {
+        isDrawing = true;
+        ctx.beginPath();
+        const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+        const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+        const pos = getMousePos(canvas, clientX, clientY);
+        ctx.moveTo(pos.x, pos.y);
+        e.preventDefault();
+    }
+    
+    // Vẽ nét
+    function draw(e) {
+        if (!isDrawing) return;
+        const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+        const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+        const pos = getMousePos(canvas, clientX, clientY);
         
-        const presetKey = state.currentColoringPreset || "bear";
-        if (COLORING_PRESETS[presetKey]) {
-            COLORING_PRESETS[presetKey].draw(ctxPresets, canvasPresets);
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        
+        if (activeTool === "eraser") {
+            ctx.strokeStyle = "#FFFFFF";
+            ctx.lineWidth = brushSize ? brushSize.value : 8;
+            ctx.globalAlpha = 1.0;
+        } else if (activeTool === "pencil") {
+            ctx.strokeStyle = "#4A5568"; // Màu xám bút chì vẽ phác thảo
+            ctx.lineWidth = 2; // Bút chì nét siêu mảnh
+            ctx.globalAlpha = 0.65; // Hơi mờ phác thảo như chì thật
+        } else {
+            // Brush vẽ cọ
+            ctx.strokeStyle = brushColor ? brushColor.value : "#4F46E5";
+            ctx.lineWidth = brushSize ? brushSize.value : 8;
+            ctx.globalAlpha = 1.0;
         }
+        
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+        e.preventDefault();
     }
     
-    // Khởi tạo các card chọn tranh
-    document.querySelectorAll(".coloring-preset-card").forEach(card => {
-        card.onclick = () => {
-            const presetKey = card.dataset.preset;
-            if (COLORING_PRESETS[presetKey]) {
-                state.currentColoringPreset = presetKey;
-                const label = document.getElementById("coloring-current-preset-label");
-                if (label) {
-                    label.innerText = `Đang tô màu: ${COLORING_PRESETS[presetKey].title}`;
-                }
-                if (selectView) selectView.classList.add("hidden");
-                if (workspaceView) workspaceView.classList.remove("hidden");
-                if (btnSave) btnSave.classList.remove("hidden");
-                drawCurrentPreset();
+    // Kết thúc vẽ
+    function stopDraw() {
+        isDrawing = false;
+        ctx.globalAlpha = 1.0; // Khôi phục alpha mặc định
+    }
+    
+    // Gán sự kiện canvas
+    canvas.addEventListener("mousedown", startDraw);
+    canvas.addEventListener("mousemove", draw);
+    canvas.addEventListener("mouseup", stopDraw);
+    canvas.addEventListener("mouseleave", stopDraw);
+    
+    canvas.addEventListener("touchstart", startDraw, {passive: false});
+    canvas.addEventListener("touchmove", draw, {passive: false});
+    canvas.addEventListener("touchend", stopDraw);
+    
+    // Nút chọn nét Dày / Mỏng nhanh qua click chấm tròn
+    document.querySelectorAll(".size-dot").forEach(dot => {
+        dot.onclick = () => {
+            const sizeVal = dot.dataset.size;
+            if (brushSize) {
+                brushSize.value = sizeVal;
             }
         };
     });
     
-    const btnBack = document.getElementById("btn-back-to-coloring-select");
-    if (btnBack) {
-        btnBack.onclick = () => {
-            if (selectView) selectView.classList.remove("hidden");
-            if (workspaceView) workspaceView.classList.add("hidden");
-            if (btnSave) btnSave.classList.add("hidden");
+    // Tool Brush
+    if (toolBrush) {
+        toolBrush.onclick = () => {
+            activeTool = "brush";
+            toolBrush.classList.add("active");
+            if (toolPencil) toolPencil.classList.remove("active");
+            if (toolEraser) toolEraser.classList.remove("active");
         };
     }
     
-    let selectedColor = "#FF5722";
-    dom.colorsContainer68 = document.getElementById("color-num-palette");
-    if (dom.colorsContainer68) {
-        dom.colorsContainer68.querySelectorAll(".color-swatch").forEach(swatch => {
-            const newSwatch = swatch.cloneNode(true);
-            swatch.parentNode.replaceChild(newSwatch, swatch);
-            
-            newSwatch.addEventListener("click", () => {
-                dom.colorsContainer68.querySelectorAll(".color-swatch").forEach(s => s.classList.remove("active"));
-                newSwatch.classList.add("active");
-                selectedColor = newSwatch.dataset.color;
-            });
-        });
-    }
-
-    canvasPresets.onclick = (e) => {
-        const rect = canvasPresets.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        
-        ctxPresets.fillStyle = selectedColor;
-        ctxPresets.beginPath();
-        ctxPresets.arc(x, y, 22, 0, Math.PI * 2);
-        ctxPresets.fill();
-        
-        const presetKey = state.currentColoringPreset || "bear";
-        if (COLORING_PRESETS[presetKey]) {
-            COLORING_PRESETS[presetKey].draw(ctxPresets, canvasPresets);
-        }
-    };
-    
-    const btnReset = document.getElementById("btn-coloring-reset");
-    if (btnReset) {
-        btnReset.onclick = () => {
-            drawCurrentPreset();
+    // Tool Pencil
+    if (toolPencil) {
+        toolPencil.onclick = () => {
+            activeTool = "pencil";
+            toolPencil.classList.add("active");
+            if (toolBrush) toolBrush.classList.remove("active");
+            if (toolEraser) toolEraser.classList.remove("active");
         };
     }
-
-    // 2. Khởi tạo phần Vẽ Tự Do (Canvas 9+)
-    const canvasFree = dom.drawingCanvas9;
-    const ctxFree = canvasFree.getContext("2d");
-    ctxFree.fillStyle = "#FFFFFF";
-    ctxFree.fillRect(0, 0, canvasFree.width, canvasFree.height);
     
-    let isDrawing = false;
-    canvasFree.onmousedown = (e) => {
-        isDrawing = true;
-        ctxFree.beginPath();
-        ctxFree.moveTo(e.offsetX, e.offsetY);
-    };
-    canvasFree.onmousemove = (e) => {
-        if (!isDrawing) return;
-        ctxFree.strokeStyle = dom.brushColorPicker.value;
-        ctxFree.lineWidth = dom.brushSizeSlider.value;
-        ctxFree.lineCap = "round";
-        ctxFree.lineTo(e.offsetX, e.offsetY);
-        ctxFree.stroke();
-    };
-    canvasFree.onmouseup = () => isDrawing = false;
-    canvasFree.onmouseleave = () => isDrawing = false;
-
-    // Dán stickers
+    // Tool Eraser
+    if (toolEraser) {
+        toolEraser.onclick = () => {
+            activeTool = "eraser";
+            toolEraser.classList.add("active");
+            if (toolBrush) toolBrush.classList.remove("active");
+            if (toolPencil) toolPencil.classList.remove("active");
+        };
+    }
+    
+    // Xóa sạch canvas
+    if (btnClear) {
+        btnClear.onclick = () => {
+            ctx.fillStyle = "#FFFFFF";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        };
+    }
+    
+    // Ghim Sticker
     let selectedSticker = "";
-    dom.stickerShelfContainer.querySelectorAll(".sticker-item").forEach(st => {
-        const newSt = st.cloneNode(true);
-        st.parentNode.replaceChild(newSt, st);
-        newSt.addEventListener("click", () => {
-            dom.stickerShelfContainer.querySelectorAll(".sticker-item").forEach(s => s.classList.remove("active"));
-            newSt.classList.add("active");
-            selectedSticker = newSt.dataset.sticker;
+    if (stickerShelf) {
+        stickerShelf.querySelectorAll(".sticker-item").forEach(st => {
+            st.onclick = (e) => {
+                stickerShelf.querySelectorAll(".sticker-item").forEach(s => s.classList.remove("active"));
+                st.classList.add("active");
+                selectedSticker = st.dataset.sticker;
+                activeTool = "sticker"; // đặt tool tạm thời
+            };
         });
-    });
-
-    canvasFree.onclick = (e) => {
-        if (selectedSticker) {
-            ctxFree.font = "40px Arial";
-            ctxFree.fillText(selectedSticker, e.offsetX - 20, e.offsetY + 15);
+    }
+    
+    canvas.addEventListener("click", (e) => {
+        if (selectedSticker && activeTool === "sticker") {
+            const pos = getMousePos(canvas, e.clientX, e.clientY);
+            ctx.font = "40px Arial";
+            ctx.fillText(selectedSticker, pos.x - 20, pos.y + 15);
             selectedSticker = "";
-            dom.stickerShelfContainer.querySelectorAll(".sticker-item").forEach(s => s.classList.remove("active"));
+            if (stickerShelf) {
+                stickerShelf.querySelectorAll(".sticker-item").forEach(s => s.classList.remove("active"));
+            }
+            activeTool = "brush"; // Trở lại vẽ cọ
+            if (toolBrush) toolBrush.classList.add("active");
         }
-    };
-
-    // 3. Đồng bộ hiển thị & Click tab mặc định cho bé lớn
-    syncArtSubPanelsByAge(age);
-    if (age !== "6-8") {
-        if (dom.btnColoringTabPresets) dom.btnColoringTabPresets.click();
-    } else {
-        if (selectView) selectView.classList.remove("hidden");
-        if (workspaceView) workspaceView.classList.add("hidden");
-        if (btnSave) btnSave.classList.add("hidden");
+    });
+    
+    // Upload hình vẽ
+    if (uploadInput) {
+        uploadInput.onchange = (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const img = new Image();
+                img.onload = () => {
+                    ctx.fillStyle = "#FFFFFF";
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    const ratio = Math.min(canvas.width / img.width, canvas.height / img.height);
+                    const w = img.width * ratio;
+                    const h = img.height * ratio;
+                    const x = (canvas.width - w) / 2;
+                    const y = (canvas.height - h) / 2;
+                    ctx.drawImage(img, x, y, w, h);
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        };
+    }
+    
+    // Lựa chọn Style nghệ thuật
+    document.querySelectorAll(".style-btn").forEach(btn => {
+        btn.onclick = () => {
+            document.querySelectorAll(".style-btn").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            selectedStyle = btn.dataset.style;
+        };
+    });
+    
+    state.lastAiArt = "";
+    if (placeholder) placeholder.classList.remove("hidden");
+    if (genImg) genImg.classList.add("hidden");
+    if (loader) loader.classList.add("hidden");
+    
+    if (btnGen) {
+        btnGen.onclick = () => {
+            if (loader) loader.classList.remove("hidden");
+            
+            // Giả lập AI múa cọ vẽ tranh
+            setTimeout(() => {
+                if (loader) loader.classList.add("hidden");
+                if (placeholder) placeholder.classList.add("hidden");
+                
+                // Mảng các hình ảnh AI tương ứng style
+                const styleImages = {
+                    chibi: "assets/images/drawing.jpeg",
+                    anime: "assets/images/comic.jpeg",
+                    pixar: "assets/images/stories.jpeg",
+                    comic: "assets/images/comic.jpeg",
+                    watercolor: "assets/images/drawing.jpeg",
+                    neon: "assets/images/character.png"
+                };
+                
+                const resultArt = styleImages[selectedStyle] || "assets/images/drawing.jpeg";
+                state.lastAiArt = resultArt;
+                
+                if (genImg) {
+                    genImg.src = resultArt;
+                    genImg.classList.remove("hidden");
+                }
+                
+                showCustomAlert("🪄", "AI Đã Vẽ Xong!", `AI đã hô biến tác phẩm của bé sang style **${selectedStyle.toUpperCase()}** cực kỳ lung linh rồi nhé!`);
+            }, 2000);
+        };
+    }
+    
+    // Đẩy vào Diary (Lưu passport nhật ký)
+    if (btnDiary) {
+        btnDiary.onclick = () => {
+            if (!state.lastAiArt) {
+                showCustomAlert("🐻", "Chưa Có Tranh AI", "Bé hãy vẽ tranh hoặc tải ảnh lên và bấm **AI Vẽ Lại** để tạo tranh phép thuật trước nhé!");
+                return;
+            }
+            
+            // Thêm vào passport
+            const previewHTML = `<img src="${state.lastAiArt}" style="width:100%; height:100%; object-fit:cover;">`;
+            addWorkToPassport("drawing", `AI Art Style: ${selectedStyle.toUpperCase()}`, previewHTML);
+            
+            // Đồng bộ lại UI timeline của Passport
+            initPassportPanel();
+            
+            showCustomAlert("📖", "Nhật Ký Đã Lưu!", `Bức tranh AI biến hóa lung linh đã được dán vào Nhật Ký (Passport) của bé thành công! Bé sẽ được cộng thêm **50 xu sáng tạo**! ✨`);
+        };
     }
 }
-
 // 9. MODULE: BRAIN ARENA (ĐẤU TRÍ)
 function setupBrainArenaEvents() {
     document.querySelectorAll(".brain-tab-btn").forEach(btn => {

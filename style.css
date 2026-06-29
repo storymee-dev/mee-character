@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Bowlby+One&family=Bowlby+One+SC&family=Montserrat:wght@400;500;600;700;800;900&display=swap');
 /* ==========================================
    CSS SYSTEM - STORYMEE UNIVERSE
    ========================================== */
@@ -536,7 +537,7 @@ body {
     border: none;
     aspect-ratio: auto;
     box-shadow: none;
-    background: url('assets/homepage_background.png') no-repeat center center;
+    background: url('assets/HOMEPAGE_BACKGROUND_VER_2.png') no-repeat center center;
     background-size: 100% 100%;
     overflow: hidden;
 }
@@ -2706,7 +2707,7 @@ input[type="color"]::-webkit-color-swatch {
    9. ART THEME: FULL-BLEED BACKGROUND & NO WHITE CONTAINER
    ========================================================================== */
 .detail-viewport-wrapper.art-theme-active {
-    background: url('assets/yello_back.jpeg') no-repeat center center;
+    background: url('assets/BACK_ART.jpeg') no-repeat center center;
     background-size: cover;
     background-attachment: scroll;
 }
@@ -3282,3 +3283,1053 @@ input[type="color"]::-webkit-color-swatch {
 
 
 
+
+/* ==========================================================================
+   13. AI STYLE TRANSFER DRAWING WORKSPACE (CARD & STEP LAYOUTS)
+   ========================================================================== */
+.ai-style-selector-row {
+    background: #FFFFFF;
+    border-radius: 24px;
+    padding: 18px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
+    margin-bottom: 20px;
+    border: 3px solid #E2E8F0;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.selector-label {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 1.05rem;
+    color: #1E293B;
+}
+
+.ai-style-options {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    justify-items: center;
+    width: 100%;
+    box-sizing: border-box;
+    gap: 16px;
+}
+
+.style-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+    background: #FFFFFF !important;
+    border: 4px solid #F1F5F9 !important;
+    border-radius: 24px !important;
+    padding: 12px !important;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04) !important;
+    width: 150px !important;
+    height: 190px !important;
+    box-sizing: border-box;
+}
+
+.style-btn img {
+    width: 100% !important;
+    height: 110px !important;
+    border-radius: 16px !important;
+    object-fit: cover !important;
+    border: none !important;
+    box-shadow: none !important;
+    transition: transform 0.25s;
+}
+
+.style-btn span {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 0.95rem;
+    color: #475569;
+    transition: all 0.2s ease;
+    margin-top: 2px;
+}
+
+.style-btn:hover {
+    transform: translateY(-8px);
+    border-color: #E2E8F0 !important;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1) !important;
+}
+
+.style-btn.active {
+    border-color: #4F46E5 !important;
+    box-shadow: 0 12px 28px rgba(79, 70, 229, 0.22) !important;
+    transform: translateY(-4px) scale(1.02);
+}
+
+.style-btn.active span {
+    color: #4F46E5 !important;
+}
+
+/* 2 Columns Workspace */
+.drawing-ai-workspace {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.workspace-box {
+    background: #FFFFFF;
+    border: 4px solid #E2E8F0;
+    border-radius: 28px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+    box-sizing: border-box;
+}
+
+.workspace-box.left-box {
+    border-color: #93C5FD !important;
+}
+
+.workspace-box.right-box {
+    border-color: #F87171 !important;
+}
+
+.workspace-box .box-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px dashed #F1F5F9;
+    padding-bottom: 10px;
+}
+
+.workspace-box .box-header h4 {
+    font-family: var(--font-primary);
+    font-size: 1.15rem;
+    color: #1E293B;
+    margin: 0;
+    font-weight: 800;
+}
+
+.box-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.upload-btn-label {
+    background: #EFF6FF;
+    color: #2563EB;
+    border: 2px solid #BFDBFE;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    padding: 6px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.upload-btn-label:hover {
+    background: #DBEAFE;
+    transform: translateY(-2px);
+}
+
+/* Canvas Toolbar */
+.drawing-canvas-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #F8FAFC;
+    padding: 8px 12px;
+    border-radius: 16px;
+    border: 1px solid #E2E8F0;
+}
+
+.drawing-canvas-toolbar input[type="color"] {
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    background: transparent;
+    padding: 0;
+}
+
+.drawing-canvas-toolbar input[type="range"] {
+    width: 80px;
+    cursor: pointer;
+    margin: 0;
+}
+
+.brush-size-control-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #EFF6FF;
+    border: 2px solid #BFDBFE;
+    padding: 6px 12px;
+    border-radius: 12px;
+}
+
+.size-dot {
+    background: #3B82F6;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.15s;
+}
+
+.size-dot:hover {
+    transform: scale(1.3);
+}
+
+.small-dot {
+    width: 6px;
+    height: 6px;
+}
+
+.large-dot {
+    width: 14px;
+    height: 14px;
+}
+
+.tool-btn {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    color: #475569;
+    background: #FFFFFF;
+    border: 2px solid #E2E8F0;
+    padding: 6px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.tool-btn:hover {
+    background: #F1F5F9;
+}
+
+.tool-btn.active {
+    background: #4F46E5;
+    color: #FFFFFF;
+    border-color: #4F46E5;
+}
+
+.sticker-shelf {
+    display: flex;
+    gap: 6px;
+    margin-left: auto;
+    border-left: 2px dashed #CBD5E1;
+    padding-left: 10px;
+}
+
+.sticker-item {
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: transform 0.15s;
+    user-select: none;
+}
+
+.sticker-item:hover {
+    transform: scale(1.25) rotate(5deg);
+}
+
+/* Canvas & AI Output wrappers */
+.canvas-wrapper, .ai-output-container {
+    width: 100% !important;
+    height: 450px !important;
+    border-radius: 20px;
+    border: 2px dashed #CBD5E1;
+    background: #F8FAFC;
+    overflow: hidden;
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+}
+
+.canvas-wrapper canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.ai-image-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    text-align: center;
+    color: #94A3B8;
+    gap: 15px;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.magic-wand-icon {
+    font-size: 3rem;
+    animation: magicShake 2.5s infinite ease-in-out;
+}
+
+.ai-image-placeholder p {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    font-weight: 600;
+    margin: 0;
+}
+
+.ai-loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    z-index: 10;
+}
+
+.ai-loading-overlay p {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #4F46E5;
+    margin: 0;
+}
+
+.magic-spinner {
+    width: 45px;
+    height: 45px;
+    border: 4px solid #E2E8F0;
+    border-top: 4px solid #4F46E5;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* Main Action Footer */
+.drawing-action-footer {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 25px;
+    width: 100%;
+}
+
+/* Step-by-step Drawing Wizard */
+.drawing-step-panel {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.step-header-title {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.step-header-title h3 {
+    font-family: var(--font-primary) !important;
+    font-size: 1.5rem !important;
+    color: #1E293B;
+    margin: 0 0 8px 0;
+    font-weight: 800;
+}
+
+.step-header-title p {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.95rem;
+    color: #64748B;
+    margin: 0;
+    font-weight: 600;
+}
+
+.step-footer-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.step2-header-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #FFFFFF;
+    border: 3px solid #E2E8F0;
+    border-radius: 20px;
+    padding: 10px 20px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+}
+
+.active-style-badge {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    color: #4F46E5;
+    background: #EEF2FF;
+    padding: 6px 18px;
+    border-radius: 12px;
+    border: 2px solid #C7D2FE;
+}
+
+@keyframes magicShake {
+    0%, 100% { transform: rotate(0deg) scale(1); }
+    10% { transform: rotate(-8deg) scale(1.1); }
+    20% { transform: rotate(8deg) scale(1.1); }
+    30% { transform: rotate(-6deg) scale(1.1); }
+    40% { transform: rotate(6deg) scale(1.1); }
+    50% { transform: rotate(0deg) scale(1); }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Homepage Landing Page 2 columns style (Study.Pilot) */
+.homepage-landing-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 40px;
+    box-sizing: border-box;
+    transform: translateY(120px); /* Đẩy xuống để không bị che chữ */
+}
+
+.homepage-landing-left {
+    flex: 1;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    z-index: 5;
+}
+
+.landing-badge {
+    background: #EFF6FF;
+    color: #2563EB;
+    border: 2px solid #BFDBFE;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 0.9rem;
+    padding: 6px 16px;
+    border-radius: 9999px;
+    display: inline-block;
+}
+
+.landing-title {
+    font-family: 'Bowlby One SC', cursive !important;
+    font-size: 3.5rem !important;
+    color: #1e293b;
+    margin: 0;
+    line-height: 1.1;
+    text-shadow: 0 4px 0px #ffffff;
+}
+
+.landing-intro-box {
+    background: #FFFFFF;
+    border: 4px solid #E2E8F0;
+    border-radius: 24px;
+    padding: 18px 24px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.06);
+    max-width: 480px;
+    box-sizing: border-box;
+    border-color: #E2E8F0 !important;
+}
+
+.landing-intro-box p {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #475569;
+    font-weight: 700;
+    margin: 0;
+}
+
+.landing-cta-btn {
+    font-family: 'Bowlby One SC', cursive !important;
+    font-size: 1.2rem !important;
+    background: #FF9800;
+    color: white;
+    border: none;
+    padding: 16px 36px;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 8px 0 #E65100, 0 15px 25px rgba(255,152,0,0.3);
+    transition: all 0.15s ease;
+    font-weight: normal;
+    text-transform: uppercase;
+}
+
+.landing-cta-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 0 #E65100, 0 20px 30px rgba(255,152,0,0.4);
+}
+
+.landing-cta-btn:active {
+    transform: translateY(4px);
+    box-shadow: 0 4px 0 #E65100, 0 8px 12px rgba(255,152,0,0.3);
+}
+
+.homepage-landing-right {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 4;
+}
+
+.landing-avatar-platform {
+    position: relative;
+    width: 580px;
+    height: 530px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.landing-avatar-svg-container {
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    animation: floatMascot 4s infinite ease-in-out;
+}
+
+.landing-avatar-svg-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.landing-avatar-shadow {
+    position: absolute;
+    bottom: -10px;
+    width: 320px;
+    height: 35px;
+    background: rgba(0,0,0,0.08);
+    border-radius: 50%;
+    filter: blur(8px);
+    animation: shadowScale 4s infinite ease-in-out;
+}
+
+@keyframes floatMascot {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+@keyframes shadowScale {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(0.85); opacity: 0.4; }
+}
+
+/* Bottom Zone Cards styling */
+.homepage-zones-grid {
+    position: absolute;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 30px;
+    z-index: 10;
+}
+
+.zone-card {
+    background: #FFFFFF;
+    border: 4px solid #E2E8F0;
+    border-radius: 28px;
+    width: 210px;
+    height: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+    position: relative;
+    overflow: hidden;
+}
+
+.zone-card-top-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: transparent;
+}
+
+.card-mee .zone-card-top-glow { background: #60A5FA; }
+.card-art .zone-card-top-glow { background: #34D399; }
+.card-passport .zone-card-top-glow { background: #A78BFA; }
+
+.zone-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+}
+
+.zone-card-image {
+    width: 140px;
+    height: 140px;
+    object-fit: contain;
+    transition: transform 0.3s;
+}
+
+.zone-card:hover .zone-card-image {
+    transform: scale(1.1);
+}
+
+.zone-card-content h3 {
+    font-family: 'Bowlby One SC', cursive !important;
+    font-size: 1.6rem !important;
+    margin: 0;
+    color: #1e293b;
+    text-transform: uppercase;
+}
+
+/* Number Badges and Borders on homepage navigation cards */
+.zone-card {
+    position: relative !important;
+}
+
+.card-num {
+    position: absolute !important;
+    top: 12px !important;
+    left: 12px !important;
+    background: #2563EB !important; /* Xanh dương đậm trong ảnh */
+    color: #FFFFFF !important;
+    font-family: 'Bowlby One SC', cursive, sans-serif !important;
+    font-weight: 800 !important;
+    font-size: 0.95rem !important;
+    width: 30px !important;
+    height: 30px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: 0 4px 8px rgba(37, 99, 235, 0.4) !important;
+    z-index: 5 !important;
+    border: 2px solid #FFFFFF !important; /* Viền trắng xinh xắn */
+    box-sizing: border-box !important;
+}
+
+.card-mee {
+    border: 4px solid #FCD34D !important; /* Viền vàng */
+}
+
+.card-art {
+    border: 4px solid #34D399 !important; /* Viền xanh lá */
+}
+
+.card-passport {
+    border: 4px solid #C084FC !important; /* Viền tím */
+}
+
+/* Force correct home mee background cover */
+.world-map-wrapper {
+    background: url('assets/HOMEPAGE_BACKGROUND_VER_2.png') no-repeat center center !important;
+    background-size: cover !important;
+}
+
+/* Passport (Diary) Theme Full-bleed Background */
+.detail-viewport-wrapper.passport-theme-active {
+    background: url('assets/BACK_DIARY.jpeg') no-repeat center center !important;
+    background-size: cover !important;
+    background-attachment: scroll !important;
+}
+
+.detail-viewport-wrapper.passport-theme-active .detail-panel-container {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+}
+
+/* Force correct back home background cover */
+.world-map-wrapper {
+    background: url('assets/HOMEPAGE_BACKGROUND_VER_2.png') no-repeat center center !important;
+    background-size: cover !important;
+}
+
+/* ==========================================
+   14. BOWLBY ONE FONT FOR ALL TITLES
+   ========================================== */
+h1, h2, h3, h4, h5, h6,
+.panel-title,
+.landing-title,
+.fairytale-title-heading,
+.step-header-title h3,
+.workspace-box .box-header h4,
+.zone-card-content h3,
+.active-style-badge,
+.step2-header-nav span,
+.passport-title,
+.diary-title {
+    font-family: 'Bowlby One', 'Bowlby One SC', cursive, sans-serif !important;
+    font-weight: normal !important; /* Bowlby One là font cartoon dày tự nhiên, không cần bold */
+}
+
+/* Adjust homepage card spacing and sizes to stretch wider */
+.homepage-zones-grid {
+    position: absolute !important;
+    bottom: 25px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    display: flex !important;
+    gap: 50px !important; /* Tăng gap từ 30px lên 50px để dàn ngang thoáng hơn */
+    z-index: 10 !important;
+}
+
+.zone-card {
+    background: #FFFFFF !important;
+    border-radius: 28px !important;
+    width: 235px !important; /* Tăng width từ 210px lên 235px */
+    height: 270px !important; /* Tăng height từ 250px lên 270px */
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 24px 20px !important;
+    cursor: pointer !important;
+    box-sizing: border-box !important;
+    transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.06) !important;
+}
+
+.zone-card-image {
+    width: 155px !important; /* Tăng size ảnh icon tương ứng */
+    height: 155px !important;
+}
+
+/* Force correct HOMEPAGE BACKGROUND VER 2 cover */
+.world-map-wrapper {
+    background: url('assets/HOMEPAGE_BACKGROUND_VER_2.png') no-repeat center center !important;
+    background-size: cover !important;
+}
+
+/* ==========================================================================
+   15. 50-50 SPLIT HOMEPAGE WITH LEFT-ALIGNED CARDS
+   ========================================================================== */
+.homepage-landing-left {
+    flex: 1.15 !important;
+    max-width: 680px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 20px !important;
+    z-index: 5 !important;
+}
+
+.homepage-landing-right {
+    flex: 0.85 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    position: relative !important;
+    z-index: 4 !important;
+}
+
+.landing-avatar-platform {
+    width: 620px !important; /* Phóng to platform và mascot ở cột phải */
+    height: 570px !important;
+}
+
+.homepage-zones-grid {
+    position: static !important;
+    transform: none !important;
+    display: flex !important;
+    gap: 20px !important; /* Khoảng cách giữa các card khi ở cột trái */
+    margin-top: 25px !important;
+    z-index: 10 !important;
+    width: 100% !important;
+    justify-content: flex-start !important;
+}
+
+.zone-card {
+    background: #FFFFFF !important;
+    border-radius: 24px !important;
+    width: 195px !important; /* Điều chỉnh size card nhỏ lại cho vừa vặn cột trái */
+    height: 220px !important;
+    padding: 15px 12px !important;
+    cursor: pointer !important;
+    box-sizing: border-box !important;
+    transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05) !important;
+}
+
+.zone-card-image {
+    width: 110px !important;
+    height: 110px !important;
+}
+
+.card-num {
+    top: 8px !important;
+    left: 8px !important;
+    width: 26px !important;
+    height: 26px !important;
+    font-size: 0.85rem !important;
+}
+
+/* Enlarge mascot group on the right */
+.landing-avatar-platform {
+    width: 700px !important; /* Tăng kích thước bệ đỡ */
+    height: 650px !important;
+    transform: scale(1.18) translateY(-40px) !important; /* Phóng to toàn bộ bệ đỡ, bóng đổ và mascot lên 1.18 lần */
+    transform-origin: center center !important;
+    margin-right: -40px !important; /* Nhích nhẹ sang lề phải để cân bằng layout */
+}
+
+/* Home (Mee Builder) Theme Full-bleed Background */
+.detail-viewport-wrapper.home-theme-active {
+    background: url('assets/BACK_HOME.jpeg') no-repeat center center !important;
+    background-size: cover !important;
+    background-attachment: scroll !important;
+}
+
+.detail-viewport-wrapper.home-theme-active .detail-panel-container {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+}
+
+/* ==========================================================================
+   16. VERTICAL STACK FOR ART LOBBY CARDS
+   ========================================================================== */
+.art-lobby-grid {
+    display: flex !important;
+    flex-direction: column !important; /* Xếp dọc các Card */
+    align-items: center !important; /* Căn giữa sảnh */
+    gap: 24px !important;
+    padding: 15px 0 !important;
+    width: 100% !important;
+}
+
+.art-card {
+    display: flex !important;
+    flex-direction: row !important; /* Ảnh trái, nội dung chữ bên phải */
+    width: 100% !important;
+    max-width: 980px !important; /* Chiều rộng giới hạn sang trọng */
+    height: 180px !important; /* Chiều cao cố định vừa vặn */
+    background: #FFFFFF !important;
+    border-radius: 28px !important;
+    border: 3px solid #E2E8F0 !important;
+    overflow: hidden !important;
+    box-shadow: 0 8px 0 rgba(0, 0, 0, 0.05) !important;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+    align-items: stretch !important;
+}
+
+.art-card:hover {
+    transform: translateY(-5px) scale(1.02) !important;
+    border-color: #FF6B8B !important; /* Highlight viền hồng */
+    box-shadow: 0 12px 0 rgba(255, 107, 139, 0.15) !important;
+}
+
+.art-card-img {
+    width: 280px !important; /* Kích thước chiều rộng ảnh cố định */
+    height: 100% !important;
+    flex-shrink: 0 !important;
+}
+
+.art-card-banner {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+}
+
+.art-card-content {
+    flex: 1 !important;
+    padding: 20px 30px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
+    text-align: left !important;
+}
+
+.art-card-title {
+    margin: 6px 0 !important;
+    font-size: 1.5rem !important;
+    color: #1E293B !important;
+}
+
+.art-card-desc {
+    margin: 0 !important;
+    font-size: 0.95rem !important;
+    line-height: 1.5 !important;
+    color: #64748B !important;
+}
+
+/* ==========================================================================
+   17. BLUEY ONLINE GAMES STYLE: ROW OF PORTRAIT CARDS
+   ========================================================================== */
+.art-lobby-grid {
+    display: flex !important;
+    flex-direction: row !important; /* Xếp hàng ngang */
+    justify-content: center !important; /* Căn giữa */
+    align-items: center !important;
+    gap: 30px !important; /* Khoảng cách rộng rãi giữa các card */
+    padding: 25px 0 !important;
+    width: 100% !important;
+}
+
+.art-card {
+    display: flex !important;
+    flex-direction: column !important; /* Ảnh ở trên, nội dung ở dưới */
+    width: 320px !important; /* Chiều rộng đứng */
+    height: 520px !important; /* Chiều cao đứng */
+    background: #FFFFFF !important;
+    border-radius: 28px !important;
+    border: 3px solid #E2E8F0 !important;
+    overflow: hidden !important;
+    cursor: pointer !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05) !important;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+    position: relative !important;
+}
+
+.art-card:hover {
+    transform: translateY(-8px) scale(1.02) !important;
+    border-color: #5856D6 !important; /* Viền tím khi hover */
+    box-shadow: 0 16px 30px rgba(88, 86, 214, 0.15) !important;
+}
+
+.art-card-img {
+    width: 100% !important;
+    height: 250px !important; /* Chiếm phần trên card */
+    overflow: hidden !important;
+    flex-shrink: 0 !important;
+}
+
+.art-card-banner {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+}
+
+.art-card-content {
+    flex: 1 !important;
+    padding: 20px 22px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important; /* Đẩy title ở trên, button ở dưới cùng */
+    align-items: center !important;
+    text-align: center !important;
+    background: #FFFFFF !important;
+}
+
+.art-card-tag {
+    font-family: 'Bowlby One', cursive, sans-serif !important;
+    font-size: 0.72rem !important;
+    color: #5856D6 !important; /* Tím đậm Bluey style */
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+.art-card-title {
+    margin: 5px 0 !important;
+    font-family: 'Bowlby One', cursive, sans-serif !important;
+    font-size: 1.45rem !important;
+    color: #1E293B !important;
+}
+
+.art-card-desc {
+    font-size: 0.82rem !important;
+    line-height: 1.45 !important;
+    color: #64748B !important;
+    margin: 0 0 15px 0 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 3 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+}
+
+/* Nút bấm PLAY NOW phong cách Bluey cực xinh */
+.art-card-btn {
+    background: #5856D6 !important; /* Màu tím đậm của Bluey */
+    color: #FFFFFF !important;
+    font-family: 'Bowlby One', cursive, sans-serif !important;
+    font-size: 0.9rem !important;
+    font-weight: normal !important;
+    padding: 10px 28px !important;
+    border-radius: 50px !important; /* Tròn trịa */
+    border: none !important;
+    box-shadow: 0 5px 0 #3F3D99 !important; /* 3D Shadow phía dưới */
+    cursor: pointer !important;
+    transition: all 0.15s ease !important;
+    display: inline-block !important;
+    margin-top: auto !important;
+}
+
+.art-card:hover .art-card-btn {
+    background: #6D6BFA !important;
+    box-shadow: 0 5px 0 #4F4DCE !important;
+    transform: translateY(-2px) !important;
+}
+
+.art-card-btn:active {
+    box-shadow: 0 1px 0 #3F3D99 !important;
+    transform: translateY(4px) !important;
+}
+
+/* ==========================================================================
+   18. ENLARGE STYLE SELECTION CARDS & APPLY MONTSERRAT FONT
+   ========================================================================== */
+.style-btn {
+    width: 220px !important; /* Phóng to width card từ 150px lên 220px */
+    height: 270px !important; /* Phóng to height card từ 190px lên 270px */
+    gap: 15px !important;
+    padding: 16px !important;
+    border-radius: 28px !important;
+}
+
+.style-btn img {
+    height: 180px !important; /* Phóng to hình ảnh style từ 110px lên 180px */
+    border-radius: 20px !important;
+}
+
+.style-btn span {
+    font-size: 1.15rem !important; /* Chữ tên style to rõ nét hơn */
+    font-weight: 800 !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+/* Áp dụng font Montserrat cho tiêu đề, nhãn và nút của Xưởng Vẽ AI */
+.step-header-title h3,
+.step-header-title p,
+.active-style-badge,
+.active-style-badge span,
+.step2-header-nav span,
+.box-header h4,
+.drawing-action-footer button,
+.opt-btn,
+#coloring-current-preset-label {
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 800 !important; /* Tiêu đề nét dày khỏe khoắn */
+}
+
+.step-header-title p {
+    font-weight: 500 !important; /* Subtitle mỏng hơn cho tinh tế */
+    font-size: 0.95rem !important;
+}
