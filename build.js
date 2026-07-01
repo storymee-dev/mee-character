@@ -5,6 +5,8 @@ const WORKSPACE = __dirname;
 const FACIAL_DIR = path.join(WORKSPACE, 'facial');
 const CLOTHES_DIR = path.join(WORKSPACE, 'Skin tone (clothes)');
 const NO_CLOTHES_DIR = path.join(WORKSPACE, 'Skin tone (no clothes)');
+const HAIR_DIR = path.join(WORKSPACE, 'Hair');
+const OUFIT_DIR = path.join(WORKSPACE, 'oufit');
 
 const assets = {
   skinToneColors: {}, // map of skinIndex -> { primary, shadow }
@@ -19,6 +21,15 @@ const assets = {
     face: {},
     mouth: {},
     nose: {}
+  },
+  hair: {
+    bang: {},
+    behind: {}
+  },
+  outfit: {
+    shirt: { female: {}, male: {} },
+    pants: {},
+    dress: { female: {}, male: {}, unisex: {} }
   }
 };
 
@@ -107,8 +118,25 @@ function processFacial() {
     
     const name = path.basename(file, '.svg');
     
+    // Special check for face variant files e.g. "face_1_skin_1.svg"
+    const faceSkinMatch = name.match(/^face_(\d+)_skin_(\d+)$/i);
+    const faceDefaultMatch = name.match(/^face_(\d+)$/i);
+    
+    if (faceSkinMatch) {
+      const styleId = parseInt(faceSkinMatch[1], 10);
+      const skinId = parseInt(faceSkinMatch[2], 10);
+      assets.facial.face[styleId] = assets.facial.face[styleId] || {};
+      assets.facial.face[styleId][skinId] = content;
+      return;
+    } else if (faceDefaultMatch) {
+      const styleId = parseInt(faceDefaultMatch[1], 10);
+      assets.facial.face[styleId] = assets.facial.face[styleId] || {};
+      assets.facial.face[styleId]['default'] = content;
+      return;
+    }
+    
     // Categorize by prefix, e.g. "ears_1.svg" -> ears, "eyebrow_2.svg" -> eyebrow
-    const categories = ['ears', 'eyebrow', 'eyes', 'face', 'mouth', 'nose'];
+    const categories = ['ears', 'eyebrow', 'eyes', 'mouth', 'nose'];
     let matched = false;
     
     for (const cat of categories) {
@@ -129,10 +157,77 @@ function processFacial() {
   });
 }
 
+// 3. Process Hair SVGs (Bangs & Behind)
+function processHair() {
+  if (!fs.existsSync(HAIR_DIR)) {
+    console.warn(`Hair directory not found: ${HAIR_DIR}`);
+    return;
+  }
+  const files = fs.readdirSync(HAIR_DIR);
+  files.forEach(file => {
+    if (!file.endsWith('.svg')) return;
+    const filePath = path.join(HAIR_DIR, file);
+    const content = readSvg(filePath);
+    const name = path.basename(file, '.svg');
+    
+    // Parse style index (e.g. "Bang 1" -> styleKey = 1)
+    const styleMatch = name.match(/^(Bang|Behind)\s+(\d+)/i);
+    if (!styleMatch) return;
+    
+    const styleType = styleMatch[1].toLowerCase(); // "bang" or "behind"
+    const styleKey = parseInt(styleMatch[2], 10);
+    
+    // Parse color index (e.g. "Bang 1_Color 5" -> colorKey = 5)
+    const colorMatch = name.match(/_Color\s+(\d+)/i);
+    const colorKey = colorMatch ? parseInt(colorMatch[1], 10) : 'default';
+    
+    if (!assets.hair[styleType][styleKey]) {
+      assets.hair[styleType][styleKey] = {};
+    }
+    assets.hair[styleType][styleKey][colorKey] = content;
+  });
+}
+
+// 4. Process Outfit SVGs (Shirts, Pants, Dresses)
+function processOutfit() {
+  if (!fs.existsSync(OUFIT_DIR)) {
+    console.warn(`Outfit directory not found: ${OUFIT_DIR}`);
+    return;
+  }
+  const files = fs.readdirSync(OUFIT_DIR);
+  files.forEach(file => {
+    if (!file.endsWith('.svg')) return;
+    const filePath = path.join(OUFIT_DIR, file);
+    const content = readSvg(filePath);
+    const name = path.basename(file, '.svg');
+    
+    const indexMatch = name.match(/\d+/);
+    if (!indexMatch) return;
+    const key = parseInt(indexMatch[0], 10);
+    
+    const lowerName = name.toLowerCase();
+    if (lowerName.startsWith('pants')) {
+      assets.outfit.pants[key] = content;
+    } else if (lowerName.startsWith('shirt male')) {
+      assets.outfit.shirt.male[key] = content;
+    } else if (lowerName.startsWith('shirt female')) {
+      assets.outfit.shirt.female[key] = content;
+    } else if (lowerName.startsWith('dress chung')) {
+      assets.outfit.dress.unisex[key] = content;
+    } else if (lowerName.startsWith('dress female')) {
+      assets.outfit.dress.female[key] = content;
+    } else if (lowerName.startsWith('dress male')) {
+      assets.outfit.dress.male[key] = content;
+    }
+  });
+}
+
 console.log('Bundling assets...');
 processSkinTones(CLOTHES_DIR, 'clothes');
 processSkinTones(NO_CLOTHES_DIR, 'noClothes');
 processFacial();
+processHair();
+processOutfit();
 
 // Add manual color fallbacks if any extraction failed or was incomplete
 const defaultColors = {

@@ -1,51 +1,86 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mee Character Customizer</title>
+  <title>Tạo Người Bạn Đại Diện (Mee)</title>
   <!-- SEO Meta Tags -->
-  <meta name="description" content="An interactive high-fidelity character customizer for Mee SVG characters. Choose gender, outfits, skin tones, facial features, and download your character.">
-  <meta name="keywords" content="Mee Character, Character Customizer, SVG Avatar Generator, Avatar Creator">
+  <meta name="description" content="Tùy biến nhân vật hoạt hình Mee đáng yêu và tải về dưới dạng SVG/PNG.">
+  <meta name="keywords" content="Mee Character, Tùy biến nhân vật, Avatar, SVG Creator">
   <meta name="author" content="Antigravity">
   
-  <!-- Fonts -->
+  <!-- Fonts: Fredoka & Outfit -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Outfit:wght@300..800&display=swap" rel="stylesheet">
   
   <!-- Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <!-- Custom Stylesheet -->
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=18">
 </head>
 <body>
-  <div class="glow-bg"></div>
-  
   <div class="app-container">
+    <!-- Header Bar -->
     <header class="app-header">
-      <div class="logo-area">
-        <i class="fa-solid fa-wand-magic-sparkles logo-icon"></i>
-        <h1>Mee Character <span>Customizer</span></h1>
+      <div class="header-left">
+        <button class="btn-world-map" onclick="alert('Quay lại bản đồ thế giới!')">
+          <i class="fa-solid fa-earth-americas"></i> Trở Lại Bản Đồ Thế Giới
+        </button>
       </div>
-      <p class="subtitle">Design, customize, and export your personal SVG character avatar</p>
+      
+      <div class="header-center">
+        <h1 class="main-title">Tạo Người Bạn Đại Diện (Mee)</h1>
+        <p class="main-subtitle">Tùy biến kiểu tóc, màu da, và nét mặt cho Mee của riêng bạn.</p>
+      </div>
+      
+      <div class="header-right">
+        <button id="btn-exit" class="btn btn-exit">
+          <i class="fa-solid fa-minus"></i> Exit
+        </button>
+        <button id="btn-done" class="btn btn-done">
+          <i class="fa-solid fa-plus"></i> Done
+        </button>
+      </div>
     </header>
     
     <main class="main-content">
-      <!-- Preview Panel -->
-      <section class="preview-panel" id="preview-panel-container">
-        <div class="preview-card glass-panel">
-          <div class="card-header">
-            <span class="status-indicator"><span class="dot"></span> Live Preview</span>
-            <div class="header-actions">
-              <button id="btn-randomize" class="icon-btn btn-secondary" title="Randomize Attributes">
-                <i class="fa-solid fa-dice"></i>
-              </button>
-              <button id="btn-reset" class="icon-btn btn-secondary" title="Reset to Default">
-                <i class="fa-solid fa-rotate-left"></i>
-              </button>
-            </div>
+      <!-- Left Vertical Sidebar -->
+      <nav class="left-sidebar card-panel">
+        <button class="sidebar-btn active" data-tab="identity" title="Chọn Giới Tính & Màu Da">
+          <i class="fa-solid fa-user"></i>
+        </button>
+        <button class="sidebar-btn" data-tab="eyes" title="Chọn Mắt">
+          <i class="fa-solid fa-eye"></i>
+        </button>
+        <button class="sidebar-btn" data-tab="hair" title="Chọn Tóc & Màu Sắc">
+          <i class="fa-solid fa-pencil"></i>
+        </button>
+        <button class="sidebar-btn" data-tab="nose" title="Chọn Mũi">
+          <i class="fa-solid fa-nose-cone"></i>
+        </button>
+        <button class="sidebar-btn" data-tab="mouth" title="Chọn Miệng">
+          <i class="fa-solid fa-face-smile"></i>
+        </button>
+        <button class="sidebar-btn" data-tab="outfit" title="Chọn Trang Phục">
+          <i class="fa-solid fa-shirt"></i>
+        </button>
+      </nav>
+      
+      <!-- Preview Panel (Middle-Left) -->
+      <section class="preview-panel">
+        <div class="preview-card card-panel">
+          <div class="preview-actions">
+            <button id="btn-rotate" class="preview-action-btn" title="Xoay nhân vật">
+              <i class="fa-solid fa-rotate"></i> Rotate
+            </button>
+            <button id="btn-reset" class="preview-action-btn" title="Cài lại ban đầu">
+              <i class="fa-solid fa-house"></i> Reset view
+            </button>
+            <button id="btn-undo" class="preview-action-btn" title="Hoàn tác">
+              <i class="fa-solid fa-arrow-rotate-left"></i> Undo
+            </button>
           </div>
           
           <div class="preview-viewport" id="svg-preview-container">
@@ -55,108 +90,157 @@
             </div>
           </div>
           
-          <div class="export-actions">
-            <button id="btn-export-svg" class="btn btn-primary">
-              <i class="fa-solid fa-file-code"></i> Download SVG
-            </button>
-            <button id="btn-export-png" class="btn btn-gradient">
-              <i class="fa-solid fa-file-image"></i> Download PNG
-            </button>
+          <div class="preview-footer">
+            <div class="mood-badge">
+              Mood: Bình thường 😊
+            </div>
           </div>
         </div>
       </section>
       
-      <!-- Customizer / Options Panel -->
+      <!-- Customizer Options Panel (Right) -->
       <section class="options-panel">
-        <div class="options-card glass-panel">
-          <div class="tabs-navigation">
-            <button class="tab-btn active" data-tab="identity">
-              <i class="fa-solid fa-user-gear"></i> Body
-            </button>
-            <button class="tab-btn" data-tab="facial">
-              <i class="fa-solid fa-face-smile"></i> Facial
-            </button>
-          </div>
-          
+        <div class="options-card card-panel">
           <div class="tab-content-container">
-            <!-- Identity Tab (Gender, Clothes, Skin Tone, Face Shape) -->
+            
+            <!-- 1. Identity Tab (Gender, Face Shape, Skin Tone) -->
             <div class="tab-content active" id="tab-identity">
-              <!-- Gender selection -->
+              <!-- Gender Selection -->
               <div class="option-group">
-                <label class="group-title"><i class="fa-solid fa-venus-mars"></i> Gender</label>
+                <label class="group-title">1. Chọn Giới Tính:</label>
                 <div class="gender-toggle-wrapper">
                   <input type="radio" id="gender-male" name="gender" value="male" checked>
                   <label for="gender-male" class="gender-card">
-                    <i class="fa-solid fa-mars"></i>
-                    <span>Male</span>
+                    <span>Boy (Nam) 👦</span>
                   </label>
                   
                   <input type="radio" id="gender-female" name="gender" value="female">
                   <label for="gender-female" class="gender-card">
-                    <i class="fa-solid fa-venus"></i>
-                    <span>Female</span>
+                    <span>Girl (Nữ) 👧</span>
                   </label>
                 </div>
               </div>
               
-
-              <!-- Skin Tone selection -->
+              <!-- Face Shape Selection -->
               <div class="option-group">
-                <label class="group-title"><i class="fa-solid fa-palette"></i> Skin Tone</label>
+                <label class="group-title">Chọn Dạng Khuôn Mặt:</label>
+                <div class="cards-grid" id="face-picker">
+                  <!-- Generated by app.js -->
+                </div>
+              </div>
+
+              <!-- Skin Tone Selection -->
+              <div class="option-group">
+                <div class="skin-tone-header">
+                  <label class="group-title">2. Chọn Tông Màu Da:</label>
+                  <div class="skin-tone-labels">
+                    <span id="active-skin-label" class="skin-label-text">Màu 1</span>
+                    <span id="active-skin-hex" class="skin-hex-text">#FFE7E6</span>
+                  </div>
+                </div>
+                
                 <div class="skin-tone-grid" id="skin-tone-picker">
                   <!-- Generated by app.js -->
                 </div>
+                
                 <!-- Custom Skin Colors Section -->
                 <div class="custom-skin-section">
-                  <div class="color-picker-item">
-                    <span>Base Color</span>
-                    <input type="color" id="custom-skin-base" value="#ffe7e6" title="Custom Skin Base Color">
+                  <div class="custom-skin-header">
+                    <input type="checkbox" id="enable-custom-skin">
+                    <label for="enable-custom-skin">Tùy chọn màu da riêng</label>
                   </div>
-                  <div class="color-picker-item">
-                    <span>Shading Color</span>
-                    <input type="color" id="custom-skin-shading" value="#ffcccc" title="Custom Skin Shading Color">
+                  
+                  <div class="custom-color-pickers" style="display: none;">
+                    <div class="color-picker-item">
+                      <span>Màu nền:</span>
+                      <input type="color" id="custom-skin-base" value="#ffe7e6">
+                    </div>
+                    <div class="color-picker-item">
+                      <span>Màu bóng:</span>
+                      <input type="color" id="custom-skin-shading" value="#ffcccc">
+                    </div>
                   </div>
                 </div>
               </div>
-              
-
             </div>
             
-            <!-- Facial Tab (Eyes, Eyebrows, Nose, Mouth, Ears) -->
-            <div class="tab-content" id="tab-facial">
-
-              <!-- Eyes selection -->
+            <!-- 2. Eyes Tab -->
+            <div class="tab-content" id="tab-eyes">
               <div class="option-group">
-                <label class="group-title"><i class="fa-solid fa-eye"></i> Eyes</label>
+                <label class="group-title">Chọn Kiểu Dáng Mắt:</label>
                 <div class="cards-grid" id="eyes-picker">
                   <!-- Generated by app.js -->
                 </div>
               </div>
-              
-              <!-- Eyebrows selection -->
               <div class="option-group">
-                <label class="group-title"><i class="fa-solid fa-lines-leaning"></i> Eyebrows</label>
+                <label class="group-title">Chọn Kiểu Dáng Lông Mày:</label>
                 <div class="cards-grid" id="eyebrows-picker">
                   <!-- Generated by app.js -->
                 </div>
               </div>
-              
-              <!-- Nose selection -->
+            </div>
+            
+            <!-- 3. Hair Tab -->
+            <div class="tab-content" id="tab-hair">
               <div class="option-group">
-                <label class="group-title"><i class="fa-solid fa-ellipsis-vertical"></i> Nose</label>
+                <label class="group-title">Tóc Mái (Bangs):</label>
+                <div class="cards-grid" id="bang-picker">
+                  <!-- Generated by app.js -->
+                </div>
+              </div>
+              <div class="option-group">
+                <label class="group-title">Tóc Sau (Back Hair):</label>
+                <div class="cards-grid" id="behind-picker">
+                  <!-- Generated by app.js -->
+                </div>
+              </div>
+              <div class="option-group" id="hair-color-container">
+                <!-- Dynamically populated by app.js -->
+              </div>
+            </div>
+            
+            <!-- 4. Nose Tab -->
+            <div class="tab-content" id="tab-nose">
+              <div class="option-group">
+                <label class="group-title">Chọn Kiểu Dáng Mũi:</label>
                 <div class="cards-grid" id="nose-picker">
                   <!-- Generated by app.js -->
                 </div>
               </div>
-              
-              <!-- Mouth selection -->
+            </div>
+            
+            <!-- 5. Mouth Tab -->
+            <div class="tab-content" id="tab-mouth">
               <div class="option-group">
-                <label class="group-title"><i class="fa-regular fa-face-smile-mouth"></i> Mouth</label>
+                <label class="group-title">Chọn Kiểu Dáng Miệng:</label>
                 <div class="cards-grid" id="mouth-picker">
                   <!-- Generated by app.js -->
                 </div>
               </div>
             </div>
+            
+            <!-- 6. Outfit Tab -->
+            <div class="tab-content" id="tab-outfit">
+              <div class="option-group">
+                <label class="group-title">Áo (Shirt):</label>
+                <div class="cards-grid" id="shirt-picker">
+                  <!-- Generated by app.js -->
+                </div>
+              </div>
+              <div class="option-group">
+                <label class="group-title">Quần (Pants):</label>
+                <div class="cards-grid" id="pants-picker">
+                  <!-- Generated by app.js -->
+                </div>
+              </div>
+              <div class="option-group">
+                <label class="group-title">Đầm/Bộ liền (Dress):</label>
+                <div class="cards-grid" id="dress-picker">
+                  <!-- Generated by app.js -->
+                </div>
+              </div>
+            </div>
+            
           </div>
         </div>
       </section>
@@ -166,8 +250,7 @@
   <!-- Dynamic Canvas for PNG exports -->
   <canvas id="export-canvas" style="display: none;"></canvas>
   
-  <!-- Assets & App scripts with cache-busting version query parameters -->
-  <script src="assets.js?v=13"></script>
-  <script src="app.js?v=13"></script>
+  <script src="assets.js?v=28"></script>
+  <script src="app.js?v=28"></script>
 </body>
 </html>
