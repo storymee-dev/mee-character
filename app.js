@@ -1046,13 +1046,11 @@ function composeCharacterSVG() {
     let dressTransform = '';
     if (state.dress === 1) {
       dressSvg = cleanDressChung(meeAssets.outfit.dress.unisex[1]);
-    if (dressSvg) {
-      dressSvg = makeSvgIdsUnique(dressSvg, 'mee-dress');
-      dressSvg = extractStylesAndDefs(dressSvg, stylesArray, defsArray, '#mee-outfit-dress');
-      const dressCenter = getSvgElementCenter(dressSvg) || { x: 97.28, y: 220 };
-      const dressScale = 0.895;
-      const dressTranslateX = 90.32 - (dressCenter.x * dressScale);
-      dressTransform = `translate(${dressTranslateX.toFixed(2)}, 0) scale(${dressScale})`;
+      if (dressSvg) {
+        dressSvg = makeSvgIdsUnique(dressSvg, 'mee-dress');
+        dressSvg = extractStylesAndDefs(dressSvg, stylesArray, defsArray, '#mee-outfit-dress');
+        dressTransform = 'translate(-7.72, -47.23)';
+      }
     }
   } else if (state.dress === 2) {
     dressSvg = meeAssets.outfit.dress[state.gender][1];
