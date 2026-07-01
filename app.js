@@ -939,6 +939,9 @@ function composeCharacterSVG() {
     const colorInfo = hairColors.find(c => c.index === currentEyebrowsColorIndex) || hairColors[0];
     const currentEyebrowsColor = colorInfo.base;
 
+    // Push direct fill styling to handle SVG shapes without fill attributes
+    stylesArray.push(`#composed-eyebrows rect, #composed-eyebrows path, #composed-eyebrows ellipse, #composed-eyebrows circle, #composed-eyebrows polygon { fill: ${currentEyebrowsColor} !important; }`);
+
     eyebrowSvg = eyebrowSvg
       .replace(/fill=["']#000000["']/gi, `fill="${currentEyebrowsColor}"`)
       .replace(/fill=["']#000["']/gi, `fill="${currentEyebrowsColor}"`);
