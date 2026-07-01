@@ -954,9 +954,14 @@ function composeCharacterSVG() {
     if (shirtSvg) {
       const shirtCenter = getSvgElementCenter(shirtSvg) || { x: 66.83, y: 48 };
       const shirtTranslateX = 90.32 - shirtCenter.x;
-      const shirtTranslateY = state.shirt === 3
-        ? (state.gender === 'female' ? 129.93 : 129.91)
-        : (state.gender === 'female' ? 139.93 : 139.91);
+      let shirtTranslateY;
+      if (state.shirt === 3) {
+        shirtTranslateY = state.gender === 'female' ? 129.93 : 129.91;
+      } else if (state.shirt === 4 || state.shirt === 5 || state.shirt === 6) {
+        shirtTranslateY = state.gender === 'female' ? 134.93 : 134.91;
+      } else {
+        shirtTranslateY = state.gender === 'female' ? 139.93 : 139.91;
+      }
       shirtTransform = `translate(${shirtTranslateX.toFixed(2)}, ${shirtTranslateY.toFixed(2)})`;
     }
 
