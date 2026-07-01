@@ -168,6 +168,7 @@ body {
   grid-template-columns: 80px 360px 1fr;
   gap: 20px;
   align-items: stretch;
+  height: 580px; /* Fixed uniform height for all panels on desktop viewports */
 }
 
 /* Card Panels */
@@ -305,6 +306,15 @@ body {
 .options-panel .options-card {
   height: 100%;
   padding: 24px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.tab-content-container {
+  flex: 1;
+  min-height: 0; /* Important flex fix for vertical inner scrolling */
+  overflow: hidden;
 }
 
 .tab-content {
@@ -316,6 +326,27 @@ body {
   display: flex;
   flex-direction: column;
   gap: 24px;
+  height: 100%;
+  overflow-y: auto; /* Enable vertical scroll inside the card tab container */
+  padding-right: 8px; /* Extra padding to prevent scrollbar overlapping content */
+}
+
+/* Custom premium scrollbar for option content */
+.tab-content.active::-webkit-scrollbar {
+  width: 6px;
+}
+
+.tab-content.active::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tab-content.active::-webkit-scrollbar-thumb {
+  background: #ebdcd0;
+  border-radius: 3px;
+}
+
+.tab-content.active::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-pink-hover);
 }
 
 @keyframes fadeIn {
@@ -574,6 +605,7 @@ body {
 @media (max-width: 1024px) {
   .main-content {
     grid-template-columns: 1fr;
+    height: auto; /* Auto height on stacked mobile layouts */
   }
   
   .left-sidebar {
