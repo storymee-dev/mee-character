@@ -1,6 +1,6 @@
 /* Cute Child-Friendly UI Styles for Mee Character Customizer */
 :root {
-  --font-main: 'Fredoka', 'Outfit', sans-serif;
+  --font-main: 'Mali', 'Fredoka', 'Outfit', sans-serif;
   
   /* Color Palette */
   --bg-primary: #a5d7fa;
@@ -162,6 +162,18 @@ body {
   box-shadow: 0 6px 16px rgba(255, 126, 90, 0.4);
 }
 
+.btn-random {
+  background: linear-gradient(135deg, #ff9eb5, var(--accent-pink));
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(255, 117, 151, 0.3);
+}
+
+.btn-random:hover {
+  background: linear-gradient(135deg, #ffcbd6, #ff6585);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 117, 151, 0.4);
+}
+
 /* Dashboard Content Grid */
 .main-content {
   display: grid;
@@ -217,6 +229,11 @@ body {
   border-color: var(--accent-pink);
   color: #ffffff;
   box-shadow: 0 4px 12px rgba(255, 117, 151, 0.3);
+}
+
+.sidebar-btn svg {
+  width: 22px;
+  height: 22px;
 }
 
 .preview-panel, .options-panel {
@@ -458,12 +475,7 @@ body {
 }
 
 .card-label {
-  position: absolute;
-  bottom: 4px;
-  right: 6px;
-  font-size: 0.65rem;
-  color: var(--text-muted);
-  font-weight: 600;
+  display: none;
 }
 
 /* Skin Tone Grid */
@@ -474,10 +486,7 @@ body {
 }
 
 .skin-tone-labels {
-  display: flex;
-  gap: 12px;
-  font-size: 0.85rem;
-  font-weight: 600;
+  display: none;
 }
 
 .skin-label-text {
@@ -598,6 +607,36 @@ body {
 
 #sync-eyebrows-color {
   accent-color: var(--accent-pink);
+}
+
+/* Outfit Colors Grid */
+.outfit-color-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 5px;
+  margin-bottom: 12px;
+}
+
+.outfit-colors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
+  gap: 8px;
+}
+
+/* Eyes Colors Grid */
+.eyes-color-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 5px;
+  margin-bottom: 12px;
+}
+
+.eyes-colors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
+  gap: 8px;
 }
 
 /* Spinner Loader */
