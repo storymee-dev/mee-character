@@ -904,7 +904,7 @@ function composeCharacterSVG() {
         
         if (splitResult.back) {
           dressBackGroup = `<g id="mee-outfit-dress-back" class="mee-outfit-dress" transform="${dressTransform}">
-            <circle cx="97" cy="110" r="90" fill="url(#mee-dress-linear-gradient)" />
+            <ellipse cx="97" cy="110" rx="65" ry="85" fill="url(#mee-dress-linear-gradient)" />
             ${splitResult.back}
           </g>`;
         }
